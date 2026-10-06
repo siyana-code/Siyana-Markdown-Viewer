@@ -4,6 +4,8 @@
 > for somebody. The tables are written to be lifted directly into
 > `packages/test-fixtures/traps/` as regression tests.
 >
+> `→` = TAB (U+0009) · `␣` = one SPACE · `␤` = LINE FEED · `␍` = CARRIAGE RETURN · `␀` = NUL · `␃` = BACKTICK. Real backticks appear only as code-span delimiters. See [README §2.0](README.md#20-the-visible-glyph-convention).
+>
 > **Provenance of the measurements.** Timings in §11 and §12 were produced on
 > **Windows / Node v24.14.1** on **2026-10-06** against
 > `markdown-it@15.0.2` (UMD build) and `marked@18.1.0` (UMD build). Absolute
@@ -612,10 +614,10 @@ Everything below becomes a fixture. `→` = tab, `␣` = one space.
 | 22 | `foo_bar_` | literal | `<em>bar</em>` | §6.2 Ex. 360 |
 | 23 | `foo-_(bar)_` | `<em>(bar)</em>` | literal | §6.2 Ex. 364 (rule 2b) |
 | 24 | `*$*alpha.` | literal | `<em>$</em>` | §6.2 Ex. 354 (`Sc` is punctuation) |
-| 25 | `*␣a␣*` (U+00A0) | literal | `<em>a</em>` | §6.2 Ex. 353 |
-| 26 | `` ␃ `` `` `` → `` ␃foo``bar`` `` | `` ␃foo `` + `<code>bar</code>` | one code span | §6.1 Ex. 349 |
-| 27 | `` ␃foo\␃bar␃ `` | ␃<code>foo\</code>bar\␃␃ | `<code>foo\bar</code>` | §6.1 Ex. 338 |
-| 28 | `` ␃  ``  ␃ ␃␃ | ````<code> ␃␃ </code>```` | ````<code>␃␃</code>```` | §6.1 Ex. 331 — only one space per side |
+| 25 | `*U+00A0aU+00A0*` | literal | `<em>a</em>` | §6.2 Ex. 353 — NBSP is Unicode whitespace |
+| 26 | ``␃foo␃␃bar␃␃`` | `␃foo` + `<code>bar</code>` | one span, `<code>foo␃␃bar</code>` | §6.1 Ex. 349 — closers must equal the opener |
+| 27 | ``␃foo\␃bar␃`` | `␃<code>foo\</code>bar␃` | `<code>foo\bar</code>` | §6.1 Ex. 338 — no escapes inside a code span |
+| 28 | ``␃  ␃␃  ␃`` | `<code> ␃␃ </code>` | `<code>␃␃</code>` | §6.1 Ex. 331 — only one space per side is stripped |
 | 29 | `[link]("title")` | `href="%22title%22"` | a title | §6.3 Ex. 504 |
 | 30 | `[foo] [bar]` + `[bar]: /url` | `[foo] <a>bar</a>` | one link | §6.3 Ex. 542 |
 | 31 | `[foo][bar](` + `[baz]: /url1` + `[bar]: /url2` | `[foo]`→`/url2`, `bar`→`/url2`, `baz`→`/url1` | different pairing | §6.3 Ex. 570 |

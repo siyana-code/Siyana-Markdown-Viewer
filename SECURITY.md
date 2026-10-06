@@ -106,7 +106,7 @@ security change.
 | Dependency | Minimum | Advisory |
 |---|---|---|
 | `markdown-it` | 14.2.0 | [CVE-2026-48988](https://nvd.nist.gov/vuln/detail/CVE-2026-48988) |
-| `DOMPurify` | 3.4.0 | [CVE-2026-41238](https://nvd.nist.gov/vuln/detail/CVE-2026-41238) |
+| `DOMPurify` | 3.4.16 | [CVE-2026-41238](https://nvd.nist.gov/vuln/detail/CVE-2026-41238) and the 2026 `IN_PLACE` cluster, incl. `GHSA-6688-9rhm-gjv2` (≤ 3.4.15) |
 
 Full advisory catalogue for every dependency we consider:
 [`research/11-security/04-dependency-and-supply-chain.md`](research/11-security/04-dependency-and-supply-chain.md).

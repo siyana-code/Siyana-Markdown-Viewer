@@ -65,7 +65,7 @@ and [`research/06-libraries/02-rust-parsers.md`](../../research/06-libraries/02-
 ## Decision
 
 **Proposed: `markdown-it` (≥ 14.2.0, `typographer` off) in TypeScript for the
-renderer, with `DOMPurify` (≥ 3.4.0) for sanitization, plus `ammonia` available
+renderer, with `DOMPurify` (≥ 3.4.16) for sanitization, plus `ammonia` available
 on the Rust side if ADR-0003 selects Tauri and a Rust parser is later justified.**
 
 Reasoning:
@@ -128,8 +128,8 @@ is a security dependency.
 
 | Dependency | Floor | Why |
 |---|---|---|
-| `markdown-it` | **≥ 14.2.0** | [CVE-2026-48988](https://nvd.nist.gov/vuln/detail/CVE-2026-48988) — quadratic O(n²) DoS in the smartquotes rule when `typographer: true`. 160 KB of quote characters caused ~21 s of CPU in the published PoC. Also [CVE-2022-21670](https://nvd.nist.gov/vuln/detail/CVE-2022-21670) (ReDoS) and [CVE-2025-7969](https://nvd.nist.gov/vuln/detail/CVE-2025-7969) (XSS in the fence renderer, disputed by the vendor but the bug class is real). |
-| `DOMPurify` | **≥ 3.4.0** | [CVE-2026-41238](https://nvd.nist.gov/vuln/detail/CVE-2026-41238) — prototype-pollution XSS bypass affecting 3.0.1–3.3.3 in the default configuration. Fixed in 3.4.0. Also [CVE-2026-65914](https://nvd.nist.gov/vuln/detail/CVE-2026-65914) (mXSS via re-contextualization, fixed in 3.3.2), [CVE-2026-47423](https://nvd.nist.gov/vuln/detail/CVE-2026-47423) (`<selectedcontent>` re-clone bypass), and [CVE-2026-0540](https://nvd.nist.gov/vuln/detail/CVE-2026-0540). |
+| `markdown-it` | **≥ 14.2.0** | [CVE-2026-48988](https://nvd.nist.gov/vuln/detail/CVE-2026-48988) — quadratic O(n²) DoS in the smartquotes rule when `typographer: true`. 160 KB of quote characters caused ~21 s of CPU in the published PoC. Also [CVE-2022-21670](https://nvd.nist.gov/vuln/detail/CVE-2022-21670) (ReDoS) and [CVE-2025-7969](https://nvd.nist.gov/vuln/detail/CVE-2025-7969) (XSS in the fence renderer, disputed by the vendor but the bug class is real). Current release at the time of writing: 15.0.2. |
+| `DOMPurify` | **≥ 3.4.16** | [CVE-2026-41238](https://nvd.nist.gov/vuln/detail/CVE-2026-41238) — prototype-pollution XSS bypass affecting 3.0.1–3.3.3 in the default configuration. Then a further cluster in 2026, including [CVE-2026-65914](https://nvd.nist.gov/vuln/detail/CVE-2026-65914) (mXSS via re-contextualization), [CVE-2026-47423](https://nvd.nist.gov/vuln/detail/CVE-2026-47423) (`<selectedcontent>` re-clone bypass), and `GHSA-6688-9rhm-gjv2` (Oct 2026, IN_PLACE mode, affects ≤ 3.4.15). 3.4.0 was the floor for the *first* of these; the rest of the cluster needs 3.4.16. Full analysis: [`research/06-libraries/05-sanitizer-libraries.md`](../../research/06-libraries/05-sanitizer-libraries.md). |
 
 **Operational consequences of these findings:**
 

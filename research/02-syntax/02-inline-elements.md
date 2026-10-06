@@ -5,9 +5,9 @@
 > hard and soft line breaks, and plain text.
 >
 > **Reading convention.** Same as [01](01-block-elements.md). Example numbers
-> refer to **CommonMark 0.31.2** unless prefixed `GFM Ex.`. `→` is U+2192 as
-> used by the spec for a real tab, and `␣`/trailing markers are called out in
-> prose when trailing whitespace is significant.
+> refer to **CommonMark 0.31.2** unless prefixed `GFM Ex.`.
+>
+> `→` = TAB (U+0009) · `␣` = one SPACE · `␤` = LINE FEED · `␍` = CARRIAGE RETURN · `␀` = NUL · `␃` = BACKTICK. Real backticks appear only as code-span delimiters. See [README §2.0](README.md#20-the-visible-glyph-convention).
 >
 > **Spec section map** (verified against <https://spec.commonmark.org/0.31.2/>):
 
@@ -426,7 +426,7 @@ the first 20 of your emphasis regression suite.
 | 350 | `*foo bar*` | `<p><em>foo bar</em></p>` | Rule 1 + rule 3, plain case | ✅ match |
 | 351 | `a * foo bar*` | `<p>a * foo bar*</p>` | Opener followed by whitespace ⇒ not left-flanking ⇒ rule 1 fails | ✅ match |
 | 352 | `a*"foo"*` | `<p>a*&quot;foo&quot;*</p>` | Opener preceded by alphanumeric, followed by punctuation ⇒ neither 2a nor 2b ⇒ not left-flanking | ✅ match |
-| 353 | `*␣a␣*` (U+00A0 around `a`) | `<p>*␣a␣*</p>` | **Unicode non-breaking space counts as whitespace** ⇒ opener not left-flanking | ✅ match |
+| 353 | `*U+00A0aU+00A0*` | `<p>*U+00A0aU+00A0*</p>` | **Unicode non-breaking space counts as whitespace** ⇒ opener not left-flanking | ✅ match |
 | 354 | `*$*alpha.` / `*£*bravo.` / `*€*charlie.` | `<p>*$*alpha.</p>` ×3 | **Unicode symbols (`Sc`) count as punctuation** ⇒ not left-flanking | ✅ match |
 | 355 | `foo*bar*` | `<p>foo<em>bar</em></p>` | **Intraword `*` is allowed** | ✅ match |
 | 356 | `5*6*78` | `<p>5<em>6</em>78</p>` | Intraword, digits | ✅ match |
@@ -547,23 +547,28 @@ RULE (CM §6.1)
        from the front and back.
 ```
 
-| Syntax | Verdict | Notes |
+| `Syntax` | Verdict | Notes |
 |--------|---------|-------|
-| `` ␃foo␃ `` → `<p><code>foo</code></p>` | **Valid**, §6.1 Ex. 328 | |
-| ` ␃␃ foo \` bar ␃␃ ` → `<p><code>foo \` bar</code></p>` | **Valid**, §6.1 Ex. 329 | Two backticks because the content contains one; also demonstrates one-space stripping |
-| `` ␃ `` ```` ␃␃ ```` `` → ␃<p><code>``</code></p>␃ | **Valid**, §6.1 Ex. 330 | **The motivation for stripping** — lets you put a backtick at the edge |
-| `` ␃  ``  ```` ␃␃ → ````<p><code> ␃␃ </code></p>␃ | **Valid**, §6.1 Ex. 331 | **Only ONE space per side is stripped** |
-| `` ␃ a␃ `` → `<p><code> a</code></p>` | **Valid**, §6.1 Ex. 332 | Stripping requires BOTH sides |
-| `` ␃␣b␣␃ `` (U+00A0) → spaces preserved | **Valid**, §6.1 Ex. 333 | **Only U+0020 is stripped, not Unicode whitespace** |
-| `` ␃␣␃ `` and `` ␃␣␣␃ `` (only spaces) → preserved | **Valid**, §6.1 Ex. 334 | Changelog 0.29: *"Don't strip spaces in code span containing only spaces … allows one to include a code span with just spaces"* |
-| ```` ␃␃\nfoo\nbar  \nbaz\n␃␃ ```` → `<p><code>foo bar   baz</code></p>` | **Valid**, §6.1 Ex. 335 | Line endings → spaces; interior runs of spaces preserved |
-| `` ␃foo   bar \nbaz␃ `` → `<p><code>foo   bar  baz</code></p>` | **Valid**, §6.1 Ex. 337 | **Interior spaces are NOT collapsed** (0.29: *"Code spans: don't collapse interior space"*) |
-| `` ␃foo\␃bar␃ `` → `<p><code>foo\</code>bar\`</p>␃ | **Valid**, §6.1 Ex. 338 | **Backslash escapes do not work**; the `\` is literal, so the backtick string closes early |
-| ` ␃␃foo`bar␃␃ ` → `<p><code>foo\`bar</code></p>` | **Valid**, §6.1 Ex. 339 | "Backslash escapes are never needed, because one can always choose a string of n backticks" |
-| `` ␃ `` ```` ␃␃ bar ```` `` → ␃<p><code>foo `` bar</code></p>␃ | **Valid**, §6.1 Ex. 340 | |
-| ```` ␃␃␃foo␃␃ ```` → ````<p>␃␃␃foo␃␃</p>```` | **Valid**, §6.1 Ex. 347 | **Unclosed backtick string ⇒ literal backticks** |
-| `` ␃foo `` → `<p>`foo</p>␃ | **Valid**, §6.1 Ex. 348 | |
-| `` ␃foo``bar`` `` → `<p>`foo<code>bar</code></p>␃ | **Valid**, §6.1 Ex. 349 | **Opening and closing runs must be EQUAL length.** Here the ```` ␃␃ ```` after `foo` does not match the opening ` ` ␃ |
+| ``␃foo␃`` → `<p><code>foo</code></p>` | **Valid**, §6.1 Ex. 328 | The whole of §6.1 in one row: backtick string, content, equal-length closer |
+| ``␃␃ foo ␃ bar ␃␃`` → `<p><code>foo ␃ bar</code></p>` | **Valid**, §6.1 Ex. 329 | Two-backtick delimiter *because the content holds a backtick*. Also shows one-space stripping |
+| ``␃ ␃␃ ␃`` → `<p><code>␃␃</code></p>` | **Valid**, §6.1 Ex. 330 | **The motivation for the stripping rule** — it is the only way to put a backtick at the *edge* of a code span |
+| ``␃  ␃␃  ␃`` → `<p><code> ␃␃ </code></p>` | **Valid**, §6.1 Ex. 331 | **Only ONE space per side is stripped**, however many there were |
+| ``␃ a␃`` → `<p><code> a</code></p>` | **Valid**, §6.1 Ex. 332 | Stripping needs **both** ends; here the closer abuts `a`, so the leading space survives |
+| ``␃U+00A0bU+00A0␃`` → `<p><code>U+00A0bU+00A0</code></p>` | **Valid**, §6.1 Ex. 333 | **Only U+0020 is stripped.** The delimiters here are surrounded by NBSP, which §6.1 does not call a "space character" |
+| ``␃U+00A0␃␤␃␣␣␃`` → `<p><code>U+00A0</code>␤<code>␣␣</code></p>` | **Valid**, §6.1 Ex. 334 | Changelog 0.29: *"Don't strip spaces in code span containing only spaces … allows one to include a code span with just spaces"* |
+| ``␃␃␤foo␤bar␣␣␤baz␤␃␃`` → `<p><code>foo bar␣␣␣baz</code></p>` | **Valid**, §6.1 Ex. 335 | Line endings become spaces; the two trailing spaces survive, so three appear in a row |
+| ``␃␃␤foo␣␤␃␃`` → `<p><code>foo␣</code></p>` | **Valid**, §6.1 Ex. 336 | A single trailing space **is** stripped |
+| ``␃foo␣␣␣bar ␤baz␃`` → `<p><code>foo␣␣␣bar␣␣baz</code></p>` | **Valid**, §6.1 Ex. 337 | **Interior runs of spaces are NOT collapsed** (0.29: *"Code spans: don't collapse interior space"*) |
+| ``␃foo\␃bar␃`` → `<p><code>foo\</code>bar␃</p>` | **Valid**, §6.1 Ex. 338 | **Backslash escapes do not work inside a code span.** The `\` is literal, so the run it forms closes the span early |
+| ``␃␃foo␃bar␃␃`` → `<p><code>foo␃bar</code></p>` | **Valid**, §6.1 Ex. 339 | *"Backslash escapes are never needed, because one can always choose a string of n backticks"* |
+| ``␃ foo ␃␃ bar ␃`` → `<p><code>foo ␃␃ bar</code></p>` | **Valid**, §6.1 Ex. 340 | |
+| ``*foo␃*␃`` → `<p>*foo<code>*</code></p>` | **Valid**, §6.1 Ex. 341 | The span wins over the emphasis delimiters: code spans bind tighter (§1.1) |
+| ``[not a ␃link](/foo␃)`` → `<p>[not a <code>link](/foo</code>)</p>` | **Valid**, §6.1 Ex. 342 | An unmatched closer is literal, so this is **not** a link |
+| ``␃<a href="␃">␃`` → `<p><code>&lt;a href=&quot;</code>&quot;&gt;␃</p>` | **Valid**, §6.1 Ex. 343 | Raw HTML has **lower** precedence than code spans (§1.1), so this is text, not a tag |
+| ``␃<https://foo.bar.␃baz>␃`` → `<p><code>&lt;https://foo.bar.</code>baz&gt;␃</p>` | **Valid**, §6.1 Ex. 345 | Same ordering, inside an angle bracket |
+| ``␃␃␃foo␃␃`` → `<p>␃␃␃foo␃␃</p>` | **Valid**, §6.1 Ex. 347 | **An unclosed backtick string stays literal** — it is not an error and not a span |
+| ``␃foo`` → `<p>␃foo</p>` | **Valid**, §6.1 Ex. 348 | |
+| ``␃foo␃␃bar␃␃`` → `<p>␃foo<code>bar</code></p>` | **Valid**, §6.1 Ex. 349 | **Opening and closing runs must be EQUAL length.** The two-backtick run after `foo` cannot close a one-backtick span, so it opens its own — and the leading `␃` survives as literal text |
 
 ### 5.1 The CSS requirement
 
@@ -649,7 +654,7 @@ RULE (CM §6.3)
 | `[link]("title")` → `href="%22title%22"` | **Valid**, §6.3 Ex. 504 | **Titles can often be parsed as destinations, so omitting the destination silently swallows the title into the URL.** This is the single most surprising link fixture |
 | `[link](/url "title")` / `'title'` / `(title)` | **Valid**, §6.3 Ex. 505 | All three delimiters |
 | `[link](/url "title \"&quot;")` → `title="title &quot;&quot;"` | **Valid**, §6.3 Ex. 506 | Escapes and entities in titles |
-| `[link](/url␣"title")` (U+00A0) → literal | **Invalid**, §6.3 Ex. 507 | **NBSP is not one of the permitted separators**; only space, tab, and one line ending |
+| `[link](/urlU+00A0"title")` → literal | **Invalid**, §6.3 Ex. 507 | **NBSP is not one of the permitted separators**; only space, tab, and one line ending |
 | `[link](/url "title "and" title")` → literal | **Invalid**, §6.3 Ex. 508 | No nested same-type quotes without escapes |
 | `[link](/url 'title "and" title')` → valid | **Valid**, §6.3 Ex. 509 | Use a different quote type |
 | `[link](   /uri` / `  "title"  )` | **Valid**, §6.3 Ex. 510 | Whitespace and up to one line ending around components |

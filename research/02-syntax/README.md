@@ -25,6 +25,47 @@
 Every construct in docs 01–03 is presented in the same shape. Learn the shape
 once and you can read any row at a glance.
 
+### 2.0 The visible-glyph convention
+
+Because these documents have to *show* Markdown source inside a code span — and
+a code span cannot contain its own delimiter run — the folder uses a set of
+**visible glyphs** for whitespace and structural characters. This is the same
+trick the CommonMark spec itself uses for tabs.
+
+| Glyph | Code point | Stands for | Why we need it |
+|-------|-----------|------------|-----------------|
+| `→` | U+2192 | TAB (U+0009) | The spec's own convention; tab expansion must advance to a *column*, so the raw tab is unreadable |
+| `␣` | U+2423 | one SPACE (U+0020) | Trailing-space significance (hard breaks, code content) is otherwise invisible |
+| `␤` | U+2424 | LINE FEED (U+000A) | Multi-line inputs are shown on one table row |
+| `␀` | U+2400 | NUL (U+0000) | A raw NUL would make this file binary; CommonMark §2.3 requires it to become U+FFFD |
+| `␃` | U+2403 | BACKTICK (U+0060) | **A code span cannot contain a backtick run of its own delimiter length.** A literal three-backtick fence therefore cannot live inside a single-backtick span, and re-writing delimiters by hand across ~40 rows is exactly the kind of thing that silently corrupts a syntax reference |
+| `␍` | U+240D | CARRIAGE RETURN (U+000D) | Same reason as `␤` |
+
+**No glyph for U+00A0.** NBSP is *not* a SPACE for any rule in this folder —
+CM §6.1 strips only U+0020 — so writing it as `␣` would be actively misleading.
+It is always spelled **`U+00A0`** in prose and in tables.
+
+**The rule:** in these files, a backtick that is part of the *demonstrated
+Markdown source* is always written `␃`. A real `` ` `` character appears **only**
+as a code-span delimiter. The same holds for `→`, `␣`, `␤` and `␀`.
+
+**Newlines are the one place where two notations coexist, and the split is
+deliberate:**
+
+| Where the newline appears | Notation | Real example |
+|---|---|---|
+| Inside the **Markdown source** being demonstrated | `␤` (U+2424) | ``` `␃␃␤foo␤bar␣␣␤baz␃␃` ``` — CM §6.1 Ex. 335 |
+| Inside a **rendered-HTML** column | the two-character escape `\n` | `` `<pre><code>foo\n</code></pre>` `` — CM §4.4 Ex. 118 |
+
+A rendered-HTML column can never contain a real LINE FEED: the output has
+already been serialised, so a literal LF there would be a lie, while `\n` is
+exactly how every serialiser prints it. In a Markdown *source* column a real LF
+is a real character of the input and must be shown as one.
+
+This is machine-checkable and we check it: see
+[05 §12](05-test-fixture-strategy.md#12-maintenance). If you add a fixture row to
+these documents, follow the convention or the doc-lint job fails.
+
 ### 2.1 The canonical form (a single construct)
 
 ```markdown

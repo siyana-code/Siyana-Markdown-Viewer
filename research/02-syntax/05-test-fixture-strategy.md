@@ -4,6 +4,8 @@
 > into a CI gate that cannot be quietly weakened, and that tells us the truth
 > about how conformant we are.
 >
+> `→` = TAB (U+0009) · `␣` = one SPACE · `␤` = LINE FEED · `␍` = CARRIAGE RETURN · `␀` = NUL · `␃` = BACKTICK. Real backticks appear only as code-span delimiters. See [README §2.0](README.md#20-the-visible-glyph-convention).
+>
 > **Everything numeric in this document was measured on 2026-10-06** with
 > **Windows / Node v24.14.1 / Python 3.12.9**, against
 > `marked@18.1.0` and `markdown-it@15.0.2` (both UMD builds loaded via jsDelivr),
@@ -866,6 +868,43 @@ A per-section report is what makes the suite usable. "652/652" tells you nothing
 | We find a CommonMark bug | Report on <https://talk.commonmark.org/>; **do not** locally deviate — add a documented allow-list entry |
 | A trap is fixed | Remove the fixture **in the same PR** that fixes it, and note the removal in the changelog |
 | The allow-list grows by 5+ entries | Trigger an ADR review of our HTML renderer; a growing allow-list is a smell, not a strategy |
+
+### 12.1 The doc-lint gate for [README §2.0](README.md#20-the-visible-glyph-convention)
+
+These six files *show* Markdown inside Markdown, which is the easiest place in the
+repo to silently corrupt a fixture. Four checks run in CI over
+`research/02-syntax/*.md`; all four must pass before a docs PR merges.
+
+| # | Check | Rule | Why it exists |
+|:-:|-------|------|---------------|
+| 1 | **Table well-formedness** | Every table row splits into the same number of cells as its header, using GFM §4.10 cell splitting (an unescaped `\|` always ends a cell) | A missing pipe silently merges two rows and the reference stops matching the source |
+| 2 | **Span parseability** | No prose line contains a code span that cannot be parsed by CommonMark §6.1 | A run-together backtick pair makes the *documentation* mis-render, which is the one failure a reader cannot detect |
+| 3 | **Glyph purity** | Inside a code span, TAB / LF / CR / NUL / BACKTICK never appear as content — they are written `→`, `␤`, `␍`, `␀`, `␃` | A real backtick written by hand where `␃` belongs closes the span early, so the reader sees the wrong syntax |
+| 4 | **Provenance** | Every row citing `§X.Y Ex. N` decodes (glyphs → characters) to something reconstructible from that example in the vendored `spec.json` | The check that actually caught the corruption: a dropped space in Ex. 329 and a spurious trailing backtick in Ex. 349 |
+
+**Escape hatch (three, and only three).** Check 3 permits a real character in
+span content when:
+
+- it is inside a **fenced** code block — those are real source, not citations;
+- the span is quoting **JavaScript**, e.g. the `"\\`"` string literal in this
+  document's harness listing;
+- the span is README §2.0's own self-demonstration of a real backtick.
+
+Anything else fails. When adding a row, write the glyph and not the character,
+and run the gate before you open the PR.
+
+### 12.2 What the gate has already caught
+
+Kept as evidence that the gate earns its place in CI:
+
+| Found | Where | Consequence had it shipped |
+|-------|-------|------------------------------|
+| `Ex. 329` shown as ``␃␃foo ␃bar␃␃`` — two spaces dropped | 02 §5 | A reader would conclude §6.1 strips interior spaces |
+| `Ex. 349` HTML column carried a trailing ``␃`` that the spec does not emit | 02 §5 | The reference would have taught a wrong output; markdown-it and the spec agree, the doc did not |
+| `Ex. 333`/`334` wrote U+00A0 as the ``␣`` SPACE glyph | 02 §5 | Would imply NBSP is stripped by §6.1 — the exact opposite of the rule |
+| `Ex. 118` used two ``··`` MIDDLE DOTs for trailing spaces | 01 §7 | An undocumented glyph would have crept into every future fixture |
+| Row 4 of 01 §8 pointed at a mangled fence glyph run | 01 §8.1 | Unreadable rationale for a real engineering decision |
+
 
 ---
 

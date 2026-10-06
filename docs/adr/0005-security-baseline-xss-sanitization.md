@@ -77,10 +77,14 @@ bug.
 
 ### Sanitizer version floor
 
-`DOMPurify` **MUST** be at least **3.4.0**. The default configuration was
+`DOMPurify` **MUST** be at least **3.4.16**. The default configuration was
 bypassable in 3.0.1 through 3.3.3 via prototype pollution
-([CVE-2026-41238](https://nvd.nist.gov/vuln/detail/CVE-2026-41238)). Three
-other 2026 advisories are relevant to how we use it:
+([CVE-2026-41238](https://nvd.nist.gov/vuln/detail/CVE-2026-41238)), fixed in
+3.4.0 — but a further cluster of 2026 advisories, including
+`GHSA-6688-9rhm-gjv2` (October 2026, `IN_PLACE` mode, affects ≤ 3.4.15), needs
+3.4.16. We do not use `IN_PLACE`, but pinning to the newest patched release
+means one floor rather than a per-CVE allowlist. Three other advisories are
+relevant to how we use it:
 
 - [CVE-2026-65914](https://nvd.nist.gov/vuln/detail/CVE-2026-65914) (mXSS via
   re-contextualization) — sanitized output that is inserted into a *second,

@@ -4,6 +4,8 @@
 > the syntax, who defines it, whether it is CommonMark-valid, how widely it
 > appears in real files, and whether a Markdown **viewer** should support it.
 >
+> `→` = TAB · `␣` = one SPACE · `␤` = LINE FEED · `␃` = BACKTICK. Real backticks appear only as code-span delimiters. See [README §2.0](README.md#20-the-visible-glyph-convention).
+>
 > **Provenance tags** (see [README §3](README.md#3-the-symbol-legend)):
 > **CORE** / **GFM** / **EXTENSION** / **DIALECT** / **NONSTANDARD**.
 

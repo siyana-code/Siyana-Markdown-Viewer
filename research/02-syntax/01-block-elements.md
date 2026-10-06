@@ -5,9 +5,10 @@
 > Inline syntax that appears *inside* those blocks is in
 > [02-inline-elements.md](02-inline-elements.md).
 >
+> `→` = TAB (U+0009) · `␣` = one SPACE · `␤` = LINE FEED · `␍` = CARRIAGE RETURN · `␀` = NUL · `␃` = BACKTICK. Real backticks appear only as code-span delimiters. See [README §2.0](README.md#20-the-visible-glyph-convention).
+>
 > **Reading convention.** Every construct is presented as
-> `Syntax` / `CommonMark verdict` / `Notes`. In code samples `→` (U+2192) stands
-> for a real tab (U+0009), exactly as the CommonMark spec does. Example numbers
+> `Syntax` / `CommonMark verdict` / `Notes`. Example numbers
 > are from **CommonMark 0.31.2** unless prefixed `GFM Ex.`.
 >
 > **Spec section map used below** (all numbers verified against
@@ -284,7 +285,7 @@ RULE (CM §4.3)
 | `Foo` / `    ---` → `<p>Foo\n---</p>` | **Invalid**, §4.3 Ex. 87 | Underline with 4-space indent does not apply |
 | `Foo` / `= =` → `<p>Foo\n= =</p>` | **Invalid**, §4.3 Ex. 88 | No *internal* spaces in the underline |
 | `Foo` / `--- -` → `<p>Foo</p>` + `<hr />` | **Invalid**, §4.3 Ex. 88 | `--- -` is a thematic break (inter-character spaces allowed), so the `Foo` paragraph closes and cannot become a heading |
-| `Foo··` / `-----` → `<h2>Foo</h2>` | **Valid**, §4.3 Ex. 89 | **Trailing spaces in the content line are stripped, so they do NOT create a hard break** |
+| `Foo␣␣` / `-----` → `<h2>Foo</h2>` | **Valid**, §4.3 Ex. 89 | **Trailing spaces in the content line are stripped, so they do NOT create a hard break** |
 | `Foo\` / `----` → `<h2>Foo\</h2>` | **Valid**, §4.3 Ex. 90 | A trailing backslash is literal here, not a hard break |
 | `` ␃Foo `` / `----` / `` ␃ `` → `<h2>\`Foo</h2><p>\`</p>` | **Valid**, §4.3 Ex. 91 | Block structure beats the code span |
 | `> Foo` / `---` → quote + `<hr />` | **Invalid**, §4.3 Ex. 92 | **The underline cannot be a lazy continuation line** |
@@ -355,7 +356,7 @@ RULE (CM §4.4)
 | `Foo` / `    bar` → `<p>Foo\nbar</p>` | **Invalid**, §4.4 Ex. 113 | Cannot interrupt a paragraph — this is what makes hanging indents work |
 | `    foo` / `bar` → code + `<p>bar</p>` | **Valid**, §4.4 Ex. 114 | But a paragraph may follow code immediately |
 | `        foo` / `    bar` → `<pre><code>    foo\nbar\n</code></pre>` | **Valid**, §4.4 Ex. 116 | |
-| `    foo··` → `<pre><code>foo··\n</code></pre>` | **Valid**, §4.4 Ex. 118 | **Trailing spaces are part of code content** |
+| `    foo␣␣` → `<pre><code>foo␣␣␤</code></pre>` | **Valid**, §4.4 Ex. 118 | **Trailing spaces are part of code content** |
 
 ---
 
@@ -388,23 +389,35 @@ RULE (CM §4.5)
 
 | Syntax | CommonMark verdict | Notes |
 |--------|--------------------|-------|
-| ```` ␃␃␃ ```` … ```` ␃␃␃ ```` → `<pre><code>` | **Valid**, §4.5 Ex. 119 | |
+| ```` ␃␃␃ ```` … ```` ␃␃␃ ```` → `<pre><code>` | **Valid**, §4.5 Ex. 119 | Reading the `Syntax` column: `` ␃␃␃ `` is a three-backtick fence. It is written with the glyph rather than with real backticks because a code span cannot contain a run of backticks as long as its own delimiter — see [README §2.0](README.md#20-the-visible-glyph-convention). The full literal form of row 1 is in the block below |
 | ```` ␃␃␃ ```` → ```` ␃␃␃ ```` → `<p><code>foo</code></p>` | **Invalid**, §4.5 Ex. 121 | Two backticks is an *inline code span*, not a fence |
 | ```` ␃␃␃ ```` / `aaa` / `~~~` / ```` ␃␃␃ ```` | **Valid**, §4.5 Ex. 122 | `~~~` inside a backtick fence is literal content |
 | ```` ```` ```` / ␃aaa␃ / ```` ␃␃␃ ```` / ```` ```` ```` → closes | **Valid**, §4.5 Ex. 124 | **Closing must be ≥ opening length** |
-| ```` ␃␃␃ ```` / ```` ␃␃␃ aaa```` / ```` ␃␃␃ ```` → the middle line is content | **Valid**, §4.5 Ex. 147 | Closing fences cannot have info strings |
+| ```` ␃␃␃ ```` / ```` ␃␃␃ aaa ```` / ```` ␃␃␃ ```` → the middle line is content | **Valid**, §4.5 Ex. 147 | Closing fences cannot have info strings |
 | ```` ␃␃␃ ␃␃␃ ```` → `<p><code> </code>\naaa</p>` | **Invalid**, §4.5 Ex. 138 | A fence may not contain internal spaces |
-| ```` ␃␃␃ruby```` → `<pre><code class="language-ruby">` | **Valid**, §4.5 Ex. 142 | First word of the info string becomes the class — *the spec does not mandate this*, it is conventional |
+| ```` ␃␃␃ruby ```` → `<pre><code class="language-ruby">` | **Valid**, §4.5 Ex. 142 | First word of the info string becomes the class — *the spec does not mandate this*, it is conventional |
 | `~~~~    ruby startline=3 $%@#$` → `class="language-ruby"` | **Valid**, §4.5 Ex. 143 | Remaining info-string words are **unspecified**; cmark discards them |
-| ```` ````; ␃␃␃␃ → `<pre><code class="language-;"></code></pre>` | **Valid**, §4.5 Ex. 144 | A one-character language is legal |
+| ```` ␃␃␃␃; ```` → `<pre><code class="language-;"></code></pre>` | **Valid**, §4.5 Ex. 144 | A one-character language is legal |
 | ```` ␃␃␃ aa ␃␃␃ ```` → `<p><code>aa</code>\nfoo</p>` | **Invalid**, §4.5 Ex. 145 | Backtick in a backtick-fence info string |
-| ````~~~ aa ␃␃␃ ~~~```` / `foo` / `~~~` → `class="language-aa"` | **Valid**, §4.5 Ex. 146 | Tilde fences may have backticks in the info string |
+| ``~~~ aa ␃␃␃~~~␤foo␤~~~~~~`` → `<pre><code class="language-aa">foo␤</code></pre>` | **Valid**, §4.5 Ex. 146 | Tilde fences may have backticks in the info string |
 | ```` ␃␃␃ ```` / `aaa` / ````    ␃␃␃ ```` → the last line is content | **Valid**, §4.5 Ex. 137 | 4-space-indented closer is not a closer |
 | ```` ␃␃␃ ```` / `aaa` / ````   ␃␃␃ ```` → closes | **Valid**, §4.5 Ex. 135 | Closer indent need not match opener |
 | ````    ␃␃␃ ```` / `    aaa` / ````    ␃␃␃ ```` → indented code containing fences | **Invalid**, §4.5 Ex. 134 | 4-space indent |
 | ```` ␃␃␃   ```` + ` aaa` + `aaa` + ```` ␃␃␃   ```` → two lines, no indent | **Valid**, §4.5 Ex. 131 | N=1 opener removes 1 space of indent |
 | `foo` / ```` ␃␃␃ ```` / `bar` / ```` ␃␃␃ ```` / `baz` → p, code, p | **Valid**, §4.5 Ex. 140 | Fences interrupt paragraphs and need no blank lines |
 | ```` ␃␃␃ ```` / `aaa` → `<pre><code>aaa\n</code></pre>` with no closer | **Valid**, §4.5 | Unclosed fences terminate at container end |
+
+**The literal form of the first row** (CM §4.5 Example 119) — this is what the
+`␃␃␃` notation above stands for:
+
+````markdown
+```
+<
+ >
+```
+````
+
+→ `<pre><code>&lt;\n &gt;\n</code></pre>`
 
 ### 8.1 Renderer obligations for fences
 
@@ -416,7 +429,7 @@ The spec does not mandate them, so we must decide and document:
 | Info-string words beyond the first | Preserve in `data-info` | Cheap, enables tooling; never rendered |
 | Escaping of code content | Escape `&`, `<`, `>` only | CM §4.5 Ex. 119 shows `<` → `&lt;`; do **not** escape quotes |
 | `<pre>` needs `white-space` handling | Ship `pre { white-space: pre; }` | Browsers collapse nothing inside `pre` by default, but this protects against inherited `white-space: normal` from a parent |
-| Maximum fence length | Cap at 3 000 (mirrors cmark's behaviour) | Prevents an O(n²) "find matching closer" scan on a pathological ```` ````…␃␃␃␃ |
+| Maximum fence length | Cap at 3 000 (mirrors cmark's behaviour) | Stops the O(n²) "scan the rest of the document for a matching closer" cost that a 3 000-backtick opener with no closer triggers on every subsequent line |
 
 ---
 
