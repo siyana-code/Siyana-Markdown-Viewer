@@ -131,19 +131,29 @@ The weighted verdict is in
 [`06-comparison-matrix.md` § Weighted verdict](06-comparison-matrix.md#weighted-verdict-for-this-projects-priorities).
 The short form:
 
-1. **Tauri v2** — the strongest fit for the desktop-first requirement. Secure
-   by default, tiny, one language on the backend, real auto-update with
-   mandatory signatures. Its Linux dependency story is the main tax.
-2. **Electron** — the strongest *engineering* fit if reuse across all three
-   targets dominates, because one renderer codebase genuinely covers desktop +
-   web + (via Capacitor) mobile. It pays ~150 MB and ~8 major upgrades a year
-   for that.
-3. **Flutter** — the best renderer consistency and the best mobile story, at
-   the cost of rewriting the Markdown renderer and giving up the HTML/CSS
-   ecosystem. Weakest fit for a *viewer*.
-4. **A shared TS/JS core with a thin shell** — the option we keep coming back
-   to in [`07-hybrid-architectures.md`](07-hybrid-architectures.md). Often
-   beats picking one framework everywhere.
+| Rank | Candidate | Score | Why |
+|-----:|-----------|------:|-----|
+| 1 | **Electron 44.x** | **4.17** | Wins reuse, CSS leverage, rendering consistency, Linux, DX, viability |
+| 2 | **Tauri 2.12** | **3.74** | Wins size, memory, startup, and is the only option with a signed all-platform updater |
+| 3 | **Flutter 3.47** | **3.52** | Best renderer consistency and best mobile story — but 1/5 on CSS leverage, which is fatal for a *viewer* |
+| 4 | Qt 6 | 3.39 | Chromium without Node (sound security) at Electron's size with a worse ecosystem |
+| 5 | **Wails 2.16** | 3.04 | Excellent, easy-to-learn desktop shell — but no mobile, no updater |
+| 6 | NW.js | 2.97 | Node in the renderer: architecturally disqualified for untrusted Markdown |
+| 7 | Custom Rust renderer | 2.82 | The best possible *viewer*; the worst possible *multi-platform* story |
+| 8 | Neutralino | 2.56 | Tiny and pleasant, but too thin and too coarse |
+
+**Electron and Tauri are 0.43 apart, which is noise.** The decision is not
+arithmetic — it is one question: *are we building one renderer for three
+platforms, or a great desktop app plus a separate web build?*
+
+And that question turns out to be **unnecessary to answer now**, because the
+framework governs only ~5% of our code while the renderer governs ~70% — and
+the renderer is **identical HTML/CSS/JS under every candidate shell**. So the
+recommendation is [`07-hybrid-architectures.md` option (d)](07-hybrid-architectures.md):
+**build the renderer first as a plain web app behind a typed
+`PlatformAdapter` interface, then pick the shell.** Deferring is not fence
+sitting here; it is the correct strategy, because it is the cheapest and most
+reversible of all the decisions available.
 
 Nothing here is decided. Per the brief, this folder documents all candidates
 and defers the choice. But the evidence does support a *lean*, and the lean is

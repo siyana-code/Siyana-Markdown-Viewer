@@ -87,9 +87,29 @@ needs an ADR and a second reviewer.
    raw-text rendering.
 8. **Updates are signature-verified**, not merely checksum-verified.
 9. **Dependencies are locked and audited.** `Cargo.lock` and `pnpm-lock.yaml` are
-   committed. Parser and sanitizer upgrades get an explicit security review.
+   committed. Parser and sanitizer upgrades get an explicit security review, and
+   both carry a minimum version floor (see
+   [`docs/adr/0004-markdown-parser-strategy.md`](docs/adr/0004-markdown-parser-strategy.md#minimum-versions-verified-2026-10-06)).
 10. **No telemetry, no crash uploads, no analytics** without explicit,
     documented, opt-in user consent.
+11. **Sanitized output is never re-contextualized.** Sanitized HTML goes into
+    exactly one place — a detached `<div>` — and is never concatenated into a
+    wrapper string or re-parsed in a different parsing context. This is the
+   control for the mutation-XSS class
+   ([CVE-2026-65914](https://nvd.nist.gov/vuln/detail/CVE-2026-65914)).
+
+## Dependency floors
+
+Set from published advisories, verified 2026-10-06. Crossing a floor upward is a
+security change.
+
+| Dependency | Minimum | Advisory |
+|---|---|---|
+| `markdown-it` | 14.2.0 | [CVE-2026-48988](https://nvd.nist.gov/vuln/detail/CVE-2026-48988) |
+| `DOMPurify` | 3.4.0 | [CVE-2026-41238](https://nvd.nist.gov/vuln/detail/CVE-2026-41238) |
+
+Full advisory catalogue for every dependency we consider:
+[`research/11-security/04-dependency-and-supply-chain.md`](research/11-security/04-dependency-and-supply-chain.md).
 
 ## Out of scope
 

@@ -113,6 +113,32 @@ The reasoning, in short:
    alternative — JavaScript-only with Electron — is simpler but commits us to
    shipping a browser inside the app.
 
+### The one serious argument against
+
+The research produces one finding that could overturn this decision, so it is
+stated here rather than buried:
+
+**Linux is our weakest platform and our hardest constraint.** Tauri requires
+`webkit2gtk-4.1`, which is **not available on Debian 11 or Ubuntu 20.04**, and
+RHEL 8/9 ships the ABI 4.0 webkit that Tauri cannot use. Tauri's own Linux
+dependency chain (`libwebkit2gtk-4.1-dev`, `libayatana-appindicator3-dev`,
+`librsvg2-dev`, `patchelf`) is a genuine distribution problem — the most common
+way a Tauri app fails to launch.
+
+Electron has the opposite property: it bundles its own Chromium, so the same
+binary runs identically on every distro, old or new, with no webview
+dependency at all. On a project that ships Linux as a first-class target,
+that is not a small advantage.
+
+What keeps Tauri ahead is the size and memory difference — Electron's measured
+runtime is **150.7 MB on Windows and 117.2 MB on Linux**, against a Tauri
+install in the single-digit-to-low-double-digit megabytes — and the fact that
+we have already committed to a web renderer for correctness and accessibility
+reasons, which Flutter would forfeit and Electron merely makes expensive.
+
+**Therefore this decision is conditional on the prototype, not settled by
+argument.** See the validation section.
+
 ### What we will not do
 
 - We will not render raw HTML unsanitized, in any shell. See
@@ -206,3 +232,35 @@ If (2) turns out to be true for both webviews, we should switch to Flutter for
 its first-party accessibility semantics and accept the renderer rewrite — a
 viewer that cannot be used with a screen reader fails a hard requirement, and
 no amount of bundle size compensates.
+
+### The prototype
+
+Two days, both platforms, with a fixed acceptance test. Not a spike to explore —
+a spike to measure.
+
+**Build:** a Tauri app that opens a file from a native dialog, parses it with
+`markdown-it`, sanitizes with `DOMPurify`, renders it, resolves one relative
+image, and shows a table of contents.
+
+**Must pass, or the decision is reversed:**
+
+| # | Test | Why it is a gate |
+|---|---|---|
+| 1 | Launches on Ubuntu 22.04 and 24.04 | The Linux webview dependency is the known failure mode |
+| 2 | `webkit2gtk-4.1` install documented and reproducible | Users will hit this; so will our release process |
+| 3 | NVDA reads the rendered document with correct heading structure | Hard accessibility requirement (`R-P3-45`) |
+| 4 | Idle RSS under 200 MB with a 5 MB document open | Published budget (`R-P3-31`) |
+| 5 | Install size under 50 MB | The main reason we prefer Tauri |
+| 6 | Cold start to first render under 700 ms | Published budget (`R-P3-30`) |
+| 7 | Parser performance in WebKitGTK within 1.5× of Chromium | If materially worse, that pushes toward a Rust parser (ADR-0004) |
+
+**Recorded whether it passes or fails.** A prototype that is not documented is
+not evidence.
+
+**If any of 1, 3, or 7 fails**, the recommendation changes:
+
+- 1 fails → Electron. Accept 150 MB, gain identical behaviour on every distro.
+- 3 fails for Tauri and Electron → Flutter. Accept the renderer rewrite; a
+  viewer unusable with a screen reader fails a hard requirement.
+- 7 fails → keep Tauri, add a Rust parser core (see
+  [ADR-0004](0004-markdown-parser-strategy.md#deliberately-rejected)).

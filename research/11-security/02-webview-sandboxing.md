@@ -762,7 +762,7 @@ window.
 Markdown viewer. But it converts an entire solved problem (CSS typography for
 long-form reading, which has twenty years of refinement) into an unsolved one,
 and it does not remove the other eleven threat vectors — path traversal, symlinks,
-TODoU, supply chain, encoding, file permissions all still apply. The DOM-XSS
+TOCTOU, supply chain, encoding, and file permissions all still apply. The DOM-XSS
 advantage is bought by not having a DOM, which is a large price for a *reader*.
 
 **Recommendation: not Flutter for v0.1.** Revisit if the CSS strategy proves to

@@ -64,9 +64,9 @@ and [`research/06-libraries/02-rust-parsers.md`](../../research/06-libraries/02-
 
 ## Decision
 
-**Proposed: `markdown-it` in TypeScript for the renderer, with `DOMPurify` for
-sanitization, plus `ammonia` available on the Rust side if ADR-0003 selects
-Tauri and a Rust parser is later justified.**
+**Proposed: `markdown-it` (≥ 14.2.0, `typographer` off) in TypeScript for the
+renderer, with `DOMPurify` (≥ 3.4.0) for sanitization, plus `ammonia` available
+on the Rust side if ADR-0003 selects Tauri and a Rust parser is later justified.**
 
 Reasoning:
 
@@ -89,7 +89,11 @@ Reasoning:
 ### Deliberately rejected
 
 **`marked` as the default.** Faster, and GFM by default, but its extension model
-is thinner and its history with untrusted input has been less careful. We may
+is thinner and its advisory history is worse: published XSS and ReDoS issues
+including [CVE-2017-1000427](https://nvd.nist.gov/vuln/detail/CVE-2017-1000427),
+[CVE-2017-17461](https://github.com/advisories/GHSA-p9wx-2529-fp83),
+[CVE-2022-21680](https://nvd.nist.gov/vuln/detail/CVE-2022-21680), and
+[CVE-2022-21681](https://nvd.nist.gov/vuln/detail/CVE-2022-21681). We may
 revisit for a performance-critical path; we will not make it the default.
 
 **`micromark`/`remark`/`unified`.** The best standards story and the best
@@ -115,6 +119,35 @@ will contribute to an existing project instead.
 
 **MDX.** Excluded permanently. MDX executes JavaScript from the document. That
 is incompatible with the safety principle in [ADR-0005](0005-security-baseline-xss-sanitization.md).
+
+## Minimum versions (verified 2026-10-06)
+
+Version floors are part of this decision, not an implementation detail. Each of
+these has a published advisory, and each is a reminder that a parser dependency
+is a security dependency.
+
+| Dependency | Floor | Why |
+|---|---|---|
+| `markdown-it` | **≥ 14.2.0** | [CVE-2026-48988](https://nvd.nist.gov/vuln/detail/CVE-2026-48988) — quadratic O(n²) DoS in the smartquotes rule when `typographer: true`. 160 KB of quote characters caused ~21 s of CPU in the published PoC. Also [CVE-2022-21670](https://nvd.nist.gov/vuln/detail/CVE-2022-21670) (ReDoS) and [CVE-2025-7969](https://nvd.nist.gov/vuln/detail/CVE-2025-7969) (XSS in the fence renderer, disputed by the vendor but the bug class is real). |
+| `DOMPurify` | **≥ 3.4.0** | [CVE-2026-41238](https://nvd.nist.gov/vuln/detail/CVE-2026-41238) — prototype-pollution XSS bypass affecting 3.0.1–3.3.3 in the default configuration. Fixed in 3.4.0. Also [CVE-2026-65914](https://nvd.nist.gov/vuln/detail/CVE-2026-65914) (mXSS via re-contextualization, fixed in 3.3.2), [CVE-2026-47423](https://nvd.nist.gov/vuln/detail/CVE-2026-47423) (`<selectedcontent>` re-clone bypass), and [CVE-2026-0540](https://nvd.nist.gov/vuln/detail/CVE-2026-0540). |
+
+**Operational consequences of these findings:**
+
+1. `typographer: true` **MUST** stay off in v1. It is the option that turns
+   CVE-2026-48988 from unreachable into reachable, and its benefit (curly
+   quotes) is cosmetic.
+2. DOMPurify **MUST** be pinned to a floor, not floating, and Dependabot must
+   treat it as a security-critical dependency — see
+   [`11-security/04-dependency-and-supply-chain.md`](../../research/11-security/04-dependency-and-supply-chain.md).
+3. The mXSS class in CVE-2026-65914 is a direct argument for
+   [ADR-0005](0005-security-baseline-xss-sanitization.md): sanitized output must
+   never be re-inserted into a different parsing context. Our single insertion
+   point, into a detached `<div>`, avoids it. That constraint is now explicit in
+   the baseline.
+4. `marked` is disqualified as the default on this evidence alone, independent of
+   its features: it carries a longer chain of published XSS and ReDoS advisories.
+
+Full catalogue: [`research/11-security/04-dependency-and-supply-chain.md`](../../research/11-security/04-dependency-and-supply-chain.md).
 
 ## Consequences
 
