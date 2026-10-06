@@ -212,11 +212,19 @@ the index is warranted. Do not build an index before you have measured a scan.
 
 | Library | Model | Persistence | Fuzzy | Language handling | Notes |
 |---|---|---|---|---|---|
-| **`minisearch`** | In-memory inverted index with BM25-style scoring; docs in JS objects | Export/import to plain objects (`JSON`/`JSONL`); you persist it yourself | Yes — prefix + fuzzy (Levenshtein/dice), field boosting, auto-suggest | Custom tokenizer, easy to plug `Intl.Segmenter` | Zero dependencies; small; runs in Node and browser; works in a Web Worker. **Best default for an in-app folder index.** |
-| **`flexsearch`** 0.8 | Chunked/worker-native indexes, several index types (including a `Map`-based "document" index) | Yes — built-in `WorkerIndex`, `Index`, and export/import | Yes; has an `Encoder` abstraction for charset folding | Custom `Encoder`, `Charset` | Highest raw throughput; the README claims up to 1,000,000× faster "compared to other libraries" — **that is the project's own marketing claim, treat it as unverified**. API has churned across major versions; the 0.8 migration guide is a warning sign. |
-| **`lunr`** (v2 line) | In-memory inverted index, TF-IDF-ish scoring | `lunr.Index.serialize()` / `load()` — a compact text format | Yes — wildcards and edit distance | Per-language built-in pipelines (`lunr.multiLanguage`), 14 languages | Small, stable, boring in the best way. But: unmaintained-ish momentum, and **not worker-aware** — you build the worker. |
-| **`orama`** (`@orama/orama`) | Schema-declared index; full-text, vector, hybrid search; BM25; stemming/tokenization in ~30 languages | Yes (`save`/`load`) | Typo tolerance, exact match, boosting, pinning | Strong — explicit schema, strong multilingual support | Much more than we need. Its vector and hybrid search are aimed at a different product. Overkill for a Markdown folder; interesting if we ever want semantic search. |
-| **SQLite FTS5** | A virtual table inside SQLite; **persistent, transactional, incremental** | Native — it *is* the database | Built-in `porter`, `trigram`, `unicode61` tokenizers; `NEAR`, prefix (`*`), column filters, `bm25()` ranking, `snippet()` and `highlight()` helpers | `unicode61` + `trigram` covers CJK poorly; custom tokenizers are possible | The **only** option on this list that gives durable, incrementally-updated, crash-safe indexes for free, and it is already in every desktop toolchain (Python has it built in, Rust via `rusqlite`, Node via `node:sqlite`). Also the only one that can hold the *file content* alongside the index, enabling result previews without a second read. **Strongest candidate for the workspace scope.** |
+| **`minisearch`** | In-memory inverted index with BM25-style scoring; docs in JS objects | Export/import to plain objects (`JSON`/`JSONL`); you persist it yourself | Yes — prefix + fuzzy (Levenshtein/dice), field boosting, auto-suggest | Custom tokenizer, easy to plug `Intl.Segmenter` | Zero dependencies; small; runs in Node and browser; works in a Web Worker. **Best default for an in-app folder index.** Concurred with by [14-architecture-options §4](../14-architecture-options/05-search-architecture.md) |
+| **`flexsearch`** 0.8 | Chunked/worker-native indexes, several index types (including a `Map`-based "document" index) | Yes — built-in `WorkerIndex`, `Index`, and export/import | Yes; has an `Encoder` abstraction for charset folding | Custom `Encoder`, `Charset` | Highest raw throughput. The README claims up to 1,000,000× faster "compared to other libraries" — **that is the project's own marketing claim, treat it as unverified**. API has churned across major versions; the 0.8 migration guide is a warning sign. Our architecture doc additionally notes a slow release cadence |
+| **`lunr`** | In-memory inverted index, TF-IDF-ish scoring | `lunr.Index.serialize()` / `load()` — a compact text format | Yes — wildcards and edit distance | Per-language pipelines (`lunr.multiLanguage`), 14 languages | Small, stable, boring in the best way. But: unmaintained momentum and **not worker-aware** — you build the worker. [14-architecture-options §4.2](../14-architecture-options/05-search-architecture.md) recommends **avoiding** it |
+| **`orama`** (`@orama/orama`) | Schema-declared index; full-text, vector, hybrid search; BM25; stemming/tokenization in ~30 languages | Yes (`save`/`load`) | Typo tolerance, exact match, boosting, pinning | Strong — explicit schema, strong multilingual support | Much more than we need. Its vector and hybrid search are aimed at a different product, and it has grown into a *product* with a paid cloud tier. Overkill for a Markdown folder |
+| **SQLite FTS5** | A virtual table inside SQLite; **persistent, transactional, incremental** | Native — it *is* the database | Built-in `porter`, `trigram`, `unicode61` tokenizers; `NEAR`, prefix (`*`), column filters, `bm25()` ranking, `snippet()` and `highlight()` helpers | `unicode61` + `trigram` covers CJK poorly; custom tokenizers are possible | The **only** option on this list that gives durable, incrementally-updated, crash-safe indexes for free, and it is already in every desktop toolchain. Also the only one that can hold the *file content* alongside the index, enabling result previews without a second read. **Strongest candidate for the workspace scope** |
+
+> **Authority note.** The engine *decision* is already made in
+> [`14-architecture-options/05-search-architecture.md`](../14-architecture-options/05-search-architecture.md):
+> SQLite FTS5 via `rusqlite` (bundled) on desktop, MiniSearch on web and mobile,
+> with a phased plan and a benchmark gate before tier (c) is justified. This
+> section restates the same conclusion from the UX side and adds the versions
+> and licences verified on 6 Oct 2026. **Where the two disagree, the
+> architecture document wins.**
 
 **Recommendation:**
 
@@ -248,6 +256,12 @@ add the workspace scope with FTS5 later.
 ## 5. Find-in-page
 
 **The honest answer: do not build a custom find-in-page for v1.**
+
+> This conclusion agrees with
+> [`14-architecture-options/05-search-architecture.md` §2](../14-architecture-options/05-search-architecture.md),
+> which has already worked through "what we actually get for free", "Electron's
+> `Ctrl+F` problem", and the bar our own built-in bar must clear anyway. The
+> architecture document owns the mechanism; this section owns the UX.
 
 Every Chromium and WebKit webview ships an excellent native find: it is
 incremental, it highlights, it has a result counter, it scrolls to the match,

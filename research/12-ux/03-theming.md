@@ -8,6 +8,34 @@ Research date: **6 October 2026**.
 
 ---
 
+## 0. Relationship to other documents — read this first
+
+| Document | Scope | Authority |
+|---|---|---|
+| [`05-rendering/03-styling-and-themes.md`](../05-rendering/03-styling-and-themes.md) | The **mechanism**: CSS layer order, reset strategy, token *naming*, syntax-highlighter comparison, print stylesheet mechanics, the CI contrast script | **Mechanism authority.** If the two disagree about how to do it, that document wins |
+| **This document** | The **decision**: light/dark/auto mechanics, theme-as-data schema, the org palette audit, dark-mode counterparts, font pairing, syntax-theme pairing, the curated starter set | **Decision authority** on the palette and the schema shape |
+| `siyana-code/brand` (external repo) | The canonical design tokens for the whole org | Upstream authority on values |
+
+> ⚠️ **Known conflict, deliberately left unresolved here.** `05-rendering/03`
+> proposes token names `--bg`, `--fg`, `--fg-muted`, `--bg-subtle`,
+> `--bg-inset`, `--measure`. This document proposes `--color-bg`,
+> `--color-text`, `--color-text-muted`, `--color-surface`, `--measure`.
+> **They are not the same names and they must be reconciled before any CSS is
+> written.** Reconciling them is an ADR, not a research note, and it belongs in
+> `docs/adr/`. Flagged in
+> [15-open-questions](../15-open-questions/).
+>
+> Also note that `05-rendering/03` uses a **GitHub-like neutral palette**
+> (`#ffffff` / `#1f2328` / `#59636e`) as its worked example, and states
+> "**comments in code are never de-emphasised below body-text contrast**". §8
+> below audits a **different palette** — the org's warm-minimalist one — and
+> finds it *fails* on muted and accent. Both positions are compatible: the rule
+> is right, and the org palette does not currently satisfy it. **That is the
+> finding**, and it is why §8 proposes role-split tokens rather than accepting
+> the palette as-is.
+
+---
+
 ## Table of contents
 
 1. [Light / dark / auto](#1-light--dark--auto)
@@ -416,10 +444,11 @@ can override it without touching our code.
 
 ### The palette under audit
 
-The organisation's warm-minimalist palette (referred to as the org's BRAND.md
-palette; **note:** no `BRAND.md` file currently exists in this repository — the
-values below were supplied in the project brief and are treated as
-authoritative):
+The organisation's warm-minimalist palette, maintained in the separate
+[`siyana-code/brand`](https://github.com/siyana-code/brand) repository
+(referenced from the root `README.md`; **note:** there is no `BRAND.md` file in
+*this* repository, and the values below are treated as authoritative per the
+project brief):
 
 | Token | Hex | Role |
 |---|---|---|
