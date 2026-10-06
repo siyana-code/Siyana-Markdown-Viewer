@@ -22,10 +22,12 @@ Three concrete reasons, in order of how often they will bite us:
 
 1. **Silently different dialects.** A file that came out of MkDocs is not
    "Markdown", it is MkDocs-flavoured Markdown, and it will use `attr_list`
-   (`{ .class }`), `def_list`, `footnotes` and `admonition` (`!!! note`)
+   (`{: .class }`), `def_list`, `footnotes` and `admonition` (`!!! note`)
    syntaxes that our CommonMark+GFM renderer will show as literal text. We
    need to know which tools emit which extensions so we can offer a
-   "compatibility profile" setting instead of a bug report.
+   "compatibility profile" setting instead of a bug report. See
+   [§6b](#6b-tools-that-produce-markdown-we-must-open) for the inventory of
+   tools and their latest verified releases.
 2. **Escaping and re-encoding round trips.** A document exported from Word →
    HTML → Markdown by Pandoc comes out with backslash escapes in places that
    surprise everyone (`\_`, `\#`, hard-coded entities). If we re-save such a
@@ -272,6 +274,37 @@ the WASM alternatives are 1–2 MB with a much smaller extension story. The
 one place WASM is genuinely the right answer is **Oniguruma**, the C regex
 engine that TextMate grammars require — and that is exactly how Shiki ships
 it. See [04-frontend-highlighting](04-frontend-highlighting.md).
+
+---
+
+## 6b. Tools that *produce* Markdown we must open
+
+The libraries above are implementations; these are the applications whose
+output lands in our users' file pickers. Release data from GitHub Releases,
+2026-10-06.
+
+| Tool | Latest release | Released | Emits | What we must handle |
+|---|---|---|---|---|
+| **Pandoc** | **3.12** | **2026-09-29** | Pandoc Markdown: tables, deflists, footnotes, citations, math, metadata blocks, smart quotes, `~` subscripts | Everything in [06-front-matter §1.3](06-front-matter.md#13-pandoc--three-different-things-called-metadata). Also Pandoc's *escaping*: `\_`, `\#`, hard-coded `&nbsp;` after Word imports. |
+| **Obsidian** | — (continuous) | — | `---` YAML front matter, `[[wikilinks]]`, `> [!callout]`, `===` embeds, `$math$` | Wikilinks and callouts. Wikilink *resolution* is a vault problem, not a parser problem — see [§7](#7-cross-ecosystem-dialect-matrix). |
+| **Hugo** | — (rolling, monthly) | — | `---` YAML / `+++` TOML / `{` JSON front matter, shortcodes, goldmark extensions | Front matter (all three formats) and **shortcodes must render as literal text** — they are a template language. |
+| **MkDocs** | **1.6.1** | 2024-08-30 | Python-Markdown + Material for MkDocs: `attr_list`, `def_list`, `admonition` (`!!! note`), `toc`, `pymdownx.*` | The "MkDocs profile": `attrs` + `deflist` + `container`. All three plugins exist for markdown-it. |
+| **Quarto** | **v1.10.18** | 2026-07-24 | Pandoc Markdown + Jupyter notebooks; shortcodes `{{< >}}`, divs `:::`, callouts `> [!NOTE]`, `code-cell` | Pandoc dialect plus fenced divs and callouts. |
+| **Docusaurus** | **v3.10.2** | 2026-07-10 | MDX, admonitions `:::note`, `Tabs`/`TabItem` JSX | **MDX is not Markdown.** MDX embeds JSX. We must render `<Tabs>` as literal text rather than crash, and MDX is a compatibility profile we do not support. |
+| **VitePress** | **v2.0.0-alpha.20** | 2026-09-04 | markdown-it based; custom containers `:::info`, `:::tip`; Vue SFC blocks | markdown-it with `container` — our closest relative. |
+| **Jupyter / nbconvert** | **v7.17.1** | 2026-04-08 | `.ipynb` JSON, not Markdown; converts to Markdown via pandoc | `.ipynb` is JSON. Opening one in a Markdown viewer should produce a clear message, not a parse error. |
+| **Zettlr** | **v4.8.0** | 2026-09-18 | CommonMark + YAML front matter, Zotero citations `@key`, Pandoc-style `[@key]` citations | Citation syntaxes. **We render them as literal text** — resolving them requires a bibliography store we do not have. |
+| **LibreOffice / ONLYOFFICE** | — | — | Export to Markdown via **md4c**'s dialect, and to HTML | See [§4.1](#41-md4c-deserves-attention). LibreOffice's Markdown export is a *very* common source of user files in this category. |
+| **Word / Google Docs → Pandoc** | — | — | Pandoc with `smart` on, entity-heavy, `\` escapes | The single most common source of "why is my file full of backslashes". |
+
+**The pattern.** Every tool in this table that is *actively developed*
+(Pandoc, Quarto, Obsidian, Zettlr, Docusaurus, VitePress) emits **some
+construct beyond CommonMark + GFM**, and the constructs are always the same
+small set: front matter, definition lists, admonitions/callouts, footnotes,
+math, and something tool-specific (shortcodes, wikilinks, citations, JSX).
+**Six plugins cover six of the seven common constructs.** The seventh —
+tool-specific syntax — we render literally, and say so in the UI rather than
+guessing.
 
 ---
 
