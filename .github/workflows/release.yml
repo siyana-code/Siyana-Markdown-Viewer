@@ -154,7 +154,7 @@ jobs:
       - name: Build desktop bundles
         run: pnpm --filter desktop tauri:build ${{ matrix.args }}
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: siyana-markdown-viewer-${{ matrix.platform }}
           path: |
