@@ -741,15 +741,24 @@ not a backslash"* — much looser, and it mis-parses `$5 and $6`.
 
 ## 10. Mermaid and other diagram fences — **EXTENSION**
 
-| Syntax | Renderer | Notes |
-|--------|----------|-------|
-| ` ```mermaid ` + body + ` ``` ` | Mermaid.js | The de-facto standard |
-| ` ```vega-lite ` | Vega-Lite | MarkText |
-| ` ```vega ` | Vega | MarkText |
-| ` ```flowchart ` | flowchart.js | MarkText, Typora diagrams |
-| ` ```sequence ` | js-sequence-diagrams | MarkText |
-| ` ```plantuml ` | PlantUML | MarkText, Typora (C4) |
-| ` ```dot ` / ` ```graphviz ` | Graphviz | Various |
+| Info string | Renderer | Notes |
+|-------------|----------|-------|
+| `mermaid` | Mermaid.js | The de-facto standard |
+| `vega-lite` | Vega-Lite | MarkText |
+| `vega` | Vega | MarkText |
+| `flowchart` | flowchart.js | MarkText, Typora diagrams |
+| `sequence` | js-sequence-diagrams | MarkText |
+| `plantuml` | PlantUML | MarkText, Typora (C4) |
+| `dot` / `graphviz` | Graphviz | Various |
+
+Full syntax, using a **three-backtick fence with an info string**:
+
+````markdown
+```mermaid
+graph TD
+  A --> B
+```
+````
 
 Mermaid configuration inside a fence (Obsidian, Typora):
 
@@ -887,7 +896,7 @@ before shipping.
 | Subscript `H~2~O` | ❌ | ⚠️ *(reads as strike)* | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ➕ `subscript` | ➕ | ✅ | ➕ *(off)* |
 | Emoji `:smile:` | ❌ | ➕ *(not in the spec text)* | ➕ | ➕ | ✅ | ➕ | ➕ `emoji` | ➕ | ✅ | ✅ |
 | `#tag` | ❌ | ❌ *(GitHub issue refs)* | ❌ | ❌ | ⚠️ issue refs | ✅ | ❌ | ❌ | ❌ | ❌ |
-| `#kbd[[Ctrl]]` | ❌ | ✅ *(as an extension)* | ❌ | ➕ | ✅ | ➌ | ➕ | ➕ | ❌ | ✅ |
+| `#kbd[[Ctrl]]` | ❌ | ✅ *(as an extension)* | ❌ | ➕ | ✅ | ❌ | ➕ | ➕ | ❌ | ✅ |
 | Smart typography | ❌ | ❌ | ❌ | ➕ `typographer` | ❌ | ❌ | ➕ `smart` | ❌ | ❌ | ❌ |
 | Hard line breaks everywhere | ❌ | ❌ | ➕ `breaks` | ❌ | ❌ | ➕ toggle | ➕ `hard_line_breaks` | ➕ | ➕ toggle | ➕ `breaks` |
 

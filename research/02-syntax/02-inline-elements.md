@@ -431,7 +431,7 @@ the first 20 of your emphasis regression suite.
 | 355 | `foo*bar*` | `<p>foo<em>bar</em></p>` | **Intraword `*` is allowed** | ✅ match |
 | 356 | `5*6*78` | `<p>5<em>6</em>78</p>` | Intraword, digits | ✅ match |
 | 357 | `_foo bar_` | `<p><em>foo bar</em></p>` | Rule 2(a): left-flanking and not right-flanking (followed by space / preceded by BOL-whitespace) | ✅ match |
-| 358 | `_ foo bar_` | `<p>_ foo bar*</p>`→ actual `<p>_ foo bar_</p>` | Opener followed by whitespace ⇒ fails rule 2 | ✅ match |
+| 358 | `_ foo bar_` | `<p>_ foo bar_</p>` | Opener followed by whitespace ⇒ fails rule 2 | ✅ match |
 | 359 | `a_"foo"_` | `<p>a_&quot;foo&quot;_</p>` | Same as 352 but for `_` | ✅ match |
 | 360 | `foo_bar_` | `<p>foo_bar_</p>` | **Intraword `_` rejected** by rule 2's extra condition | ✅ match |
 | 361 | `5_6_78` | `<p>5_6_78</p>` | Intraword, digits | ✅ match |
@@ -444,9 +444,13 @@ the first 20 of your emphasis regression suite.
 | 368 | `*(*foo)` | `<p>*(*foo)</p>` | Second `*` preceded by `(` (punctuation) and followed by `f` ⇒ not right-flanking | ✅ match |
 | 369 | `*(*foo*)*` | `<p><em>(<em>foo</em>)</em></p>` | The positive counterpart of 368: the inner `*` pair works because rule-of-three allows 1+1=2 (not a multiple of 3) | ✅ match |
 
-> **Row 358 note:** the spec's expected HTML is `<p>_ foo bar_</p>`. The table's
-> `Source` column is the raw JSON from `spec.json`; do not "fix" the stray
-> transcription above — copy from `spec.json` directly.
+> **How the "markdown-it output" column was obtained.** All 20 pairs were read
+> from `https://spec.commonmark.org/0.31.2/spec.json` (see
+> [README §4.1](README.md#41-sha-256-of-the-machine-readable-inputs) for the
+> pinned hash) and re-checked against `markdown-it@15.0.2` preset `commonmark` on
+> 2026-10-06: **20 / 20 identical** at the semantic tier.
+> When you transcribe these into fixtures, take them from `spec.json`, not from
+> this table, so that a transcription slip cannot hide a real failure.
 
 ### 4.9 The delimiter-stack algorithm (Appendix A, "process emphasis")
 
