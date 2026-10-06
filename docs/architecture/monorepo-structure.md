@@ -254,5 +254,5 @@ desktop build matrix.
 
 - [Architecture overview](overview.md)
 - [Rendering pipeline](rendering-pipeline.md)
-- [ADR-0002](../adr-0002-monorepo-with-workspaces.md)
+- [ADR-0002](../adr/0002-monorepo-with-workspaces.md)
 - [`research/14-architecture-options/01-monorepo-strategy.md`](../../research/14-architecture-options/01-monorepo-strategy.md)

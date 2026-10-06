@@ -3,6 +3,16 @@
 > **Standard:** WCAG 2.2, Level AA.
 > **Research date:** 6 October 2026.
 
+> ### Authority note
+>
+> [`11-security/`](../11-security/) owns the sanitizer threat model and the
+> sandboxing story; [`05-rendering/02-sanitization.md`](../05-rendering/02-sanitization.md)
+> owns the allow-list mechanics. **This document owns the conformance
+> requirements, the semantic contract the sanitizer must not break, and the
+> webview accessibility-tree risk.** §2 restates the allow-list only to make the
+> accessibility argument; where the two disagree, `05-rendering/02` wins on
+> mechanics.
+
 ---
 
 ## Table of contents
@@ -12,9 +22,9 @@
 3. [Focus management](#3-focus-management)
 4. [Landmarks and heading hierarchy](#4-landmarks-and-heading-hierarchy)
 5. [Live regions: file watching made audible](#5-live-regions-file-watching-made-audible)
-6. [Reduced motion](#6-reduced-motion-24)
-7. [Target size](#7-target-size-258)
-8. [Reflow at 320 CSS px](#8-reflow-at-320-css-px-1410)
+6. [Reduced motion](#6-reduced-motion)
+7. [Target size](#7-target-size)
+8. [Reflow at 320 CSS px](#8-reflow-at-320-css-px)
 9. [The webview accessibility tree risk](#9-the-webview-accessibility-tree-risk)
 10. [Screen-reader testing protocol](#10-screen-reader-testing-protocol)
 11. [The full conformance checklist](#11-the-full-conformance-checklist)
@@ -645,7 +655,7 @@ A consolidated list, each line testable. Level AA unless noted.
 | A9 | 1.4.3 | Contrast (Minimum) 4.5:1 | Theme CI gate — [03 §8](03-theming.md#8-auditing-our-own-brand-palette) |
 | A10 | 1.4.4 | Resize text to 200% | `rem` everywhere; no `user-scalable=no` |
 | A11 | 1.4.5 | Images of text | Diagrams-as-image allowed (they *are* content); UI chrome must be text, not images |
-| A12 | 1.4.10 | Reflow at 320 CSS px | [§8](#8-reflow-at-320-css-px-1410) |
+| A12 | 1.4.10 | Reflow at 320 CSS px | [§8](#8-reflow-at-320-css-px) |
 | A13 | 1.4.11 | Non-text contrast 3:1 | `--border-strong`, `--focus-ring`, code block boundary, checkbox outline |
 | A14 | 1.4.12 | Text spacing | No `!important` fixed heights on text containers; line-height can be overridden by the user |
 | A15 | 1.4.13 | Content on hover or focus (dismissible, hoverable, persistent) | Footnote popups and link previews must be dismissible with `Esc`, hoverable, and persist |
@@ -707,3 +717,24 @@ A consolidated list, each line testable. Level AA unless noted.
 | 1 | **The webview a11y tree is not exposed** on some platform/shell/AT combination | The app is unusable with a screen reader regardless of our HTML quality | Test early, publish an honest support matrix | [§9](#9-the-webview-accessibility-tree-risk) — **do this before locking the framework** |
 | 2 | **The sanitizer strips semantics** we depend on | Silent loss of headings, tables, footnotes, figure captions, and anchor ids | Semantic-preserving allow-list, CI test that asserts a specific semantics-preserving fixture | [§2](#2-semantic-html-is-the-product) |
 | 3 | **The theme palette fails contrast** (as measured: `muted` 3.39:1, `accent` 4.19:1) | AA failure on captions and links for every user | Role-split tokens + CI gate | [03 §8](03-theming.md#8-auditing-our-own-brand-palette) |
+## Sources
+
+- W3C WAI, "What's New in WCAG 2.2" — "WCAG 2.2 was published as a 'W3C Recommendation' web standard on 5 October 2023"; the nine new criteria; "4.1.1 Parsing is obsolete and removed from WCAG 2.2" — <https://www.w3.org/WAI/standards-guidelines/wcag/new-in-22/>
+- W3C, `WCAG 2.2` (W3C Recommendation) — <https://www.w3.org/TR/WCAG22/>
+- W3C WAI, "Understanding SC 2.5.8: Target Size (Minimum)" — "at least 24 by 24 CSS pixels, except when…", Level AA — <https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html>
+- W3C WAI, "Understanding SC 1.4.10: Reflow" — 320 CSS px and the two-dimensional-layout exception — <https://www.w3.org/WAI/WCAG21/Understanding/reflow.html>
+- W3C, `WCAG2Mobile` — applying WCAG 2.2 to native applications, including 2.5.8 — <https://www.w3.org/TR/wcag2mobile-22/>
+- MDN, `prefers-reduced-motion` — Baseline *Widely available* "since January 2020" — <https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion>
+- WAI-ARIA 1.2, document-content concepts (`doc-noteref`, `doc-endnotes`, `doc-footnote`) — <https://www.w3.org/TR/wai-aria-1.2/#document_concept>
+- WAI-ARIA Authoring Practices Guide — dialog, toolbar, region and disclosure patterns — <https://www.w3.org/WAI/ARIA/apg/>
+- DOMPurify — "a DOM-only, super-fast, uber-tolerant XSS sanitizer for HTML, MathML and SVG", version v3.4.16, licence MPL-2.0 OR Apache-2.0 — <https://github.com/cure53/DOMPurify>
+- Electron, "Accessibility" tutorial — "Electron applications will automatically enable accessibility features in the presence of assistive technology (e.g. JAWS on Windows or VoiceOver on macOS)"; `app.setAccessibilitySupportEnabled(enabled)`; "the user's system assistive utilities have priority over this setting and will override it"; the macOS `AXManualAccessibility` Objective-C and Swift examples — <https://github.com/electron/electron/blob/main/docs/tutorial/accessibility.md>
+- Chromium, "Accessibility" design document (how Chrome detects assistive technology) — <https://www.chromium.org/developers/design-documents/accessibility/>
+- `tauri-apps/wry` — the cross-platform webview library: WebView2 on Windows, WKWebView on macOS, WebKitGTK on Linux — <https://github.com/tauri-apps/wry>
+- Tauri v2, "Webview versions" — "The diverse nature of the Linux ecosystem makes it very hard to compile accurate information about WebKitGTK on the various distros" — <https://v2.tauri.app/reference/webview-versions/>
+- **UNVERIFIED:** the DOM → platform accessibility API mapping (WebView2 → UI Automation, WKWebView → NSAccessibility, WebKitGTK → AT-SPI) is asserted by third-party sources but not stated in Tauri primary documentation. This is exactly the gap §9 spikes, and it is the reason the spike must happen before the framework decision is locked.
+- NVDA User Guide — <https://nvdac.nvaccess.org/user-guide/>
+- axe-core / axe DevTools — <https://github.com/dequelabs/axe-core>
+- Lighthouse accessibility auditing — <https://developer.chrome.com/docs/lighthouse/overview>
+- Pa11y CI — <https://github.com/pa11y/pa11y-ci>
+- Existing internal documents this section defers to: `05-rendering/02-sanitization.md` (allow-list mechanics) and `11-security/` (threat model, sandboxing)

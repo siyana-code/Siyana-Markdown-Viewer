@@ -430,11 +430,11 @@ Output of `commonmark@0.31.2`, verbatim:
 ```mermaid
 flowchart TB
     subgraph costs["COSTS"]
-        C1["Markup > content<br/>~1.7x bytes for HTML"]
-        C2["Markup >> content<br/>~4.9-11.6x bytes for AST"]
+        C1["Markup exceeds content<br/>~1.7x bytes for HTML"]
+        C2["Markup far exceeds content<br/>~4.9 to 11.6x bytes for AST"]
         C3["Not human-reviewable<br/>AST is machine-shaped"]
         C4["Output-only<br/>cannot be re-parsed for meaning"]
-        C5["Escaping artefacts<br/>&amp;amp; &amp;quot; &amp;lt;"]
+        C5["Escaping artefacts<br/>amp, quot and lt entities"]
     end
     subgraph gains["GAINS"]
         G1["Human-reviewable source"]

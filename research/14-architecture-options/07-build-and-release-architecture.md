@@ -89,7 +89,7 @@ graph TB
         U2["upload: ui-dist-<sha>"]
     end
 
-    U_BUILD_DL[/download ui-dist/] -.-> BUNDLE_W
+    U_BUILD_DL["download: ui-dist artifact"] -.-> BUNDLE_W
     U_BUILD_DL -.-> BUNDLE_LX64
     U_BUILD_DL -.-> BUNDLE_LARM
 
@@ -595,12 +595,12 @@ flowchart TB
 
     QUALITY["quality gates: typecheck lint test<br/>boundaries versions<br/>clippy fmt cargo-test<br/>audit · wasm check"] --> UI
 
-    UI["turbo run build (ubuntu)"] --> ART_UI[/ui-dist artifact/]
+    UI["turbo run build (ubuntu)"] --> ART_UI["artifact: ui-dist"]
     ART_UI --> BW & BL & BA
 
-    BW["windows-latest<br/>tauri build --bundles msi,nsis<br/>+ signtool (Azure Trusted Signing)"] --> AW[/artifacts: msi exe nsis sig latest.json/]
-    BL["Ubuntu 22.04 container<br/>tauri build --bundles deb,appimage"] --> AL[/artifacts: deb AppImage sig latest.json/]
-    BA["ubuntu-24.04-arm<br/>tauri build --bundles appimage"] --> AAL[/artifacts: AppImage arm64 sig/]
+    BW["windows-latest<br/>tauri build --bundles msi,nsis<br/>+ signtool (Azure Trusted Signing)"] --> AW["artifacts: msi, exe, nsis, sig, latest.json"]
+    BL["Ubuntu 22.04 container<br/>tauri build --bundles deb,appimage"] --> AL["artifacts: deb, AppImage, sig, latest.json"]
+    BA["ubuntu-24.04-arm<br/>tauri build --bundles appimage"] --> AAL["artifacts: AppImage arm64, sig"]
 
     AW & AL & AAL --> DL["download all"]
     DL --> MERGE["merge latest.json fragments<br/>assert every platform present"]

@@ -729,7 +729,7 @@ function hasLoneSurrogate(s: string): boolean {
 ```
 
 Where it bites, and the mitigation, is in
-[05-rendering/01-ast-to-html.md §2.2](./05-rendering/01-ast-to-html.md#22-dedupe-precisely):
+[05-rendering/01-ast-to-html.md §2.2](../05-rendering/01-ast-to-html.md#22-dedupe-precisely):
 the heading slug is generated with `toLowerCase()` and a regex that only handles
 surrogate pairs present in valid text. A lone surrogate produces an `id` the URL
 parser will percent-encode, so a `#deep-link` will not match. Mitigation: strip

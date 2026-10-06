@@ -233,8 +233,13 @@ Every change to this research tree is logged here. Newest first.
 | 2026-10-06 | Pinned every versioned fact to a retrieval date | all | Prevents "current version" drift |
 | 2026-10-06 | Ran 652-example CommonMark 0.31.2 conformance for commonmark.js, markdown-it, marked; recorded both strict and normalised scores | `02-history-and-evolution.md` | Turns "they all diverge" from folklore into data |
 | 2026-10-06 | Adopted two-level normalisation using the spec's own `normalize.py` | method §4.1 | The spec explicitly says its HTML samples are not all normative; comparing raw strings would over-report |
-| 2026-10-06 | Tagged CommonMark 1.0 status as [UNVERIFIED] rather than "not coming" | `02-history-and-evolution.md` | An open proposal to cut 1.0 exists; it is not a decision |
+| 2026-10-06 | Measured representation cost of one document as Markdown / HTML / editor AST, including single-word-edit diff behaviour | `01-what-is-markdown.md` | Replaces a slogan with numbers |
+| 2026-10-06 | Implemented three naive emphasis parsers and measured their failures against the reference | `03-core-principles.md` | Makes the delimiter-run argument falsifiable rather than folkloric |
+| 2026-10-06 | Verified the front-matter / thematic-break collision and the BOM interaction against the reference implementation | `04-the-viewer-problem.md` | Turns "handle front matter" into a specific cited requirement |
+| 2026-10-06 | Measured `github-slugger@2.0.0` anchor behaviour on duplicate, CJK, punctuation-only and markup-bearing headings | `04-the-viewer-problem.md` | Anchors are unspecified by Markdown; we must pick and document a scheme |
 | 2026-10-06 | Recorded filesystem watcher caveats as documentation-derived, not measured | `04-the-viewer-problem.md` | Honesty about what we did not test |
+| 2026-10-06 | Corrected three dates inherited from the working brief (Markdown 1.0.1 is 2004 not 2009; marked is 2011 not 2012; "CommonMark formation" is three distinct dates) | `02-history-and-evolution.md` | Silently accepting a bad premise is worse than no document |
+| 2026-10-06 | Tagged CommonMark 1.0 status as [UNVERIFIED] rather than "not coming" | `02-history-and-evolution.md` | An open proposal to cut 1.0 exists; it is not a decision |
 | — | *Next:* corpus analysis, `02-syntax`, `03-specifications` | — | — |
 
 ---

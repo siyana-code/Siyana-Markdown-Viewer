@@ -9,7 +9,7 @@
 ## Table of contents
 
 1. [Layers of navigation](#1-layers-of-navigation)
-2. [Heading anchors](#2-heading-anchals)
+2. [Heading anchors](#2-heading-anchors)
 3. [The table of contents](#3-the-table-of-contents)
 4. [Search](#4-search)
 5. [Find-in-page](#5-find-in-page)
@@ -602,3 +602,19 @@ Differences from the TOC, if any:
 | N12 | Reading position persists per document across restarts | P1 |
 | N13 | All panel toggles are reachable by keyboard alone and each toggle target has `aria-expanded` | P0 |
 | N14 | History navigation (`Alt+←`/`Alt+→`) is the webview's, never reimplemented | P0 |
+## Sources
+
+- Electron, `Menu.setApplicationMenu` — "Passing `null` will suppress the default menu. On Windows and Linux, this has the additional effect of removing the menu bar from the window."; "The default menu will be created automatically if the app does not set one. It contains standard items such as File, Edit, View, and Window."; `&File` → generated `Alt-F` accelerator on Windows and Linux — <https://github.com/electron/electron/blob/main/docs/api/menu.md>
+- Electron, `Menus` tutorial — `role` values and their default `label`/`accelerator` per platform; the default menu roles `fileMenu`, `editMenu`, `viewMenu`, `windowMenu` and what each contains — <https://github.com/electron/electron/blob/main/docs/tutorial/menus.md>
+- Electron, `webContents` — `before-input-event`: "Calling `event.preventDefault` will prevent the page `keydown`/`keyup` events and the menu shortcuts."; `setIgnoreMenuShortcuts` for suppressing only the menu shortcuts — <https://github.com/electron/electron/blob/main/docs/api/web-contents.md>
+- Electron, `InputEvent` object (the `modifiers` value space: `shift`, `control`, `ctrl`, `alt`, `meta`, `command`, `cmd`, …) — <https://github.com/electron/electron/blob/main/docs/api/structures/input-event.md>
+- Tauri v2, "Window Menu" — `setAsAppMenu`, `setAsWindowMenu`, `append`/`prepend`/`insert`/`remove`, desktop-only, custom items and multi-level menus — <https://v2.tauri.app/learn/window-menu/>
+- Tauri v2, `@tauri-apps/api/menu` reference — `Menu`, `MenuItem`, `CheckMenuItem`, `IconMenuItem`, `PredefinedMenuItem`, `Submenu` with `setAccelerator`, `setAsHelpMenuForNSApp`, `setAsWindowsMenuForNSApp` — <https://v2.tauri.app/reference/javascript/api/namespacemenu/>
+- GitHub Flavored Markdown, heading anchors and the de-duplication suffix algorithm — <https://github.github.com/gfm/#heading-anchors>
+- `minisearch` — <https://github.com/lucaong/minisearch>
+- `flexsearch` 0.8 — README, `Encoder` abstraction, worker/persistent indexes; the "1,000,000 times faster" figure is the project's own — <https://github.com/nextapps-de/flexsearch>
+- `lunr` — <https://github.com/olivernn/lunr.js>
+- `@orama/orama` — schema-declared index, BM25, stemming in 30 languages, vector and hybrid search — <https://github.com/oramasearch/orama>
+- SQLite FTS5 — `bm25()`, `snippet()`, `highlight()`, `porter`/`unicode61`/`trigram` tokenizers, contentless and external-content tables — <https://www.sqlite.org/fts5.html>
+- WAI-ARIA Authoring Practices Guide — `aria-expanded`, `aria-controls`, dialog focus management — <https://www.w3.org/WAI/ARIA/apg/>
+- Existing internal decisions this document defers to: `14-architecture-options/05-search-architecture.md` §2 (tier (a), find-in-page, and "Electron's Ctrl+F problem") and §4 (tier (c) engine choice)

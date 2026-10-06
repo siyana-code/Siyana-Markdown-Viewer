@@ -133,3 +133,24 @@ version:
 > overhead.**
 
 That is the space. The rest of this folder is the evidence for it.
+## Sources
+
+All verified 6 October 2026 against:
+
+- Obsidian — <https://obsidian.md/> · <https://obsidian.md/pricing> · <https://obsidian.md/sync> · <https://obsidian.md/download> · <https://obsidian.md/plugins> · <https://obsidian.md/license> · <https://obsidian.md/roadmap> · <https://obsidian.md/cli> · <https://obsidian.md/security>
+- Typora — <https://typora.io/> · <https://support.typora.io/License-Agreement/> · <https://support.typora.io/what's-new/>
+- MarkText — <https://github.com/marktext/marktext> · <https://github.com/marktext/marktext/releases/tag/v0.20.0> · <https://marktext.me/docs/introduction> · <https://marktext.me/docs/dev/overview>
+- Logseq — <https://github.com/logseq/logseq> · <https://github.com/logseq/docs/blob/master/db-version.md> · <https://github.com/logseq/docs/blob/master/db-version-changes.md>
+- Zettlr — <https://github.com/Zettlr/Zettlr> · <https://www.zettlr.com/>
+- VS Code Markdown — <https://code.visualstudio.com/docs/languages/markdown> · <https://code.visualstudio.com/api/extension-guides/markdown-extension>
+- GitHub rendering — <https://github.com/github/markup> · <https://github.com/github/html-pipeline> · <https://github.com/github/cmark-gfm>
+- mdBook — <https://github.com/rust-lang/mdBook> · <https://rust-lang.github.io/mdBook/>
+- MkDocs Material — <https://github.com/squidfunk/mkdocs-material> · <https://squidfunk.github.io/mkdocs-material/>
+- Docusaurus — <https://github.com/facebook/docusaurus>
+- VitePress — <https://github.com/vuejs/vitepress>
+- Hugo / Goldmark — <https://gohugo.io/content-management/formats/>
+- Jupyter Book — <https://github.com/jupyter-book/jupyter-book>
+- Markmap — <https://github.com/markmap/markmap> · <https://markmap.js.org/docs>
+- glow — <https://github.com/charmbracelet/glow>
+- mdcat — <https://github.com/swsnr/mdcat> · maintained fork <https://github.com/BIRSAx2/mdcat>
+- Star counts and licence SPDX identifiers: GitHub REST API, unauthenticated, 6 Oct 2026. Some repositories were rate-limited at the time of writing; those cells are marked UNVERIFIED rather than guessed.

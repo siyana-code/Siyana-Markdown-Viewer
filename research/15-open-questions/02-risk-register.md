@@ -126,6 +126,8 @@ adapters packages at once.
 
 ## High
 
+*Ordered by exposure, highest first.*
+
 <a id="r-01"></a>
 ### R-01 · Linux WebView fragmentation blocks the Linux release
 
@@ -463,7 +465,10 @@ can be handed over is a project that survives its maintainer.
 
 ---
 
-## Medium
+## High (continued) and Medium
+
+*High-band entries continue here; the band is shown on each entry because
+likelihood × impact is a crude score and the human read is the real one.*
 
 <a id="r-05"></a>
 ### R-05 · Pathological files hang or crash the app

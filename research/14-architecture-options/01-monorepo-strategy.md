@@ -550,7 +550,8 @@ graph TD
     RWASM --> RCORE
     RIDX --> RCORE
 
-    CORE -. "wasm build (optional, see 02" -. RWASM
+    CORE -.-> RWASM
+    CORE ==>|"wasm build (optional)"| RWASM
 ```
 
 Note the deliberate **absence of arrows between the two graphs**. The TS tree

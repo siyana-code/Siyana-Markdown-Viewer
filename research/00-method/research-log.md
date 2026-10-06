@@ -212,6 +212,30 @@ Appendix A description of the delimiter-stack algorithm with `openers_bottom`.
 **Ran:** `commonmark@0.31.2` on 20 hand-picked pathological inputs, to see the
 actual output rather than trusting our memory of it.
 
+**Also ran: three naive parsers, compared against the reference.** This is the
+experiment that turned "emphasis is hard" into a falsifiable claim. Three
+strategies, 12 inputs, `<p>` wrappers stripped for comparison:
+
+| Strategy | Rule | Errors |
+|----------|------|-------:|
+| Naive A | strong-first regex, non-greedy: `(\*\*\|__)(.+?)\1` then `(\*\|_)(.+?)\1` | 7 / 12 |
+| Naive B | single alternation, `<em>` alternative first: `\*([^*]+)\*\|__([^_]+)__` | 9 / 12 |
+| Naive C | symmetric run-matching, no context (find run, find next run of same char, tag by length) | 11 / 12 |
+
+Four distinct failure modes identified, each with a verified example:
+1. **Delimiter ambiguity** — `*a **b** c*` has two valid readings and Gruber's
+   rule does not choose between them.
+2. **No flanking** — all three emit `<em>foo bar </em>` for `*foo bar *`, which
+   the spec says is literal.
+3. **No Unicode awareness** — all three emphasise `a*"foo"*`, which the spec says
+   is literal.
+4. **No `*`-vs-`_` distinction** — two of three emphasise `foo_bar_baz`, which
+   the spec says is literal.
+
+**Notably Naive A gets the headline case `*a **b** c*` right**, which is exactly
+why it survives in the wild: it looks correct on the common case and fails on
+the awkward ones. That is a finding about testing, not just about parsers.
+
 **Concluded:**
 - The rules exist because the original prose is one sentence long and the
   original implementation was buggy. That is stated by the spec itself.
@@ -339,6 +363,118 @@ documentation-derived. Recorded as such.
 
 ---
 
+## 2026-10-06 — Session 8b: what does a document cost?
+
+### Investigated
+The claim "plain text is cheaper than rich formats" — usually asserted, never
+measured in this conversation.
+
+**Ran:** one document in four representations, `Buffer.byteLength`, Node v24.14.1,
+2026-10-06.
+
+| Representation | Bytes | Lines |
+|---|---:|---:|
+| Markdown source | **194** | 12 |
+| Rendered HTML (commonmark@0.31.2) | **332** | 12 |
+| Editor AST, minified JSON | **943** | 1 |
+| Editor AST, pretty-printed JSON | **2 256** | 122 |
+
+Also ran a **one-word edit** (`immutable` → `append-only`) through all three:
+Markdown changed 1 line; HTML changed 1 line; the minified AST changed on a
+single line — i.e. the *entire* line, which for a minified AST is the entire
+document. Pretty-printed AST diffs shift indentation for every subsequent line.
+
+**Concluded:**
+- Ratio HTML/Markdown ≈ 1.7×; AST/Markdown ≈ 4.9× minified, 11.6× pretty. These
+  are *for this document shape*; a link-heavy document will differ.
+- The diff result is the load-bearing one. It is the mechanical reason version
+  control works with Markdown and does not work with editor ASTs, and it is why
+  rich-text collaboration is built on CRDT/OT rather than on diffs.
+- The HTML figure is *not* a fair "storage" comparison, because HTML loses
+  source-level intent (hard wraps, reference definitions). Storing HTML is
+  strictly worse than storing Markdown, not 1.7× better.
+
+**Open:** Gruber quotes 81 / 176 / 234 characters for the same paragraph in
+reference / inline / raw HTML form. We did **not** re-measure his paragraph. It
+is quoted as his measurement, not ours.
+
+---
+
+## 2026-10-06 — Session 8c: front matter is a parsing bug, not a style bug
+
+### Investigated
+What actually happens to a front-matter-bearing file if the parser does not know
+about front matter.
+
+**Consulted:** Jekyll docs (`---` fenced YAML, must be first thing, BOM warning),
+Hugo docs (competing YAML/TOML/JSON convention).
+
+**Ran** (`commonmark@0.31.2`, no front-matter handling):
+
+| Input | Output |
+|---|---|
+| `---\ntitle: Hello\n---\n\n# Body\n` | `<hr />\n<h2>title: Hello</h2>\n<h1>Body</h1>` |
+| `***\ntitle: Hello\n***\n` | `<hr />\n<p>title: Hello</p>\n<hr />` |
+| `+++\ntitle = "Hello"\n+++\n` | `<p>+++\ntitle = "Hello"\n+++</p>` |
+| `\uFEFF---\ntitle: Hello\n---\n\nBody\n` | `<h2>---\ntitle: Hello</h2>\n<p>Body</p>` |
+
+**Concluded:**
+- The collision is total: `---` is a thematic break and an H2 underline under
+  Setext. A viewer that does not strip front matter renders a horizontal rule
+  and a heading called "title: Hello" at the top of every blog-derived document.
+- **A UTF-8 BOM breaks it worse** — the `---` is absorbed into a heading. Jekyll's
+  own docs warn about BOMs on Windows; this is the concrete reason.
+- Ordering requirement derived: decode (strip BOM) → detect → parse metadata
+  with a real YAML/TOML/JSON parser → render body even if metadata fails.
+- Because we must never write back (Principle 3), the safe implementation keeps
+  the original bytes and a byte offset for the body, not a stripped buffer.
+
+**Open:** which delimiters to support, and what to do when metadata parsing
+fails, are product decisions. Logged as open question.
+
+---
+
+## 2026-10-06 — Session 8d: anchor schemes
+
+### Investigated
+What anchors a viewer should generate, given that Markdown defines none.
+
+**Consulted:** RFC 7763 §3 ("does not define any fragment identifiers"),
+`rehype-sanitize` README ("defaulting to how github.com works"), CommonMark's
+recommendation that only the *plain string content* of an image description be
+used for `alt`.
+
+**Ran:** `github-slugger@2.0.0` (npm) on nine headings.
+
+| Heading text | Slug |
+|---|---|
+| `Hello World` (first / second) | `hello-world` / `hello-world-1` |
+| `C++ & You` | `c--you` |
+| `Ünïcödé Häding` | `uenicoede-haeding` |
+| `100% Done` | `100-done` |
+| `---dash---` | `----dash---` |
+| `a b  c` | `a-b--c` |
+| `<em>x</em>` | `emxem` |
+
+**Concluded:**
+- Duplicate counters make slugs order-dependent: inserting a heading above
+  another breaks inbound `#links`. Inherited problem, not fixable.
+- Slugs are lossy and collide (`a b  c` → `a-b--c`). We must detect and
+  disambiguate collisions ourselves.
+- **Heading text must come from the AST's rendered text content, not the raw
+  source line.** Passing `## <em>x</em>` yields `#-emxem`. This is a concrete,
+  reproducible bug class for any implementation that slugs the source line.
+- markdown-it options were read at runtime for the record: default preset is
+  `{html:false, linkify:false, maxNesting:100}`; `commonmark` preset is
+  `{html:true, xhtmlOut:true, maxNesting:20}`. `maxNesting` is a
+  structural-complexity guard worth knowing about.
+
+**Open:** GitHub's scheme is a *convention*, not a specification. Whether to
+adopt it verbatim, adopt it with collision handling, or define our own is a
+product decision with interop consequences.
+
+---
+
 ## 2026-10-06 — Session 9: bibliography curation
 
 ### Investigated
@@ -374,12 +510,24 @@ Which sources are real, current, and load-bearing enough to cite.
 
 1. **Corpus.** We have a syntax corpus (652 spec examples) and no content corpus.
    Blocked on nothing; just not started. Highest-value next research task.
-2. **CommonMark 1.0.** Watch `talk.commonmark.org` tag `release-1.0`.
+   Specifically we still cannot answer: *how often do real documents diverge
+   across Markdown 1.0.1 / CommonMark 0.31.2 / GFM?* That question gates
+   ADR-0004.
+2. **CommonMark 1.0.** Watch `talk.commonmark.org` tag `release-1.0` and issue
+   #788.
 3. **CJK emphasis.** commonmark-spec#650 may change emphasis semantics in 1.0.
    Our renderer must be able to change this without a rewrite.
-4. **Performance.** Zero data. Must measure before choosing a parser on speed
-   grounds. `10-performance/`.
+4. **Performance.** Zero data, deliberately. Must measure before choosing a
+   parser on speed grounds. `10-performance/`. Also needs a *worst-case
+   pathological input* budget, not just throughput.
 5. **Windows/Linux watcher behaviour in the wild.** Documentation is clear about
-   guarantees and silent about reality. Needs an experiment.
+   guarantees and silent about reality. Needs an experiment on both OSes.
 6. **Whether we target 0.31.2 strictly or 0.31.2 + GFM subset.** This is
    ADR-0004's job; this research phase's job is to make the trade-off legible.
+7. **Competitor audit.** Conclusion C6 ("the parser is ~10% of the work") is
+   unmeasured and it drives the roadmap. Requires code-auditing three real
+   viewers. `13-competitors/`.
+8. **Front matter policy.** Which delimiters, which metadata formats, and what
+   happens on malformed metadata. Needs a decision before implementation.
+9. **Anchor scheme policy.** Adopt GitHub's verbatim, adopt with collision
+   handling, or define our own.

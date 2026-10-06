@@ -95,9 +95,10 @@ timeline
     section Core
         2004-12-17 : Markdown 1.0.1 (BSD) : Markdown.pl frozen
     section Divergence
+        2007-05-09 : Markdown.pl 1.0.2b8 announced, never released
         2009 : GitHub forks (tables, autolinks)
-        2011 : marked ships its own dialect
-        2007-2012 : Markdown Extra, MultiMarkdown, pandoc add constructs
+        2011-07-24 : marked ships its own dialect
+        2012 : Markdown Extra, MultiMarkdown, pandoc add constructs
     section Standardisation attempt
         2012-10-25 : Atwood calls for a spec
         2014-08-14 : commonmark-spec repo
@@ -263,15 +264,17 @@ managed.
 
 ```mermaid
 flowchart LR
-    subgraph A["Spec-first (Markdown.pl, pedantic)"]
-        A1[Author writes 'foo_bar_baz'] --> A2[Parser has an opinion]
-        A2 --> A3[Author sees unexpected output] --> A4[Author blames the tool]
-        A4 --> A5['Tool is "broken"']
+    subgraph A["Spec-first: Markdown.pl, pedantic mode"]
+        A1["Author writes foo_bar_baz"] --> A2["Parser has an opinion"]
+        A2 --> A3["Author sees unexpected output"]
+        A3 --> A4["Author blames the tool"]
+        A4 --> A5["The tool is broken"]
     end
-    subgraph B["User-first (original Gruber's Markdown, GFM, pandoc)"]
-        B1[Author writes 'foo_bar_baz'] --> B2[Parser does nothing]
-        B2 --> B3[Source looks exactly as written] --> B4[Author is happy]
-        B4 --> B5['Spec is "wrong" for being precise']
+    subgraph B["User-first: original Markdown, GFM, pandoc"]
+        B1["Author writes foo_bar_baz"] --> B2["Parser does nothing"]
+        B2 --> B3["Source looks exactly as written"]
+        B3 --> B4["Author is happy"]
+        B4 --> B5["The spec is wrong for being precise"]
     end
 ```
 

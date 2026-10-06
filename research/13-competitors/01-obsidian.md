@@ -561,3 +561,18 @@ have one in the app.
 > **Obsidian is trying to become a knowledge-management platform. We are going
 > to be the best reader in the world, and we are going to be free, MIT, and
 > accessible.** Those are not the same product, and both are needed.
+## Sources
+
+- Overview — <https://obsidian.md/>
+- Pricing — Sync/Publish tiers, Catalyst \$25 one-time, Commercial \$50/user/year, 40% education and nonprofit discount, 7-day refunds on services with Catalyst/Commercial non-refundable — <https://obsidian.md/pricing>
+- Sync — Standard (\$4 annual-billed / \$5 monthly; 1 vault, 1 GB, 5 MB max file, 1 month history) and Plus (\$8 / \$10; 10 vaults, 10 GB, 200 MB max file, 12 month history, upgradable to 100 GB); AES-256 end-to-end encryption; configuration syncing; selective sync; shared vaults — <https://obsidian.md/sync>
+- Download matrix — Windows universal, macOS universal, Linux AppImage (x64), AppImage (aarch64/ARM64), Snap, Deb, community Flatpak; iOS App Store; Android Google Play and APK — <https://obsidian.md/download>
+- License overview — "free for all purposes, including personal, commercial, and non-profit use"; "Your data is saved locally on your device"; "We own and reserve rights to our content, including text, images, and code in the app, which is protected by copyright" — <https://obsidian.md/license>
+- Community plugins and themes — 8,449 plugins and 826 themes; categories Integrations 1,250 / Files 1,171 / AI 1,019 / Sidebar 903 / Editing 898 / Visualization 807 / Automation 729 / Links 692; the `Importer` plugin's supported sources; the March 2026 community directory with automated review — <https://obsidian.md/plugins>
+- Roadmap — Bases support for Publish (Active), Calendar view for Bases (Planned), Canvas support for Publish (Planned), Multiplayer (Planned), PDF annotation (Planned), Obsidian for Work (Active), Obsidian Reader for the Web Clipper (Launched March 2026), Headless client for Sync (Launched March 2026), Sort search results by relevance (Launched October 2026), Airtable import (July 2026), Kanban view for Bases and group reordering (1.14) — <https://obsidian.md/roadmap>
+- CLI — `daily`, `daily:append`, `search`, `create`, `tags counts`, `tasks daily`, `diff`, `files --copy`, `unresolved`, `eval`, `plugin:reload`, `dev:errors`, `dev:css`, `dev:dom`; TUI; `/usr/local/bin/obsidian` symlink requiring administrator privileges; `~/.local/bin` on PATH; "the Obsidian app must be running" — <https://obsidian.md/cli>
+- Security — Cure53 audit of the apps December 2023; Cure53 audit of the apps with attention to the Web viewer plugin December 2024; Cure53 audit of the Sync API/server/cryptography October 2024; Trail of Bits audit of the Sync API/server/cryptography December 2025 — <https://obsidian.md/security>
+- Developer Documentation — plugin API and the Bases-view plugin guide — <https://docs.obsidian.md/>
+- `obsidianmd/obsidian-releases` — community plugin list, theme list, repository topics including `bases`, `jsoncanvas`, `markdown` — <https://github.com/obsidianmd/obsidian-releases>
+- Changelog — desktop v1.14.4 (1 October 2026) and mobile v1.14 (5 October 2026), including the Bases changes and "Search in the File Explorer, Bookmarks, Outline, and Sync views now matches the full path of each item" — <https://obsidian.md/changelog/>
+- **INFERENCE, not verified:** that the application is Electron/Chromium. Supporting evidence: the platform matrix, the DOM-oriented plugin API surface, and the `dev:screenshot` / `dev:css` / `dev:dom` CLI commands. Treated as inference throughout §4.

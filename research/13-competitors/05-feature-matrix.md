@@ -285,3 +285,33 @@ the seven gaps, **it does not ship.**
 >
 > That is the gap. It is not a feature list; it is an absence, and absences are
 > much easier to fill than to compete in.
+## Sources
+
+Every cell derives from the per-product sections of this folder. Primary
+sources, all checked 6 October 2026:
+
+- Obsidian — <https://obsidian.md/> · <https://obsidian.md/pricing> · <https://obsidian.md/sync> · <https://obsidian.md/download> · <https://obsidian.md/plugins> · <https://obsidian.md/roadmap> · <https://obsidian.md/cli>
+- Typora — <https://typora.io/> · <https://support.typora.io/License-Agreement/>
+- MarkText — <https://github.com/marktext/marktext> · <https://github.com/marktext/marktext/releases/tag/v0.20.0>
+- Logseq — <https://github.com/logseq/logseq> · <https://github.com/logseq/docs/blob/master/db-version.md> · <https://github.com/logseq/docs/blob/master/db-version-changes.md>
+- Zettlr — <https://github.com/Zettlr/Zettlr> · <https://www.zettlr.com/>
+- VS Code — <https://code.visualstudio.com/docs/languages/markdown>
+- GitHub — <https://github.com/github/markup> · <https://github.com/github/html-pipeline>
+- mdBook — <https://github.com/rust-lang/mdBook> · <https://rust-lang.github.io/mdBook/>
+- MkDocs Material — <https://squidfunk.github.io/mkdocs-material/>
+- glow — <https://github.com/charmbracelet/glow>
+- Licence identifiers and star counts: GitHub REST API, unauthenticated, 6 October 2026
+
+### Cells to re-verify before relying on them 🔧
+
+| Cell | Why it needs a second look |
+|---|---|
+| glow → Export to HTML ✅ | The glow TUI exports HTML in recent versions, but this was not confirmed against a specific tagged release. Downgrade to ◐ if you cannot confirm |
+| glow → Task lists / Tables / Footnotes ✅ | `glamour` supports these constructs; the shipped default style set was not verified line by line |
+| glow → Math ◐ | Terminal Unicode math is inherently limited; the ◐ is a judgement, not a measurement |
+| Logseq → Export to HTML ◐ | The DB version removed several first-class features; confirm what actually ships in the version a user gets |
+| Obsidian → Export to EPUB ◐ | Reachable only through community plugins, and plugin availability is not a guarantee |
+| MkDocs Material → Insiders price | The sponsorware *model* is verified; the tier *prices* were not reachable at time of writing |
+| Zettlr → Footnotes ◐ | Inferred from "selective support Pandoc markdown" rather than from a documented feature list |
+| Obsidian → Tables ◐ | Obsidian has shipped both a source-mode and a live-preview table editor at various points; the current balance was not verified in detail |
+| mdBook / Jupyter Book → EPUB ◐ | Both are achievable via community printers/converters; neither ships it in the core |

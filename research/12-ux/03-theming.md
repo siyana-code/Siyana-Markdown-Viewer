@@ -638,3 +638,22 @@ Acceptance rules for a bundled theme:
 | T13 | `<figure>`/`<figcaption>` styling applies to real figure elements, not to `<div>`s with a class | P1 |
 | T14 | Seven bundled starter themes, all passing T7 | P2 |
 | T15 | A "system fonts only" setting exists and disables all bundled font loading | P1 |
+## Sources
+
+- MDN, `prefers-color-scheme` — Baseline *Widely available*, "It's been available across browsers since January 2020" — <https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme>
+- MDN, `light-dark()` — Baseline *Newly available*, "Since May 2024"; accepts two `<color>` values or two images, and works with `var()` — <https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark>
+- CSS Color Adjustment Module Level 1, `color-scheme` — <https://www.w3.org/TR/css-color-adjust-1/#color-scheme-prop>
+- MDN, `color-mix()` — <https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/color-mix>
+- MDN, `text-wrap` — Baseline *Widely available* "since March 2024", with uneven support for `balance` and `pretty` — <https://developer.mozilla.org/en-US/docs/Web/CSS/text-wrap>
+- MDN, `forced-colors` — <https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors>
+- Electron, `nativeTheme` module — <https://www.electronjs.org/docs/latest/api/native-theme>
+- Tauri v2, `@tauri-apps/api/window` (which includes `ColorPanel`) and `tauri::window::Window::theme()` — <https://v2.tauri.app/reference/javascript/api/namespacewindow/> . **UNVERIFIED** whether Tauri v2 exposes the *system accent colour* specifically.
+- Monotype, "Licensing" — "A production font is a font that is utilized for a purpose described by a license that you hold for the font", with desktop / web / within-application as distinct uses — <https://support.monotype.com/en/articles/7872341-licensing>
+- Monotype, "Font licenses for Monotype Fonts" — <https://support.monotype.com/en/articles/9956482-font-licensing-monotype-fonts>
+- Shiki — MIT, TextMate-grammar based; branch table showing `v4.x` on `main` with `v3`/`v2`/`v1`/`v0` maintenance branches — <https://github.com/shikijs/shiki>
+- highlight.js — BSD-3-Clause — <https://github.com/highlightjs/highlight.js>
+- KaTeX — MIT — <https://github.com/KaTeX/KaTeX>
+- W3C, SC 1.4.3 Contrast (Minimum) — <https://www.w3.org/TR/WCAG22/#contrast-minimum>
+- W3C, SC 1.4.11 Non-text Contrast — <https://www.w3.org/TR/WCAG22/#non-text-contrast>
+- W3C, the relative-luminance definition from which every ratio in §8 was computed — <https://www.w3.org/TR/WCAG22/#dfn-relative-luminance>
+- `siyana-code/brand` — the org design-token repository referenced from the root `README.md` — <https://github.com/siyana-code/brand>

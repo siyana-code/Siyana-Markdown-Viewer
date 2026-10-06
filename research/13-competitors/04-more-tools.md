@@ -752,3 +752,60 @@ workflow with it.
 | 23 | glow | Detect and adapt to platform capabilities | [03 §2](../12-ux/03-theming.md#2-following-the-os-accent), [09 platform](../09-platform/) |
 | 24 | mdcat | Publish an honest capability matrix, **including the ❌s** | Public docs requirement |
 | 25 | mdcat | A single-maintainer tool can die; **MIT means the reader still works if we stop** | The core argument for our licence |
+## Sources
+
+### GitHub rendering
+
+- `github/markup` README — the five-stage journey: (1) select an underlying library, (2) "The HTML is sanitized, aggressively removing things that could harm you and your kin — such as `script` tags, inline-styles, and `class` or `id` attributes", (3) syntax highlighting via `github/linguist`, (4) "other filters that add special sauce, such as emoji, task lists, named anchors, CDN caching for images, and autolinking", (5) render; plus "only the first step is covered by this gem" and "markup itself does no sanitization"; the markup list mapping `.markdown`/`.md` to the `commonmarker` gem — <https://github.com/github/markup>
+- `github/html-pipeline` README — "a small framework for defining DOM based content filters and applying them to user provided content"; the `MarkdownFilter` → `SyntaxHighlightFilter` composition example and its rendered output; `pygments.rb` for CSS generation — <https://github.com/github/html-pipeline>
+- `github/cmark-gfm` README — "an extended version of the C reference implementation of CommonMark"; parse to AST, manipulate the AST, render to "HTML, groff man, LaTeX, CommonMark, or an XML representation of the AST"; "**Portable.** The library and program are written in standard **C99** and have **no external dependencies**… tested with MSVC, gcc, tcc, and clang"; the `Markdown.pl` benchmark — <https://github.com/github/cmark-gfm>
+- `github/linguist` — the syntax highlighting grammars and language detection — <https://github.com/github/linguist>
+- GitLab's renderer is structurally the same lineage (GFM via `cmark-gfm` plus a sanitisation filter chain) but its internals are not publicly documented in the same way. **UNVERIFIED** for current GitLab internals; GitHub is used as the reference.
+
+### VS Code
+
+- Markdown documentation, page last updated 30 September 2026 — `Shift+Cmd+V` / `Ctrl+Shift+V` preview and `Cmd+K V` / `Ctrl+K V` side-by-side; `markdown.preview.scrollPreviewWithEditor` and `scrollEditorWithPreview`; "The currently selected line in the editor is indicated in the Markdown preview by a light gray bar in the left margin"; "double clicking an element in the Markdown preview will automatically open the editor for the file and scroll to the line nearest the clicked element"; "Markdown: Toggle Preview Locking" with `[Preview]` in the title; **security** — "For security reasons, VS Code restricts the content displayed in the Markdown preview… disabling script execution and only allowing resources to be loaded over https", with Strict (default) / Allow insecure content / Disable levels, an alert popup, and "Markdown: Change preview security settings"; **Mermaid** with Alt-drag pan, scroll zoom, click zoom, hover-or-focus controls, and "Copy Diagram Source"; **math** via KaTeX with `markdown.math.enabled`; `markdown.styles`; smart selection with Shift+Alt+Left/Right; link validation settings; "Find All References" (`Shift+Alt+F12`); Rename Symbol (`F2`) updating headers and all links to them; `markdown.updateLinksOnFileMove.enabled`; workspace header completions; diff previews with `workbench.editorAssociations`; and the FAQ "**Does VS Code support GitHub Flavored Markdown? No, VS Code targets the CommonMark Markdown specification using the markdown-it library.**" — <https://code.visualstudio.com/docs/languages/markdown>
+- Markdown extension guide — "Extensions that contribute markdown-it plugins are activated lazily, when a Markdown preview is shown for the first time"; the `markdown-emoji` example — <https://code.visualstudio.com/api/extension-guides/markdown-extension>
+- `markdown-it` — MIT, "Markdown parser, done right. 100% CommonMark support, extensions, syntax plugins & high speed" — <https://github.com/markdown-it/markdown-it>
+
+### mdBook
+
+- README — "mdBook is a utility to create modern online books from Markdown files."; "All the code in this repository is released under the **Mozilla Public License v2.0**" — <https://github.com/rust-lang/mdBook>
+- User guide (site version 0.5.4) — "a command line tool to create books with Markdown… ideal for creating product or API documentation, tutorials, course materials"; integrated search; syntax highlighting; theme files; preprocessors; backends; MathJax; keyboard map (`←`/`→` chapters, `S` or `/` search, `?` help, `Esc` close); automated testing of Rust code samples — <https://rust-lang.github.io/mdBook/>
+- `SUMMARY.md` structure — part titles, nesting, draft chapters — <https://github.com/rust-lang/mdBook/blob/master/guide/src/SUMMARY.md>
+
+### MkDocs Material
+
+- README — MIT, Python, "Write your documentation in Markdown and create a professional static site for your Open Source or commercial project in minutes – searchable, customizable, more than 60 languages, for all devices." — <https://github.com/squidfunk/mkdocs-material>
+- Extensions catalogue — admonitions, annotations, buttons, code blocks, content tabs, data tables, diagrams, footnotes, formatting, grids, icons, emojis, images, lists, math, tooltips; plus the `optimize` plugin for offline builds and `privacy` — <https://squidfunk.github.io/mkdocs-material/extensions/>
+- Insiders programme — "Material for MkDocs uses the sponsorware release strategy, which means that new features are first exclusively released to sponsors as part of Insiders," via a private repository, with tiered monthly sponsorship. **Exact tier prices UNVERIFIED** — the sponsors page was not reachable at time of writing.
+- MkDocs core — "a fast, simple and downright gorgeous static site generator"; plugins, Markdown extensions, themes, single YAML config — <https://github.com/mkdocs/mkdocs>
+
+### Docusaurus, VitePress, Hugo, Jupyter Book
+
+- Docusaurus README — "a project for building, deploying, and maintaining open source project websites easily"; MIT; Meta-authored; localization via CrowIn; home page, docs, blog and support pages; `docusaurus.new` playground; MDX and docs versioning are documented on the site — <https://github.com/facebook/docusaurus> · <https://docusaurus.io/docs/markdown-features>
+- VitePress README — "a Vue-powered static site generator and a spiritual successor to VuePress, built on top of Vite"; MIT; per-page theming and on-demand routing are documented on the site — <https://github.com/vuejs/vitepress> · <https://vitepress.dev/guide/theming>
+- Hugo content formats — Apache-2.0; "Hugo natively renders Markdown to HTML using Goldmark. Goldmark is fast and conforms to the CommonMark and GitHub Flavored Markdown specifications."; **Attributes** ("Apply HTML attributes such as `class` and `id` to Markdown images and block elements including blockquotes, fenced code blocks, headings, horizontal rules, lists, paragraphs, and tables"); **Extensions** (tables, definition lists, footnotes, task lists, inserted text, mark text, subscripts, superscripts); **Mathematics**; **Render hooks** ("Override the conversion of Markdown to HTML when rendering fenced code blocks, headings, images, and links. For example, render every standalone image as an HTML `figure` element") — <https://gohugo.io/content-management/formats/>
+- Jupyter Book README — "an open-source tool for building publication-quality books and documents from computational material"; BSD-3-Clause; Markdown or notebooks; code cells; "citations, cross-references, and numbered equations"; execute-and-cache producing "a web-based interactive book and a publication-quality PDF"; "Jupyter Book is an official sub-project of Jupyter"; v1 (Sphinx-based) moved to the `v1` branch — <https://github.com/jupyter-book/jupyter-book>
+
+### Importers
+
+- Obsidian community plugin listing for `Importer` — "Convert your data to Markdown files you can use in Obsidian. Works with Apple Notes, OneNote, Evernote, Notion, Google Keep, and many other formats." — <https://obsidian.md/plugins>
+- Obsidian roadmap — "Airtable import — Convert Airtable data to Markdown files and Obsidian Bases" (July 2026) — <https://obsidian.md/roadmap>
+- CommonMark, HTML blocks and HTML comments — the constructs a tolerant reader must preserve or neutralise — <https://spec.commonmark.org/0.31.2/#html-blocks>
+
+### Markmap, mdpdf, glow, mdcat
+
+- Markmap — repository `markmap/markmap`; `LICENSE` = MIT, "Copyright (c) 2020 Gerald"; README: "Visualize your Markdown as mindmaps." and "Basically we use markmap-lib to preprocess Markdown into structured data, then render the data into interactive SVG with markmap-view"; integrations for VS Code, Neovim (`coc-markmap`), Vim (`markmap.vim`), Emacs (`eaf-markmap`) and an MCP server — <https://github.com/markmap/markmap> · <https://markmap.js.org/docs>
+- mdpdf — **a category, not one project**, and several unrelated projects use the name. Verified descriptions: `commonwealth-labs/mdpdf` — "A client-side markdown to PDF converter. No server required… Type or paste markdown on the left, see a live preview on the right, and print to PDF using your browser's native print dialog… Clean PDF output with proper page breaks… Headings stay with their content across page breaks… No server, no build step", with `marked` vendored locally — <https://github.com/commonwealth-labs/mdpdf>. `elliotblackburn/mdpdf` — "A command line markdown to pdf converter with support for page headers, footers, and custom stylesheets… incredibly configurable and has a JavaScript API" — <https://github.com/elliotblackburn/mdpdf>. `Chaostheorie/mdpdf` — "a simple CLI to convert commonmark files to PDF files. It leverages pulldown-cmark, syntect as well as ammonia and wkhtmltopdf… includes syntax highlighting and extensions such as tables, tasklists, strikethrough or footnotes… features support footers" — <https://github.com/Chaostheorie/mdpdf>. **Individual fork licences UNVERIFIED — check each repository before use.**
+- glow — `LICENSE` = MIT, "Copyright (c) 2019-2024 Charmbracelet, Inc"; README: "Render markdown on the CLI, with pizzazz!" and "a terminal based markdown reader designed from the ground up to bring out the beauty—and power—of the CLI"; "Glow will find local markdown files in subdirectories or a local Git repository"; install via Homebrew, MacPorts, pacman, xbps, Nix, FreeBSD, eopkg, **Chocolatey / Scoop / Winget on Windows**, Termux, Snapcraft, and its own APT repository — <https://github.com/charmbracelet/glow>
+- mdcat — MPL-2.0, Rust, 2.4k stars, last push 2026-06-19, repository `archived: true`; README opens: "**This repository is no longer maintained.** You can find a maintained fork at BIRSAx2/mdcat"; the per-terminal support matrix (Basic syntax / Syntax highlighting / Images / Jump marks) for Basic ANSI, Windows 10 console, Termiology, iTerm2, kitty, WezTerm, VSCode and Ghostty; "mdcat requires that the terminal supports strikethrough formatting and inline links… mdcat likely won't work well on old terminals that lack these features (e.g. the Linux text console)"; `syntect` highlighting; OSC 8 hyperlinks; SVG via `resvg`; iTerm2 jump marks — <https://github.com/swsnr/mdcat> · maintained fork <https://github.com/BIRSAx2/mdcat>
+
+### Libraries referenced
+
+- KaTeX — MIT — <https://github.com/KaTeX/KaTeX>
+- Mermaid — MIT, 90.6k stars — <https://github.com/mermaid-js/mermaid>
+- highlight.js — BSD-3-Clause — <https://github.com/highlightjs/highlight.js>
+- Shiki — MIT — <https://github.com/shikijs/shiki>
+- DOMPurify — MPL-2.0 OR Apache-2.0 — <https://github.com/cure53/DOMPurify>
+- `minisearch` — MIT — <https://github.com/lucaong/minisearch>
