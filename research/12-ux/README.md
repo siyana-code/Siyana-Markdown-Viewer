@@ -84,7 +84,7 @@ code font is too small, the heading rhythm is wrong. See
 Every permanently visible panel is subtracted from the reading column. Focus
 mode, a full-width toggle, and collapsible panels are not "nice extras" — they
 are the difference between a tool you tolerate and a tool you keep open.
-See [01 § Reading modes](01-reading-ux.md#1-reading-modes).
+See [01 § Reading modes](01-reading-ux.md#3-reading-modes).
 
 ### Principle 3 — Nothing is mouse-only
 
@@ -117,7 +117,7 @@ See [04](04-accessibility.md).
 | WCAG 2.2 is the current W3C Recommendation (published 5 Oct 2023); WCAG 3 is still a draft | **Verified** — W3C WAI, *What's New in WCAG 2.2* | [04 §1](04-accessibility.md#1-which-standard-and-when-was-it-published) |
 | 2.5.8 Target Size (Minimum) is 24×24 CSS px, Level AA, new in WCAG 2.2 | **Verified** — w3.org/WAI/WCAG22/Understanding/target-size-minimum.html | [04 §7](04-accessibility.md#7-target-size) |
 | `prefers-color-scheme` is Baseline *Widely available* (since Jan 2020) | **Verified** — MDN | [03 §1](03-theming.md#1-light-dark-auto) |
-| `prefers-reduced-motion` is Baseline *Widely available* (since Jan 2020) | **Verified** — MDN | [04 §6](04-accessibility.md#6-reduced-motion-24) |
+| `prefers-reduced-motion` is Baseline *Widely available* (since Jan 2020) | **Verified** — MDN | [04 §6](04-accessibility.md#6-reduced-motion) |
 | `light-dark()` is Baseline *Newly available* (since May 2024) | **Verified** — MDN | [03 §1](03-theming.md#1-light-dark-auto) |
 | Electron enables a11y automatically when AT is detected; `app.setAccessibilitySupportEnabled()` is the manual override | **Verified** — Electron docs, `docs/tutorial/accessibility.md` | [04 §9](04-accessibility.md#9-the-webview-accessibility-tree-risk) |
 | `Menu.setApplicationMenu(null)` suppresses Electron's default menu | **Verified** — Electron `docs/api/menu.md` | [02 §7](02-navigation-and-find.md#7-electron-and-tauri-the-shortcuts-we-have-to-take-back) |

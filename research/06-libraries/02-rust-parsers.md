@@ -160,7 +160,7 @@ source-mapped, and de-facto. Its lack of an extension API is the real cost.
 "A 100% CommonMark-compatible GitHub Flavored Markdown parser and
 formatter". Its README carries hard evidence badges:
 
-```
+```yaml
 CommonMark: 652/652   (pinned to commonmark-spec commit 9103e34)
 GFM:        670/670   (pinned to cmark-gfm test/spec.txt commit 2f13eee)
 ```

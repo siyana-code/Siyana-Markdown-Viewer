@@ -51,7 +51,7 @@ with the canonical demonstration:
 ```markdown
 - `one
 - two`
-```text
+```
 
 → a `<ul>` with two items (`<li>`one`, `<li>two``), **not** a list containing a
 code span. The backtick is inert because the block structure was decided first.
@@ -85,7 +85,7 @@ meaning*:
 === underline        →  an underline looks like an underline
 `code`              →  quote marks around a literal
 [text](url)         →  brackets around a reference, destination in parens
-```text
+```
 
 The design statement `[VERIFIED]`, [Markdown Syntax §Philosophy](https://daringfireball.net/projects/markdown/syntax#philosophy):
 
@@ -127,7 +127,7 @@ better example `[VERIFIED]`, <https://michelf.ca/projects/php-markdown/extra/>:
 
 ## Principle 3 — The source *is* the document
 
-Stated in [`01-what-is-markdown.md` §3.2](./01-what-is-markdown.md#32-publishable-as-is--the-source-is-a-first-class-artefact)
+Stated in [`01-what-is-markdown.md` §3.2](./01-what-is-markdown.md#32-publishable-as-is-the-source-is-a-first-class-artefact)
 and repeated here because it has a precise technical meaning:
 
 > A Markdown file is a *complete and sufficient* representation of the document.
@@ -225,7 +225,7 @@ Two details that matter enormously in practice `[VERIFIED]`:
    _world_.
    </pre>
    </td></tr></table>
-   ```text
+   ```
 
    → the `**Hello**` stays literal (it is inside the type-6 `<table>` block, which
    the blank line terminated), but `_world_.` becomes `<em>world</em>` because
@@ -249,7 +249,7 @@ consequences in [`02-history-and-evolution.md` §4.2](./02-history-and-evolution
 **A blocklist of nine tags is not a security boundary.** It is a compatibility
 convenience. `<img src=x onerror=…>`, `<svg onload=…>`, `<math>`, `<form>`,
 `<object>`, `<embed>` are all still allowed. See
-[`04-the-viewer-problem.md` §7](./04-the-viewer-problem.md#7-trust-boundaries) and
+[`04-the-viewer-problem.md` §7](./04-the-viewer-problem.md#8-trust-boundaries) and
 `11-security/`.
 
 **Extensibility note.** Markdown Extra's answer was `markdown="1"` on the tag —
@@ -264,9 +264,9 @@ is the shape to copy, not a config flag.
 Any ASCII punctuation character may be backslash-escaped `[VERIFIED]`,
 [§6.1](https://spec.commonmark.org/0.31.2/#backslash-escapes):
 
-```
-\!\"\#\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\\\]\^\_\`\{\|\}\~
 ```text
+\!\"\#\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\\\]\^\_\`\{\|\}\~
+```
 
 → `!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~`
 
@@ -408,7 +408,7 @@ spec proves it with the paired example `[VERIFIED]`:
 *foo bar *
 .
 <p>*foo bar *</p>
-```text
+```
 
 ```markdown
 *foo bar
@@ -416,7 +416,7 @@ spec proves it with the paired example `[VERIFIED]`:
 .
 <p>*foo bar
 *</p>
-```text
+```
 
 — "A line ending also counts as whitespace."
 
@@ -446,7 +446,7 @@ length 3, not three runs of length 1. This is the observation naive parsers miss
 **(2) Flanking.** Using Unicode whitespace and Unicode punctuation
 (`P` + `S` general categories):
 
-```
+```text
 left-flanking  := not followed by whitespace
                   and ( not followed by punctuation
                         or ( followed by punctuation and preceded by whitespace/punctuation ) )
@@ -454,7 +454,7 @@ left-flanking  := not followed by whitespace
 right-flanking := not preceded by whitespace
                   and ( not preceded by punctuation
                         or ( preceded by punctuation and followed by whitespace/punctuation ) )
-```text
+```
 
 Line start and line end count as whitespace. Verified instantiations from the
 spec's own examples: `***abc` is left-only; `abc***` is right-only;

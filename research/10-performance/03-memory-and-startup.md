@@ -196,7 +196,7 @@ async function runLeakCycle(cycles = 20) {
   const after = await heapMiB();
   return { baseMiB: base, afterMiB: after, growthPct: ((after - base) / base) * 100 };
 }
-```text
+```
 
 🔴 **Budget: growth ≤ 5%.** 🔴 And the test is only meaningful if the second
 snapshot is taken **after** `HeapProfiler.collectGarbage` — without a forced GC,
@@ -211,7 +211,7 @@ with a Cargo feature"* ([Tauri — Debug](https://v2.tauri.app/develop/debug/)).
 
 ```bash
 npm run tauri build -- --debug     # release-shaped, but with the dev console
-```text
+```
 
 ✅ **VERIFIED** — programmatic control:
 
@@ -225,7 +225,7 @@ tauri::Builder::default()
     }
     Ok(())
   })
-```text
+```
 
 ⚠️ ✅ **VERIFIED** — Tauri's own warning: *"The devtools API is private on
 macOS. Using private APIs on macOS prevents your application from being accepted
@@ -269,7 +269,7 @@ $ tree_rss() { local p=$1; awk '/^Rss:/{r+=$2} /^Pss:/{s+=$2} END{print r, s}' \
 const metrics = app.getAppMetrics();
 const totalMiB = metrics.reduce((a, m) => a + m.memory.workingSetSize / 1024, 0);
 // [electronjs.org/docs/latest/api/app]
-```text
+```
 
 🔴 **But this is exactly the single-process trap in §1**: `getAppMetrics()` returns
 all associated processes, which is *better* than measuring `process.memoryUsage()`,
@@ -286,7 +286,7 @@ flowchart TD
     Q1 -->|"which Rust function?"| MALLOC["heaptrack (Linux) /<br/>WPA (Windows) /<br/>leaks (macOS)"]
     Q1 -->|"is it mapped, not heap?"| VM["VMMap / vmmap"]
     style OS fill:#eef
-```text
+```
 
 🔴 **Order of operations when a user reports "it uses 3 GB":**
 1. Process-tree total (is it real?).
@@ -322,7 +322,7 @@ const anchors         = new Map<string, HTMLElement>();   // 2
 const searchIndex     = new Map<number, number[]>();     // 3
 const pendingHighlights = new Set<HTMLElement>();         // 4
 io.disconnect() // …and the observer's internal list  // 5
-```text
+```
 
 🔧 **The teardown contract**, one function, called on every document close:
 
@@ -372,7 +372,7 @@ codeBlocks.forEach(el => el.addEventListener('click', onCodeClick));
 // 🔴 Removing the node removes the listener only because the listener is
 //    reachable solely from the node. If anything else holds `el`, the listener
 //    lives too. Prefer delegation from a stable ancestor.
-```text
+```
 
 🔴 **Tauri-side leak**, verified as a real API shape:
 
@@ -387,7 +387,7 @@ tauri::async_runtime::spawn(async move {
     unlisten_fs.unlisten().ok();
     unlisten_win.unlisten().ok();
 });
-```text
+```
 
 🔧 **RECOMMENDED**: a `Subscriptions` registry per window/document, with a
 `dispose()` that walks it. Every `listen()` in the codebase goes through it. The
@@ -409,10 +409,10 @@ if (results.length > 1000) results.shift();      // 🔴 shift() is O(n) on arra
 // 3. A keyed cache with no eviction at all.
 const renderedHtml = new Map<number, string>();  // 🔴 keyed by block INDEX:
 //    every reparse of a changed block creates a new entry and orphans the old
-```text
+```
 
 🔧 **Every cache in the codebase is a byte-budgeted LRU**
-([02 §8.2](02-rendering-pipeline-performance.md#82-the-worker-pool)) or a
+([02 §8.2](02-rendering-pipeline-performance.md#83-the-worker-pool)) or a
 `WeakRef`/`WeakMap` where the key is an object we do not own:
 
 ```ts
@@ -441,7 +441,7 @@ consequence of the file watcher:
 ```rust
 // 🔴 Per-path state that is created on first sight and never removed.
 struct WatchRegistry { states: HashMap<PathBuf, DocState> }   // grows forever
-```text
+```
 
 🔧 **Fix**: evict `DocState` when the path is unwatched, and use `HashMap` +
 explicit `retain(|k, _| watched_paths.contains(k))` on a timer, or an LRU keyed by
@@ -535,7 +535,7 @@ page cache. Warm measurement is more reproducible."*
 ```bash
 # 🔧 Linux cold-cache, test machine only.
 sync; echo 3 | sudo tee /proc/sys/vm/drop_caches
-```text
+```
 
 ⚠️ ✅ **VERIFIED** — *"Since this command affects the entire system, use it only
 on a test machine."*
@@ -596,7 +596,7 @@ arriving 80 ms later is invisible.
     });
     Ok(())
 })
-```text
+```
 
 ### Level 2 — dynamic import for everything below the fold
 

@@ -108,7 +108,7 @@ timeline
         2017-03-14 : GFM spec written
         2019-04-06 : GFM 0.29-gfm (freezes at CommonMark 0.29)
         2024-01-28 : CommonMark 0.31.2 (still current in 2026)
-```text
+```
 
 ### 3.2 The three forces
 
@@ -276,7 +276,7 @@ flowchart LR
         B3 --> B4["Author is happy"]
         B4 --> B5["The spec is wrong for being precise"]
     end
-```text
+```
 
 Both are rational. The tension is real and is documented from both sides.
 

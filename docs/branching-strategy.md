@@ -35,7 +35,7 @@ develop    ──●───●───●───●───●───●
               \   /     \     \    \   /
 feature/      \ /       \     \    \ /
 phase/         ●         ●     ●    ●
-```text
+```
 
 ## Branch prefixes
 
@@ -81,7 +81,7 @@ feature/parser-42-markdown-it-adapter
 git checkout develop
 git pull --ff-only
 git checkout -b feature/parser-markdown-it-adapter
-```text
+```
 
 ### 2. Merging a feature
 
@@ -102,7 +102,7 @@ body become the commit message, and they follow
 git checkout develop
 git pull --ff-only
 git checkout -b release/0.3.0
-```text
+```
 
 On `release/*`:
 
@@ -120,7 +120,7 @@ git checkout develop
 git merge --ff-only origin/release/0.3.0
 git branch -d release/0.3.0
 git push origin develop
-```text
+```
 
 `main` receives `--no-ff` on purpose: every release should be visible on the
 `main` timeline as a merge, not lost in a linear blur.
@@ -192,7 +192,7 @@ MAJOR.MINOR.PATCH
   │     │   └── Patch: bug fix only. No user-visible behaviour change.
   │     └────── Minor: new backwards-compatible feature.
   └──────────── Major: breaking change (schema, config, or CLI shape).
-```text
+```
 
 Pre-release identifiers during stabilisation:
 
@@ -218,7 +218,7 @@ must be called out explicitly in `CHANGELOG.md` under `BREAKING`.
 [optional body]
 
 [optional footer: Closes #42, BREAKING CHANGE: ...]
-```text
+```
 
 Allowed types: `feat`, `fix`, `docs`, `research`, `refactor`, `perf`, `test`,
 `build`, `ci`, `chore`, `style`, `revert`, `security`, `release`.
@@ -243,7 +243,7 @@ Conventional Commit. Configure GitHub to default the PR title accordingly.
 v0.3.0                 # release
 v0.3.0-rc.1            # release candidate
 v0.3.0-linux-x86_64    # platform build artifact (attached to the release, not usually a git tag)
-```text
+```
 
 GitHub Releases attach the installers to the `v0.3.0` tag. The auto-update
 manifest that the app consumes is regenerated from the release assets.

@@ -149,11 +149,11 @@ Node v24.14.1, `typescript` language, the snippet above. Times in
 milliseconds; six sequential samples on one highlighter instance.
 
 **Shiki, dual theme (`themes: {light, dark}`):**
-```
+```text
 405.8  7.8  5.9  7.4  6.8  5.7
 ```
 **Shiki, single theme:**
-```
+```text
 230.9  2.8  2.5  1.8  3.1  3.4
 ```
 **`createHighlighter({themes:[2], langs:[1]})` cost: 187.9–340.4 ms** across
@@ -203,7 +203,7 @@ WASM engine is 629 KB unpacked plus a separate `.wasm` fetch.
 
 We checked 68 languages that appear in real Markdown documents:
 
-```
+```text
 SHIKI MISSING: fortran
 ```
 
@@ -258,7 +258,7 @@ friendly alias. `createStarryNight(['typescript'])` — which is what every
 tutorial and the starry-night README's own example at the top of the API
 section might suggest — throws:
 
-```
+```yaml
 TypeError: grammar.extensions is not iterable
 ```
 
@@ -273,7 +273,7 @@ in the README handles this correctly by matching on `names`.
 
 ### 3.3 Measured
 
-```
+```text
 createStarryNight(2 grammars)      79.3 ms
 createStarryNight(ALL 710 grammars) 839 ms
 highlight() first call             310.0 – 557.0 ms
@@ -346,7 +346,7 @@ ecosystem by a wide margin.
 
 ### 4.2 Measured
 
-```
+```text
 first highlight()   33.9 – 62.2 ms
 warm highlight()     0.63 – 0.71 ms
 ```
@@ -359,7 +359,7 @@ TypeScript snippet in **0.65 ms**; Shiki takes 7 ms.
 
 193 languages. Of a 68-language checklist drawn from real technical documents:
 
-```
+```yaml
 MISSING: vue, svelte, terraform, zig, prisma, solidity, racket,
          ocaml-interp, purescript, reason, forth, factor, idris, agda
 ```
@@ -403,7 +403,7 @@ plugin-per-language model, and it means you must enumerate languages at build
 time — the exact thing a viewer cannot do.
 
 Verified:
-```
+```text
 prism base languages: 19
 prism missing of my 68-language checklist: 30
 ```
@@ -518,7 +518,7 @@ just produces an unstyled tree — you don't have to ask first.
 **Our decision: highlight.js for unknown or unlisted languages, Shiki for the
 languages we ship.** A two-tier policy. Concretely:
 
-```
+```text
 lang is in our bundled set (top ~30)?
   ├─ yes → Shiki, JavaScript engine, dual theme. 7 ms warm, 67/68 coverage.
   └─ no  → highlight.js, single bundled build. 0.65 ms warm.
@@ -567,7 +567,7 @@ one Node process with no randomised ordering, not a statistical benchmark.
 `performance.now()` resolution and JIT warm-up are not controlled for beyond
 taking the median of six. **We did not measure in a browser or in the actual
 webview**, and we did not measure with 50,000 blocks. The plan to fix both is
-in [07-evaluation-framework §6](07-evaluation-framework.md#what-we-still-need-to-measure).
+in [07-evaluation-framework §6](07-evaluation-framework.md#66-what-we-still-need-to-measure).
 
 ---
 

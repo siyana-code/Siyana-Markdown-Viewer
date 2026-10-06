@@ -62,28 +62,28 @@ not started) · `accepted` (we decided to live with it, in writing) ·
 
 | ID | Risk | L | I | **Exposure** | Band | Owner | Status |
 |---|---|---|---|---|---|---|---|
-| [R-01](#r-01) | Linux WebView fragmentation blocks the Linux release | 4 | 4 | **16** | High | desktop | open |
-| [R-02](#r-02) | A parser or dependency CVE reaches users | 3 | 5 | **15** | High | security | open |
-| [R-03](#r-03) | Windows SmartScreen suppresses downloads and adoption | 5 | 3 | **15** | High | project-lead | open |
-| [R-04](#r-04) | Scope creep toward an Obsidian clone | 5 | 4 | **20** | **Critical** | project-lead | open |
-| [R-05](#r-05) | Pathological files hang or crash the app | 4 | 3 | **12** | High | core | open |
-| [R-06](#r-06) | Bus factor: the one person who understands the Rust core leaves | 2 | 5 | **10** | High | project-lead | open |
-| [R-07](#r-07) | Licence incompatibility in a dependency | 2 | 4 | **8** | Medium | security | open |
-| [R-08](#r-08) | Other Siyana projects compete for the same time | 4 | 4 | **16** | High | project-lead | open |
-| [R-09](#r-09) | Distribution friction: MSI, Flatpak, Store rejections | 4 | 3 | **12** | High | build | open |
-| [R-10](#r-10) | Community trust: reading untrusted files without demonstrable security maturity | 3 | 5 | **15** | High | security | open |
-| [R-11](#r-11) | `main` never ships — the project never leaves the lab | 4 | 4 | **16** | High | project-lead | open |
-| [R-12](#r-12) | Cross-platform architecture is over-engineered for one maintainer | 4 | 3 | **12** | High | project-lead | open |
-| [R-13](#r-13) | External-edit data loss on desktop | 3 | 5 | **15** | High | desktop | open |
-| [R-14](#r-14) | Accessibility gap discovered late | 3 | 4 | **12** | High | design | open |
-| [R-15](#r-15) | Remote images leak reading habits (privacy claim is false) | 4 | 3 | **12** | High | product | open |
-| [R-16](#r-16) | Mobile permission grants evaporate and we lose users' folders | 5 | 3 | **15** | High | mobile | open |
-| [R-17](#r-17) | CI cache or build-graph rot makes releases unreliable | 3 | 3 | **9** | Medium | build | open |
-| [R-18](#r-18) | Superseded Rust/TS dependencies force a painful upgrade | 4 | 2 | **8** | Medium | build | open |
-| [R-19](#r-19) | Legal/trademark risk on the name or the domain | 2 | 4 | **8** | Medium | project-lead | open |
-| [R-20](#r-20) | Burnout — a solo maintainer hits the wall | 3 | 5 | **15** | High | project-lead | open |
-| [R-21](#r-21) | Search scope creep delays the reader | 3 | 3 | **9** | Medium | core | open |
-| [R-22](#r-22) | The web target is Chromium-only and users feel misled | 3 | 3 | **9** | Medium | web | open |
+| [R-01](#r-01-linux-webview-fragmentation-blocks-the-linux-release) | Linux WebView fragmentation blocks the Linux release | 4 | 4 | **16** | High | desktop | open |
+| [R-02](#r-02-a-parser-or-dependency-cve-reaches-users) | A parser or dependency CVE reaches users | 3 | 5 | **15** | High | security | open |
+| [R-03](#r-03-windows-smartscreen-suppresses-downloads-and-adoption) | Windows SmartScreen suppresses downloads and adoption | 5 | 3 | **15** | High | project-lead | open |
+| [R-04](#r-04-scope-creep-toward-an-obsidian-clone) | Scope creep toward an Obsidian clone | 5 | 4 | **20** | **Critical** | project-lead | open |
+| [R-05](#r-05-pathological-files-hang-or-crash-the-app) | Pathological files hang or crash the app | 4 | 3 | **12** | High | core | open |
+| [R-06](#r-06-bus-factor-the-one-person-who-understands-the-rust-core-leaves) | Bus factor: the one person who understands the Rust core leaves | 2 | 5 | **10** | High | project-lead | open |
+| [R-07](#r-07-licence-incompatibility-in-a-dependency) | Licence incompatibility in a dependency | 2 | 4 | **8** | Medium | security | open |
+| [R-08](#r-08-other-siyana-projects-compete-for-the-same-time) | Other Siyana projects compete for the same time | 4 | 4 | **16** | High | project-lead | open |
+| [R-09](#r-09-distribution-friction-msi-flatpak-and-store-rejections) | Distribution friction: MSI, Flatpak, Store rejections | 4 | 3 | **12** | High | build | open |
+| [R-10](#r-10-community-trust-untrusted-file-reader-without-demonstrable-security-maturity) | Community trust: reading untrusted files without demonstrable security maturity | 3 | 5 | **15** | High | security | open |
+| [R-11](#r-11-main-never-ships-the-project-never-leaves-the-lab) | `main` never ships — the project never leaves the lab | 4 | 4 | **16** | High | project-lead | open |
+| [R-12](#r-12-cross-platform-architecture-over-engineered-for-one-maintainer) | Cross-platform architecture is over-engineered for one maintainer | 4 | 3 | **12** | High | project-lead | open |
+| [R-13](#r-13-external-edit-data-loss-on-desktop) | External-edit data loss on desktop | 3 | 5 | **15** | High | desktop | open |
+| [R-14](#r-14-accessibility-gap-discovered-late) | Accessibility gap discovered late | 3 | 4 | **12** | High | design | open |
+| [R-15](#r-15-remote-images-leak-reading-habits-making-the-privacy-claim-false) | Remote images leak reading habits (privacy claim is false) | 4 | 3 | **12** | High | product | open |
+| [R-16](#r-16-mobile-permission-grants-evaporate-and-users-lose-folders) | Mobile permission grants evaporate and we lose users' folders | 5 | 3 | **15** | High | mobile | open |
+| [R-17](#r-17-ci-cache-or-build-graph-rot-makes-releases-unreliable) | CI cache or build-graph rot makes releases unreliable | 3 | 3 | **9** | Medium | build | open |
+| [R-18](#r-18-superseded-dependencies-force-a-painful-upgrade) | Superseded Rust/TS dependencies force a painful upgrade | 4 | 2 | **8** | Medium | build | open |
+| [R-19](#r-19-legal-or-trademark-risk-on-the-name-or-the-domain) | Legal/trademark risk on the name or the domain | 2 | 4 | **8** | Medium | project-lead | open |
+| [R-20](#r-20-burnout-a-solo-maintainer-hits-the-wall) | Burnout — a solo maintainer hits the wall | 3 | 5 | **15** | High | project-lead | open |
+| [R-21](#r-21-search-scope-creep-delays-the-reader) | Search scope creep delays the reader | 3 | 3 | **9** | Medium | core | open |
+| [R-22](#r-22-the-web-target-is-chromium-only-and-users-feel-misled) | The web target is Chromium-only and users feel misled | 3 | 3 | **9** | Medium | web | open |
 
 ---
 
@@ -105,9 +105,9 @@ only visible from the outside.
 
 **Mitigation.**
 - A written out-of-scope list per phase, decided at Phase 1 kickoff
-  ([Q-52](01-question-register.md#q-52)), published in the README.
+  ([Q-52](01-question-register.md#q-52-what-is-explicitly-out-of-scope-for-phase-1)), published in the README.
 - Every feature request answered with: scope, cost, and what it displaces.
-  Never just "on the roadmap" ([Q-75](01-question-register.md#q-75)).
+  Never just "on the roadmap" ([Q-75](01-question-register.md#q-75-how-do-we-say-no-in-public)).
 - The [question register](01-question-register.md) is the honest backlog: a
   question with options and a deadline can be turned into a "no" that is
   clearly a decision rather than an evasion.
@@ -249,7 +249,7 @@ problem.
 - Dependabot for npm; `cargo update` reviewed weekly.
 - **Fuzz the parser** in CI (doc 02 §10) — the parser is the largest untrusted
   input handler we own.
-- A `SECURITY.md` with a private reporting address ([Q-70](01-question-register.md#q-70)).
+- A `SECURITY.md` with a private reporting address ([Q-70](01-question-register.md#q-70-security-disclosure-process-and-response-sla)).
 - CodeQL weekly for JS/TS.
 
 **Contingency.** A sanitizer escape is a **security incident**: publish an
@@ -280,9 +280,9 @@ loss is not recoverable by shipping faster later.
 - Publish the `SecurityPolicy` as a documented, typed object (doc 06 §3) so users
   and reviewers can see exactly what is allowed.
 - Ship the raw-text fallback and the CSP, and say so in the README.
-- Adopt a vulnerability disclosure process with a real SLA ([Q-70](01-question-register.md#q-70)).
+- Adopt a vulnerability disclosure process with a real SLA ([Q-70](01-question-register.md#q-70-security-disclosure-process-and-response-sla)).
 - **Do not add remote resource loading by default**
-  ([Q-38](01-question-register.md#q-38)) — see R-15.
+  ([Q-38](01-question-register.md#q-38-do-remote-images-load-by-default)) — see R-15.
 - Publish SBOM and SLSA provenance attestations in Phase 2.
 - Be visibly responsive to security reports. Nothing else builds this.
 
@@ -307,13 +307,13 @@ gone somewhere useful.
 
 **Mitigation.**
 - **Time-box Phase 1 to a fixed end date.** A viewer is a bounded project; an
-  editor is not. This is the strongest argument for [Q-06](01-question-register.md#q-06)
+  editor is not. This is the strongest argument for [Q-06](01-question-register.md#q-06-does-v1-support-editing-at-all)
   being "viewer only".
 - Make the shared core genuinely reusable so Siyana-Seed or Siyana-Lang can
   consume it. Reuse is the payoff for the architecture work and it converts
   this project from "a fourth app" to "the shared rendering layer".
 - Integrate the `brand` repo's design tokens so the ecosystem looks like one
-  family ([Q-57](01-question-register.md#q-57)).
+  family ([Q-57](01-question-register.md#q-57-how-do-we-handle-the-siyana-ecosystems-other-apps)).
 - Publish the research. Even if the app stalls, the research is a real
   contribution to the ecosystem and to the Markdown community.
 - Track effort per project in the open, so the trade-off is visible rather than
@@ -447,7 +447,7 @@ ambition is larger than the team by construction.
 - **Time-boxed phases with explicit exit criteria** (R-11). A project with an end
   date can be finished; an open-ended one cannot.
 - Cut the ecosystem expectations early (R-04) so the scope matches the team.
-- Say no publicly and in writing ([Q-75](01-question-register.md#q-75)) — saying
+- Say no publicly and in writing ([Q-75](01-question-register.md#q-75-how-do-we-say-no-in-public)) — saying
   no is a burnout prevention technique.
 - Write the "we are not doing this yet" list into the README so it does not have
   to be re-litigated.
@@ -539,7 +539,7 @@ management, reduced motion) rather than cosmetic.
 
 **Mitigation.**
 - The bar and the budget are decided at Phase 1 kickoff
-  ([Q-55](01-question-register.md#q-55), [Q-56](01-question-register.md#q-56)),
+  ([Q-55](01-question-register.md#q-55-accessibility-bar-wcag-22-aa-floor-or-aaa-target), [Q-56](01-question-register.md#q-56-screen-reader-testing-who-how-how-often)),
   not at v1.0.
 - Structural guarantees in the pipeline: real `<h1>`–`<h6>`, a landmark
   structure, stable ids for heading anchors, `prefers-reduced-motion` respected
@@ -572,7 +572,7 @@ so this is a policy value. `[V]` `connect-src 'self'` in the CSP would block it 
 which means whichever way we decide, the CSP must be updated to match.
 
 **Mitigation.**
-- Decide explicitly ([Q-38](01-question-register.md#q-38)) and make the CSP
+- Decide explicitly ([Q-38](01-question-register.md#q-38-do-remote-images-load-by-default)) and make the CSP
   agree with the decision, not the marketing copy.
 - If remote images load by default, **amend the README** to say exactly what is
   and is not sent. Do not leave a false claim in place.
@@ -674,7 +674,7 @@ Cargo fixes through 2.11.x, so that layer is young.
 
 **Mitigation.**
 - Pin the Rust toolchain exactly so the cache key is stable
-  ([Q-14](01-question-register.md#q-14)).
+  ([Q-14](01-question-register.md#q-14-is-turborepos-cargo-inference-reliable-enough-to-rely-on)).
 - `pnpm install --frozen-lockfile` and `cargo test --locked` everywhere: a
   release that re-resolves dependencies is not reproducible.
 - Never use a cache-bypass flag in CI; model un-cacheable tasks explicitly.
@@ -712,7 +712,7 @@ Artistic 2.0" — a licence change already planned in a crate we are considering
   alternatives (doc 15 Q-07 rejects `marked` on conformance grounds, which also
   reduces lock-in).
 - Dependabot weekly so upgrades are small and frequent rather than big and rare.
-- A dependency review in the monthly process ([Q-71](01-question-register.md#q-71)).
+- A dependency review in the monthly process ([Q-71](01-question-register.md#q-71-dependency-policy-dependabot-review-sla-licence-scanning)).
 - `cargo-deny` / a licence check in CI to catch licence drift early.
 - Accept churn on *our* side (we are the app, not a library) — no API
   compatibility obligation to anyone.
@@ -769,17 +769,17 @@ performed; we are not lawyers and this needs professional input if the project
 ever grows.
 
 **Mitigation.**
-- Do the name and bundle-id decisions once ([Q-59](01-question-register.md#q-59),
-  [Q-60](01-question-register.md#q-60), [Q-58](01-question-register.md#q-58))
+- Do the name and bundle-id decisions once ([Q-59](01-question-register.md#q-59-product-name-siyana-markdown-viewer-or-siyana-markdown),
+  [Q-60](01-question-register.md#q-60-bundle-identifier-and-reverse-dns-namespace), [Q-58](01-question-register.md#q-58-domain-name-and-website-hosting))
   **before** any release, because they are effectively permanent.
 - Check domain availability for the candidate names before committing.
 - Keep the reverse-DNS id under the organisation's control rather than a
-  personal account (R-22 / [Q-78](01-question-register.md#q-78)).
+  personal account (R-22 / [Q-78](01-question-register.md#q-78-who-owns-the-store-and-signing-accounts)).
 
 **Contingency.** A name change before the first release is cheap; after users
 have installed it, it is not.
 
-**Review trigger.** Project-identity ADR ([Q-58](01-question-register.md#q-58)).
+**Review trigger.** Project-identity ADR ([Q-58](01-question-register.md#q-58-domain-name-and-website-hosting)).
 
 ---
 
@@ -823,7 +823,7 @@ OPFS is in the WHATWG spec, so the *sandbox* filesystem is portable even though
 the local-disk picker is not.
 
 **Mitigation.**
-- Decide the web scope explicitly ([Q-21](01-question-register.md#q-21)) before
+- Decide the web scope explicitly ([Q-21](01-question-register.md#q-21-is-a-chromium-only-web-target-acceptable)) before
   Phase 2 starts.
 - Feature-detect, never sniff the user agent (doc 03 §3), so a browser that gains
   the API gets the full experience with no code change.

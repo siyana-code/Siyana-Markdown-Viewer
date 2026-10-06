@@ -64,11 +64,11 @@ So the following is, per spec, not an error — it is a correctly parsed documen
 
 ````markdown
 <script>alert(document.domain)</script>
-````text
+````
 
 ````markdown
 <iframe src="https://evil.example/x.html"></iframe>
-````text
+````
 
 The renderer must emit these bytes unchanged and hand them to the sanitizer,
 which will remove them. **A renderer that silently drops raw HTML is not
@@ -142,7 +142,7 @@ function languageFromInfo(info: string | null): { lang: string | null; dir: 'ltr
   const base = lang.split(/[-_+#.]/)[0].toLowerCase();
   return { lang: lang || null, dir: rtl.has(base) ? 'rtl' : 'ltr' };
 }
-```text
+```
 
 Three rules, all security-relevant:
 
@@ -168,7 +168,7 @@ For a fence with no info string:
 
 ```html
 <pre><code>plain</code></pre>
-```text
+```
 
 For an info string we reject entirely (empty after filtering):
 
@@ -191,7 +191,7 @@ story at the application level.
 ```markdown
 - [x] done
 - [ ] not done
-```text
+```
 
 Required output — this exact shape is what GitHub emits and what our stylesheet
 targets:
@@ -207,7 +207,7 @@ Security notes:
 
 - **`disabled` is mandatory.** Without it, a checked checkbox in a hostile
   document is a one-click script gadget (see DOMPurify's `autofocus` guidance in
-  [02-sanitization.md §5](./02-sanitization.md#5-dom-purifys-threat-model)).
+  [02-sanitization.md §5](./02-sanitization.md#5-dompurifys-threat-model)).
 - **`checked` is the only author-controlled bit** and it is a boolean with only
   two legal serializations. The renderer must never emit `checked="<anything
   from the document>"`.
@@ -228,7 +228,7 @@ GFM pipe tables. Required output shape:
 | Left | Center | Right |
 |:-----|:------:|------:|
 | a    | b      | c     |
-```text
+```
 
 ```html
 <table>
@@ -255,7 +255,7 @@ The alignment question has three defensible answers, and we must pick one:
 .md-align-left   { text-align: left; }
 .md-align-center { text-align: center; }
 .md-align-right  { text-align: right; }
-```yaml
+```
 
 Rationale: `class` is on every allowlist, `style` is on none by default, and a
 class is *ours* — a hostile document cannot use it to mean anything else because
@@ -289,7 +289,7 @@ Text with a note.[^1]
     </li>
   </ol>
 </section>
-```text
+```
 
 Both `id` and `name` matter here. DOMPurify's threat model calls `id` and `name`
 on attacker content a **DOM clobbering** vector — `<img src=x name=getElementById>`
@@ -393,7 +393,7 @@ export function slug(value: string, maintainCase = false): string {
   if (!maintainCase) value = value.toLowerCase();
   return value.replace(regex, '').replace(/ /g, '-');
 }
-```text
+```
 
 And the character-stripping regex is generated, not hand-written. It is the
 union of:
@@ -434,13 +434,13 @@ parser will mangle.
 Note the subtle behaviour in the source: the counter is keyed on
 `originalSlug`, and it is only consulted while the candidate is already taken:
 
-```
+```text
 "intro"        -> occurrences["intro"] = 0        -> id="h-intro"
 "intro"        -> "h-intro" taken; occurrences["intro"]=1; candidate "intro-1"
                   occurrences["intro-1"]=0         -> id="h-intro-1"
 "intro-1"      -> taken; occurrences["intro-1"]=1; candidate "intro-1-1"
                   occurrences["intro-1-1"]=0       -> id="h-intro-1-1"
-```text
+```
 
 The third line is the interesting one: a document containing the literal
 headings `intro`, `intro`, `intro-1` yields ids `intro`, `intro-1`,
@@ -474,9 +474,9 @@ A heading of only punctuation — `# !!!` or `# ---` — slugs to the empty stri
 
 Rule: if the slug is empty after stripping, fall back to a positional id:
 
-```
+```markdown
 `h-${blockIndex}`
-```text
+```
 
 and record that in the TOC entry so navigation still works. Never emit an empty
 `id`, and never emit an `id` beginning with a digit without prefixing (CSS
@@ -546,7 +546,7 @@ the serialize/reparse round trip entirely:
 ```js
 const fragment = DOMPurify.sanitize(dirty, { RETURN_DOM_FRAGMENT: true });
 element.replaceChildren(fragment);   // or element.appendChild(fragment)
-```text
+```
 
 We use that form for the screen path. For the print and export paths we need a
 string, and there we use `DOMPurify.sanitize()`'s string return and insert it
@@ -635,7 +635,7 @@ export function inlineTextOf(nodes: InlineNode[]): string {
   }
   return out;
 }
-```text
+```
 
 Two deliberate choices:
 
@@ -681,7 +681,7 @@ export function tocForOutline(entries: TocEntry[], minLevel = 1, maxLevel = 4): 
   //    they render as an empty row.
   return kept.filter(e => e.text.trim().length > 0);
 }
-```text
+```
 
 Deep-link stability is the reason ids are emitted for **all six levels** even
 though the pane shows four. A user who writes `<h6>` still expects
@@ -767,7 +767,7 @@ argument for each will be "it's just one attribute, and it's really useful."
 The answer is the same each time: **the renderer output is attacker-controlled
 input to the sanitizer, and every tag we add is a permanent expansion of the
 attack surface we have to keep patched forever.** See
-[11-security/01-threat-model.md §11](../11-security/01-threat-model.md#11-what-we-are-not-defending-against)
+[11-security/01-threat-model.md §11](../11-security/01-threat-model.md#9-what-we-are-not-defending-against-in-one-list)
 for the residual-risk accounting.
 
 ---

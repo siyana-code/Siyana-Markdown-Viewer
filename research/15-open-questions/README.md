@@ -38,7 +38,7 @@ date after which it becomes someone else's problem.
 3. **Every question has a decision deadline.** A date, not "when we get to it".
    The deadline is the date by which **not** having decided has a cost — usually
    a milestone. If a deadline passes without a decision, the
-   [slip policy](03-decision-schedule.md#slip-policy) applies: the default
+   [slip policy](03-decision-schedule.md#5-slip-policy) applies: the default
    option wins and the risk register is updated. **A default that is applied
    automatically is strictly better than a decision that is deferred
    indefinitely.**
@@ -61,7 +61,7 @@ PR (docs/pr/00NN-<slug>.md)        ← the evidence and the reasoning
 ADR (docs/adr/00NN-<slug>.md)      ← the decision, status: Accepted / Superseded
    ↓  question entry updated: status: decided, link: ADR path
 roadmap + risk register updated
-```text
+```
 
 The `docs/pr/` step is not bureaucracy. An ADR without attached evidence is a
 decision nobody can audit in six months, and in a small project the reasoning is
@@ -99,11 +99,11 @@ being wrong is expensive and late:
 
 | Q | Question | Why it is the expensive kind |
 |---|----------|-------------------------------|
-| [Q-01](../15-open-questions/01-question-register.md#q-01) | Which Markdown parser | Every output byte depends on it. Swapping a parser is a rewrite of the golden tests, the sanitizer interaction, and the position map. |
-| [Q-02](../15-open-questions/01-question-register.md#q-02) | Which desktop shell | Determines bundle size, WebView fragmentation, the security model, and the auto-updater. Changing it after Phase 1 is a re-platform. |
-| [Q-06](../15-open-questions/01-question-register.md#q-06) | Editing in v1 or not | It roughly doubles the filesystem and session surface (doc 03 §7). Shipping a viewer and calling it a viewer is a coherent product; shipping a half-editor is not. |
-| [Q-08](../15-open-questions/01-question-register.md#q-08) | Raw HTML policy | A security posture, a UX promise, and a compatibility decision, all in one. Getting it wrong in either direction has a real cost. |
-| [Q-13](../15-open-questions/01-question-register.md#q-13) | The name | Baked into bundle ids, the reverse-DNS identifier, the URL, the store listings, and every future import. Effectively permanent. |
+| [Q-01](../15-open-questions/01-question-register.md#q-01-which-markdown-parser-is-the-core-parser) | Which Markdown parser | Every output byte depends on it. Swapping a parser is a rewrite of the golden tests, the sanitizer interaction, and the position map. |
+| [Q-02](../15-open-questions/01-question-register.md#q-02-which-desktop-shell-tauri-electron-flutter-wails-native) | Which desktop shell | Determines bundle size, WebView fragmentation, the security model, and the auto-updater. Changing it after Phase 1 is a re-platform. |
+| [Q-06](../15-open-questions/01-question-register.md#q-06-does-v1-support-editing-at-all) | Editing in v1 or not | It roughly doubles the filesystem and session surface (doc 03 §7). Shipping a viewer and calling it a viewer is a coherent product; shipping a half-editor is not. |
+| [Q-08](../15-open-questions/01-question-register.md#q-08-do-we-support-wikilinks-target-and-embed) | Raw HTML policy | A security posture, a UX promise, and a compatibility decision, all in one. Getting it wrong in either direction has a real cost. |
+| [Q-13](../15-open-questions/01-question-register.md#q-13-what-is-the-maxfilebytes-truncation-threshold) | The name | Baked into bundle ids, the reverse-DNS identifier, the URL, the store listings, and every future import. Effectively permanent. |
 
 ## Current tally
 

@@ -36,7 +36,7 @@ philosophy.** `@codemirror/state` + `@codemirror/view` is 105,800 B gzipped
 (16,441 + 79,345, measured). `monaco-editor`'s shipped `min/vs` directory is
 **24,583 KB of JavaScript across 137 files**, of which `editor.main.js` alone
 is 2,735 KB. We could not find a credible published benchmark comparing their
-keystroke latency; we measured what we could (see [01 §5](01-editor-engines.md#5-what-we-actually-measured))
+keystroke latency; we measured what we could (see [01 §5](01-editor-engines.md#8-what-we-actually-measured))
 and are explicit about the rest.
 
 **2. CodeMirror's Markdown support comes with a real parser we can reuse.**
@@ -46,7 +46,7 @@ reuse everything before that position. We verified the mechanism works and
 measured it — cold parse 10–14 ms, incremental reparse **1.05–1.64 ms** on
 the same document, a **~9× reduction**. That is not a micro-optimisation; it is
 the difference between live preview being usable and being a slideshow. Full
-detail and the caveats are in [03 §3](03-incremental-parsing.md#3-lezer-incremental-parsing-verified).
+detail and the caveats are in [03 §3](03-incremental-parsing.md#43-lezer-incremental-parsing-verified).
 
 **3. The editing model choice is a UX decision, not a technical one.** All
 three models are technically achievable today. Which one we ship determines

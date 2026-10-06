@@ -38,7 +38,7 @@ Research date: **6 October 2026**.
 
 ## Table of contents
 
-1. [Light / dark / auto](#1-light--dark--auto)
+1. [Light / dark / auto](#1-light-dark-auto)
 2. [Following the OS accent](#2-following-the-os-accent)
 3. [Theme switching without a flash](#3-theme-switching-without-a-flash)
 4. [Themes as data, not code](#4-themes-as-data-not-code)
@@ -88,7 +88,7 @@ query. It needs one palette expressed as pairs:
   --accent-hover:light-dark(#4A3B30, #E6D2BC);
   --border:      light-dark(#D8D2CA, #3A3531);
 }
-```text
+```
 
 `color-scheme: light dark` also gets the *rest* of the platform for free: the
 form control rendering, the scrollbar, the default canvas, and — critically —
@@ -255,7 +255,7 @@ Why this matters, concretely:
     }
   }
 }
-```text
+```
 
 ### Rules for the schema
 
@@ -298,7 +298,7 @@ Why this matters, concretely:
   --lh-body: 1.7;
   --space-unit: 0.5rem;
 }
-```text
+```
 
 Every stylesheet rule in the app references **only** these variables. No rule
 may hardcode a hex colour. That single rule is what makes theming a data
@@ -323,7 +323,7 @@ Dark mode breaks images in three specific ways. Each needs its own answer.
 | `figure` / `figcaption` | Use real `<figure>` and `<figcaption>`. A caption in a `<p>` with a class is not a caption to a screen reader |
 | Caption styling | `--fs-caption`, `--color-text-muted`, centred, `margin-block-start: .5rem` |
 | Figure alignment | Left by default, `text-align: center` on the figure and `margin-inline: auto` on the image. Centring images in a long measure is a classic readability mistake — but a *figure* is an object, and centring objects is conventional |
-| `figure` full-bleed | Offer `figure.full-bleed { width: 100vw; margin-inline: calc(50% - 50vw) }` guarded by `overflow-x: clip` on an ancestor. Full-bleed images and code blocks are the one place a reader wants the full width — see [01 §3](01-reading-ux.md#1-reading-modes) |
+| `figure` full-bleed | Offer `figure.full-bleed { width: 100vw; margin-inline: calc(50% - 50vw) }` guarded by `overflow-x: clip` on an ancestor. Full-bleed images and code blocks are the one place a reader wants the full width — see [01 §3](01-reading-ux.md#3-reading-modes) |
 | Print | Figures never break across a page; captions stay with their figure (`break-inside: avoid` on the `figure`, not just the image) |
 
 ---
@@ -469,7 +469,7 @@ c_lin = c/12.92                if c <= 0.03928
 c_lin = ((c+0.055)/1.055)^2.4  otherwise
 L     = 0.2126*R_lin + 0.7152*G_lin + 0.0722*B_lin
 ratio = (L_lighter + 0.05) / (L_darker + 0.05)
-```yaml
+```
 
 Thresholds: **1.4.3 Contrast (Minimum), Level AA = 4.5:1** for normal text;
 **1.4.11 Non-text Contrast, Level AA = 3:1** for boundaries and graphics

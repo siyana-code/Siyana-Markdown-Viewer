@@ -252,7 +252,7 @@ obsidian files sort=modified limit=5 --copy
 obsidian unresolved                                # unresolved links
 obsidian eval "app.vault.getFiles().length"        # execute JS
 obsidian plugin:reload my-plugin
-```text
+```
 
 Their own framing: "Command your vault. Anything you can do in Obsidian you can
 do from the command line" and "Obsidian CLI is a programmatic playground for
@@ -486,7 +486,7 @@ rewrite.
 | L1 | **Local files first.** The user owns plain files in a folder. No container, no import, no lock-in | Folder model in [14-architecture-options](../14-architecture-options/); "Open a file or a folder" as the only concept in the UI |
 | L2 | **The plugin boundary is the product's leverage.** A narrow, stable, documented API beats a feature checklist | Design the core API surface and a permission model *before* the features. See [14]((../14-architecture-options/)) |
 | L3 | **Links are cheap; backlinks are derived.** Never make the user maintain a link graph by hand | Backlinks panel in [02 §9](../12-ux/02-navigation-and-find.md#9-backlinks), built from the same parse pass as search |
-| L4 | **Forgiving link resolution.** Fuzzy, case-insensitive, path-tolerant. Never a 404 | Anchor handling in [02 §2](../12-ux/02-navigation-and-find.md#2-heading-anchals) |
+| L4 | **Forgiving link resolution.** Fuzzy, case-insensitive, path-tolerant. Never a 404 | Anchor handling in [02 §2](../12-ux/02-navigation-and-find.md#2-heading-anchors) |
 | L5 | **One index, many features.** The parse pass that enables search also enables backlinks | `packages/core` produces one AST per document; both features consume it |
 | L6 | **Anything a user creates is a file they own.** Canvas is JSON in the vault, not a DB row | General rule for us, including themes ([03 §4](../12-ux/03-theming.md#4-themes-as-data-not-code)) and settings |
 | L7 | **Security posture is a feature.** Independent audits, published reports | [11 security](../11-security/) should include a threat model and, eventually, an audit |

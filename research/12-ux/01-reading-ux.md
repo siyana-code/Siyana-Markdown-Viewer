@@ -256,7 +256,7 @@ Implementation notes:
   chrome state exactly on exit. Losing your sidebar widths on exit is the
   classic bug.
 - The `Full width` mode must not remove the gutter entirely — a minimum of
-  `1.5rem` of page margin is required for [reflow](04-accessibility.md#8-reflow-at-320-css-px-1410) and for comfortable reading at the window edges.
+  `1.5rem` of page margin is required for [reflow](04-accessibility.md#8-reflow-at-320-css-px) and for comfortable reading at the window edges.
 - **Paged mode is a deliberate differentiator.** Continuous scroll is a
   web-page habit; paged reading is a *book* habit. Almost no Markdown viewer
   offers it and it is the single most book-like thing we could ship. It is also
@@ -425,7 +425,7 @@ Implementation:
   white-space: pre-wrap;
   overflow-wrap: anywhere;   /* break unbroken tokens like long URLs */
 }
-```text
+```
 
 Two implementation rules that are easy to get wrong:
 

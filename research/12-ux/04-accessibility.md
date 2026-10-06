@@ -78,7 +78,7 @@ Concretely, for our audience:
   the document must be semantic. Not "nice for them"; the product.
 - **Motor impairment** — every action keyboard-reachable; a drag-only reorder is
   a *blocked* feature, not a degraded one. (This is exactly why
-  [02 §3.3](02-navigation-and-find.md#33-drag-to-reorder--and-why-it-is-a-mistake-in-a-viewer)
+  [02 §3.3](02-navigation-and-find.md#33-drag-to-reorder-and-why-it-is-a-mistake-in-a-viewer)
   recommends against drag-only interactions.)
 - **Cognitive** — reduced motion, no auto-advancing anything, a focus mode that
   genuinely removes distraction, and a reading position that survives a crash.
@@ -108,7 +108,7 @@ A correct Markdown renderer emits:
   <figure><img src="…" alt="…"><figcaption>Figure 1 — …</figcaption></figure>
   <pre><code class="language-rust">…</code></pre>
 </article>
-```text
+```
 
 A screen reader, a search engine, a print stylesheet, a browser's find-in-page,
 and every assistive technology built since 1998 all understand that. **If our
@@ -216,7 +216,7 @@ we comply with the MPL file-level requirements for any files we modify).
   </article>
   <aside id="backlinks" aria-label="Backlinks"> … </aside>
 </main>
-```text
+```
 
 ```css
 .skip-link {
@@ -227,7 +227,7 @@ we comply with the MPL file-level requirements for any files we modify).
   z-index: 100;
 }
 .skip-link:focus-visible { transform: none; }
-```text
+```
 
 Two more skip links are justified: "Skip to table of contents" and "Skip to
 search", for readers who mostly use navigation.
@@ -366,7 +366,7 @@ objects can be vestibular triggers."
     scroll-behavior: auto !important;
   }
 }
-```text
+```
 
 The blanket rule above is the community-standard snippet. It is *not* enough
 on its own: JS-driven motion (smooth scrolling, inertia, drag physics) is not
@@ -703,7 +703,7 @@ A consolidated list, each line testable. Level AA unless noted.
   setting, and make "on" opt-in for users who did not previously have those
   bindings.
 - **A34 (2.5.7 Dragging Movements)** — this is the standards reason behind
-  [02 §3.3](02-navigation-and-find.md#33-drag-to-reorder--and-why-it-is-a-mistake-in-a-viewer).
+  [02 §3.3](02-navigation-and-find.md#33-drag-to-reorder-and-why-it-is-a-mistake-in-a-viewer).
   Even if we shipped drag-to-reorder, it would need a keyboard equivalent. The
   argument for not shipping it at all in a read-only viewer is now backed by a
   success criterion rather than taste.

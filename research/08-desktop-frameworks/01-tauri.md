@@ -41,7 +41,7 @@ tauri                       ← the facade; owns IPC, ACL, config, asset embeddi
 ├── tauri-build             ← build.rs codegen + JSON schema generation
 ├── tauri-codegen           ← embeds & compresses assets + icons at compile time
 └── tauri-plugin            ← the plugin trait everything official is built on
-```text
+```
 
 Two **upstream** crates are maintained by the Tauri org and are useful
 standalone:
@@ -137,7 +137,7 @@ permissions = [
   "fs:scope-home",
   "fs:allow-mkdir",
 ]
-```text
+```
 
 An official plugin ships granular, individually-grantable permissions. From
 the File System plugin's generated `read-files.toml`:
@@ -153,7 +153,7 @@ commands.allow = [
   "read_file", "read", "open",
   "read_text_file", "read_text_file_lines", "read_text_file_lines_next"
 ]
-```text
+```
 
 Identifier namespacing is enforced at compile time — `<plugin>:default`,
 `<plugin>:<command-name>`, max length 116 chars because of how the Rust
@@ -179,7 +179,7 @@ Identifier namespacing is enforced at compile time — `<plugin>:default`,
     "core:window:allow-set-title"
   ]
 }
-```text
+```
 
 Capabilities are **platform-scoped**, which matters for a multi-platform app:
 
@@ -251,12 +251,12 @@ async fn parse_document(path: String, window: tauri::WebviewWindow) -> Result<Do
     let _ = window.set_title(&format!("{} — Siyana", meta.title));
     Ok(meta)
 }
-```text
+```
 
 ```ts
 import { invoke } from '@tauri-apps/api/core';
 const meta = await invoke<DocMeta>('parse_document', { path: '/home/u/notes/a.md' });
-```text
+```
 
 As of 2.11.0 you can `#[tauri::command(rename = "...")]` to decouple the Rust
 function name from the IPC command name (#14473) — small but useful for keeping
@@ -288,7 +288,7 @@ fn open_file(app: AppHandle, path: std::path::PathBuf) {
         _ => false,
     }).unwrap();
 }
-```text
+```
 
 ### Channels — `Channel<T>` for streaming
 
@@ -326,7 +326,7 @@ import { invoke, Channel } from '@tauri-apps/api/core';
 const onEvent = new Channel<ParseEvent>();
 onEvent.onmessage = (m) => { /* m.event === 'started' | 'progress' | ... */ };
 await invoke('parse_streaming', { path, onEvent });
-```text
+```
 
 **For a Markdown viewer this is the single most useful Tauri feature.** Rendering
 a 100 MB file means streaming block-by-block from Rust into the DOM. `Channel<T>`
@@ -432,7 +432,7 @@ Enable it and scope it (`app.security.assetProtocol`):
     }
   }
 }
-```text
+```
 
 Then convert a path in the frontend:
 
@@ -441,7 +441,7 @@ import { convertFileSrc } from '@tauri-apps/api/core';
 // /home/u/Documents/notes/img/a.png
 // -> asset://localhost/%2Fhome%2Fu%2F...%2Fa.png  (or https:// if useHttpsScheme)
 img.src = convertFileSrc(absPath);
-```text
+```
 
 **Four sharp edges** the docs are unusually honest about
 ([asset-protocol docs](https://v2.tauri.app/security/asset-protocol/), last
@@ -544,7 +544,7 @@ Static JSON (works on GitHub Releases / S3 / a gist; `tauri-action` generates it
     "darwin-aarch64":  { "signature": "…", "url": "https://…" }
   }
 }
-```text
+```
 
 Keys are `OS-ARCH` where OS ∈ {`linux`, `darwin`, `windows`} and ARCH ∈ {`x86_64`,
 `aarch64`, `i686`, `armv7`}. `signature` must be the **contents** of the `.sig`
@@ -560,7 +560,7 @@ Dynamic server returns `204 No Content` for "no update", or `200` with
 
 ```jsonc
 { "plugins": { "updater": { "windows": { "installMode": "passive" } } } }
-```text
+```
 
 | Mode | Behaviour |
 |------|-----------|
@@ -598,7 +598,7 @@ Splitting build from bundle:
 npm run tauri build -- --no-bundle        # just compile
 npm run tauri bundle -- --bundles app,dmg # bundle outside the App Store
 npm run tauri bundle -- --bundles app --config src-tauri/tauri.appstore.conf.json
-```text
+```
 
 Windows VC runtime: 2.12.0 added `bundle.windows.bundleVCRuntime` to copy the
 VC++ redistributable DLLs into MSI/NSIS installers, locating them via
@@ -705,7 +705,7 @@ lto = true
 opt-level = "s"     # prioritise size; use "3" for speed
 panic = "abort"     # no unwinding tables
 strip = true
-```text
+```
 
 For a **viewer**, `opt-level = "s"` is likely wrong — we want parsing and
 layout fast. Use `opt-level = 3` with `lto = "thin"` and measure. **This is an
@@ -731,7 +731,7 @@ sudo apt install libwebkit2gtk-4.1-dev \
   libssl-dev \
   libayatana-appindicator3-dev \
   librsvg2-dev
-```yaml
+```
 
 Arch: `webkit2gtk-4.1 webkit2gtk-4.1-soup2 ... libappindicator-gtk3 librsvg`
 Fedora: `webkit2gtk4.1-devel ... libappindicator-gtk3-devel librsvg2-devel`
@@ -844,7 +844,7 @@ npm run tauri build
 # Electron: sum the asar + the extracted electron dist
 npx electron-builder --linux dir      # unpacked, no installer
 du -sh dist/linux-unpacked/            # honest baseline before compression
-```text
+```
 
 **Memory — on a fixed test document, fixed machine:**
 ```bash

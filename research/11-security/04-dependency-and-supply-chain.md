@@ -68,7 +68,7 @@ in the ecosystem.
     "sanitize-html": "2.17.0"
   }
 }
-```text
+```
 
 ```yaml
 # .npmrc — belt and braces
@@ -77,12 +77,12 @@ engine-strict=true
 ignore-scripts=false          # we review scripts, we do not disable them
 audit=true
 fund=false
-```text
+```
 
 ```yaml
 # .yarnrc.yml (if Yarn is used)
 enableImmutableInstalls: true     # CI errors if the lockfile would change
-```text
+```
 
 ```toml
 # src-tauri/Cargo.toml
@@ -110,7 +110,7 @@ the lockfile would need to change.
     git diff --exit-code package-lock.json pnpm-lock.yaml || {
       echo "::error::The lockfile changed. Commit it or use --frozen-lockfile."; exit 1; }
     cargo build --locked --manifest-path src-tauri/Cargo.toml
-```text
+```
 
 And for the packaged artifact, assert the resolved versions are what we expect:
 
@@ -131,7 +131,7 @@ for (const [name, want] of Object.entries(CRITICAL)) {
                     'This change requires a security review of the release notes.');
   }
 }
-```text
+```
 
 This is a deliberately annoying check. It is annoying in the same way a compiler
 error is annoying: it converts a decision that would otherwise be implicit and
@@ -150,7 +150,7 @@ install. What we must ensure is that nobody disables that.
   "integrity": "sha512-<base64>",      // ← this is the security-relevant field
   "engines": { "node": ">=18" }
 }
-```bash
+```
 
 Cargo does the analogous thing with `Cargo.lock`'s `checksum` field, verified
 against crates.io's index. Both are opt-*out*, not opt-*in*, which means we
@@ -177,7 +177,7 @@ and `sharp` all use. Our position:
 ```bash
 # Enumerate install scripts in the tree so the list is reviewable, not implicit.
 npm ls --all --json | jq -r 'to_entries[] | select(.value.hasInstallScript == true) | .key'
-```text
+```
 
 For Cargo, `build.rs` is the equivalent. `cargo deny` can enforce a licence
 policy and flag unusual sources; `cargo-audit` checks advisories:
@@ -186,7 +186,7 @@ policy and flag unusual sources; `cargo-audit` checks advisories:
 cargo install cargo-deny cargo-audit
 cargo deny check advisories bans licenses sources
 cargo audit
-```text
+```
 
 ## 4. Automated update management
 
@@ -235,7 +235,7 @@ We use **both, non-overlappingly**, which is a supported pattern:
   ],
   "lockFileMaintenance": { "enabled": true, "automerge": false }
 }
-```text
+```
 
 ### 4.2 What a sanitizer or parser update PR must contain
 
@@ -268,7 +268,7 @@ that turns into a bypass six months later.
 ```bash
 npm run test:fixtures -- --update-snapshots   # regenerate
 git diff packages/test-fixtures/__snapshots__   # a human reads this diff
-```text
+```
 
 ## 5. Signed updates and verification
 
@@ -286,7 +286,7 @@ Tauri requires a signature for updates and it cannot be disabled:
 pnpm tauri signer generate -w ~/.tauri/siyana.key -p ""
 # Produces the key pair; the PUBLIC key goes in tauri.conf.json,
 # the PRIVATE key is a release-only secret.
-```text
+```
 
 ```jsonc
 // src-tauri/tauri.conf.json
@@ -300,7 +300,7 @@ pnpm tauri signer generate -w ~/.tauri/siyana.key -p ""
     }
   }
 }
-```text
+```
 
 **The private key is the highest-value secret in the project.** Losing it means
 we can never publish an update to existing installs — a self-inflicted
@@ -349,7 +349,7 @@ autoUpdater.autoInstallOnAppQuit = true;
 autoUpdater.on('update-available', i => promptUser(i));
 autoUpdater.on('update-downloaded', (i) => promptInstall(i));
 autoUpdater.on('error', e => showSafeError(e)); // never surface raw paths/URLs
-```text
+```
 
 `autoDownload = false` matters. An app that silently downloads and installs
 updates is an app where a compromised CDN or a network attacker gets code
@@ -400,7 +400,7 @@ tar xzf dompurify-3.4.16.tgz
 # Diff the allow-lists against the previous version we shipped. A NEW tag or
 # attribute in a patch release is a security event, not a routine update.
 git diff --word-diff v3.4.10/tags.ts v3.4.16/tags.ts
-```text
+```
 
 Note the framework of the project itself: `src/tags.ts` has `svgDisallowed` and
 `mathMlDisallowed` lists, and the arrays are `freeze()`d at module load "to
@@ -474,7 +474,7 @@ fuzz_target!(|data: &[u8]| {
     // Invariant: sanitize is idempotent.
     assert_eq!(siyana_core::sanitize(&clean), clean);
 });
-```text
+```
 
 The **idempotence property** is the useful one: `sanitize(sanitize(x)) ==
 sanitize(x)`. A single sanitization pass that can be un-done by a second one is a
@@ -504,7 +504,7 @@ Concretely, for `marked` the published mitigations were "avoid running untrusted
 markdown through marked or run marked on a worker thread and set a reasonable time
 limit" — which tells us the mitigation is **architectural** (a worker with a
 timeout), not a config flag. That is why
-[01-threat-model.md §5.8](./01-threat-model.md#58-vector-redos--algorithmic-complexity-dos)
+[01-threat-model.md §5.8](./01-threat-model.md#58-vector-redos-algorithmic-complexity-dos)
 makes the worker boundary mandatory rather than optional.
 
 ## 8. Monitoring for parser and sanitizer CVEs
@@ -552,7 +552,7 @@ Additional channels, because Dependabot is not sufficient on its own:
 npm audit --audit-level=high || exit 1
 cargo audit || exit 1
 osv-scanner --lockfile=package-lock.json --lockfile=src-tauri/Cargo.lock || exit 1
-```text
+```
 
 The SLA is the part that matters. An advisory without a commitment to a response
 time is a wish.
@@ -579,7 +579,7 @@ available answer to "was this build compromised?".
 [toolchain]
 channel = "1.90.0"
 components = ["rustfmt", "clippy", "llvm-tools-preview"]
-```text
+```
 
 Because full byte-reproducibility for an Electron app is unlikely, the Electron
 path substitutes **verifiability**: publish the SBOM, publish checksums, and
@@ -602,7 +602,7 @@ Generate one per release, in a standard format, and publish it.
     npx @cyclonedx/cyclonedx-validate --input-file sbom.cyclonedx.json
 - uses: actions/upload-artifact@v4
   with: { name: sbom, path: sbom.cyclonedx.json }
-```text
+```
 
 Attach `sbom.cyclonedx.json` to the GitHub release and include its SHA-256 in the
 signed release manifest. Then, when the next CVE lands, this is a one-line query
@@ -632,7 +632,7 @@ lockfiles.
 ```yaml
 - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2, pinned by SHA
 - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0, pinned by SHA
-```text
+```
 
 Tag-pinned actions are a supply-chain dependency like any other, and a
 compromised action runs with the repository's secrets.
@@ -652,7 +652,7 @@ jobs:
       id-token: none
     steps:
       - run: [ build, sign ]      # secret only read inside this environment
-```text
+```
 
 ## 12. Build-time vs runtime dependency split
 
@@ -678,7 +678,7 @@ true rather than aspirational.
 # CI gate on runtime dependency count, because growth is the risk.
 cargo tree --manifest-path src-tauri/Cargo.toml --edges normal \
   | wc -l | awk '$1 > 120 { print "runtime crate count grew to " $1; exit 1 }'
-```text
+```
 
 Electron's equivalent problem is that a large `dependencies` block means a large
 Node main-process surface, which is exactly the code an XSS reaches if

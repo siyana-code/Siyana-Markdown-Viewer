@@ -105,7 +105,7 @@ within a screen and is unusable after a table.
 **The fix is a position index, and we already have the data.** From
 [03-incremental-parsing.md](03-incremental-parsing.md):
 
-```
+```text
 source line 8-12  →  <pre><code class="language-js">   (rendered height 84px)
 source line 4-8   →  <table>                            (rendered height 132px)
 ```
@@ -275,7 +275,7 @@ Other problems:
 
 ProseMirror or Tiptap, a schema for every construct, plus an editor that
 falls back to source mode for unknown constructs. Per
-[01-editor-engines.md](01-editor-engines.md#32-why-it-is-the-wrong-model-for-us--and-this-is-the-crux),
+[01-editor-engines.md](01-editor-engines.md#32-why-it-is-the-wrong-model-for-us-and-this-is-the-crux),
 that is a second editor engine, because our chosen engine (CodeMirror) cannot
 host it.
 
@@ -324,7 +324,7 @@ question is not "which model" but "which models, and which is default".
 **Ship (b) live preview as the default editing mode. Ship (a) raw source
 always, as the toggle and as the fallback. Do not ship (c).**
 
-```
+```text
 Reading mode            : rendered, full width
 Editing mode            : live preview, source left, rendered right
     Tab / Escape        : toggle to source-only (a)
@@ -344,7 +344,7 @@ Unknown / broken syntax: preview shows it literally; file is untouched
    not change. (c) does, and every bug in (c) is data loss.
 3. **One engine.** (c) means ProseMirror or Tiptap *in addition to*
    CodeMirror, because CodeMirror cannot host a schema — a fact we established
-   in [01](01-editor-engines.md#32-why-it-is-the-wrong-model-for-us--and-this-is-the-crux).
+   in [01](01-editor-engines.md#32-why-it-is-the-wrong-model-for-us-and-this-is-the-crux).
    Two editor engines is one too many for a first release.
 4. **(b) teaches Markdown.** A user in live preview sees the rendered output
    *and* the markup that produced it, side by side, updating together. That

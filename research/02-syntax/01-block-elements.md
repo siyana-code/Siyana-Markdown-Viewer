@@ -329,7 +329,7 @@ an empty list item, it should be interpreted this way and not as a setext headin
 underline."* Combined with GFM's CommonMark 0.26 rule that **empty list items
 cannot interrupt a paragraph**, this removes the `foo\n-` ambiguity that CM 0.26
 also removed. We follow CommonMark 0.31.2 and note the historical difference in
-the fixture set. → [04 §3](04-edge-cases-and-traps.md#3-list-vs-setext-vs-thematic-break)
+the fixture set. → [04 §3](04-edge-cases-and-traps.md#3-list-vs-setext-vs-thematic-break-ambiguity)
 
 ---
 
@@ -511,7 +511,7 @@ be indented. CommonMark instead:
 Gruber's one real advantage: blank lines are allowed inside HTML blocks.
 CommonMark trades that away because balancing tags *"is expensive and can
 require backtracking from the end of the document"*, and because blank-line
-separation gives a trivial way to interleave Markdown and HTML. → [01 §11](#11-paragraphs-and-blank-lines-cm-48-49-examples-219227)
+separation gives a trivial way to interleave Markdown and HTML. → [01 §11](#11-paragraphs-and-blank-lines-cm-4849-examples-219227)
 
 ---
 

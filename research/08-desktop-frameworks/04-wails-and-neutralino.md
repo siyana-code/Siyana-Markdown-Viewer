@@ -23,7 +23,7 @@ Go (main, compiled static binary)
   → binds Go methods to the frontend
   → WKWebView / WebView2 / WebKitGTK
 Frontend: HTML/CSS/JS (any framework), talks to Go via generated bindings
-```text
+```
 
 The binding model is the pleasant part: you write ordinary Go methods on a
 struct, and Wails generates the JS. `//go:embed` embeds your frontend build into
@@ -51,7 +51,7 @@ func main() {
         OnStartup: func(ctx context.Context) { app.ctx = ctx },
     })
 }
-```text
+```
 
 ### Platform support
 
@@ -187,7 +187,7 @@ your static files.
   "globalVariables": { "MY_CONST": "value" },
   "extensions": { "claude": { "commands": ["getSum"] } }
 }
-```text
+```
 
 ### The honest problems
 
@@ -290,7 +290,7 @@ context, and `window.require` is available to the page.
     "frame": true
   }
 }
-```text
+```
 
 **Why it is not credible for a Markdown viewer:**
 

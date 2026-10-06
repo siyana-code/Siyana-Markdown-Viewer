@@ -326,7 +326,7 @@ same unsafe output, so `html: true` is not a security posture, it is a
 
 **The catch for us:** to use `rehype-sanitize` we must already be in the
 unified ecosystem, which per
-[01-js-parsers §3.5](01-js-parsers.md#35-the-performance-problem--measured)
+[01-js-parsers §3.5](01-js-parsers.md#35-the-performance-problem-measured)
 costs 10.8× markdown-it's parse time. **Unless we sanitise at the string
 level.** And there is a string-level option in the same family worth
 knowing: `rehype-raw` + `hast-util-sanitize` needs a hast tree, but
@@ -549,7 +549,7 @@ industry consensus, which we adopt:
 
 Our architecture, in order of layers:
 
-```
+```markdown
 1. Parser does not emit raw HTML at all
    (markdown-it html:false — the default, and we keep it)
 2. Every URL that reaches an href/src passes through an allowlist

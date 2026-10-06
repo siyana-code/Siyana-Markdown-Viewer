@@ -251,7 +251,7 @@ the local-quality option exists.
 
 ## 6. Rust WASM builds
 
-Covered in detail in [02-rust-parsers §7](02-rust-parsers.md#7-the-ffi--wasm-question).
+Covered in detail in [02-rust-parsers §7](02-rust-parsers.md#7-the-ffi-wasm-question).
 Summary of the verified gap:
 
 | Wanted | crates.io status |
@@ -285,7 +285,7 @@ output lands in our users' file pickers. Release data from GitHub Releases,
 
 | Tool | Latest release | Released | Emits | What we must handle |
 |---|---|---|---|---|
-| **Pandoc** | **3.12** | **2026-09-29** | Pandoc Markdown: tables, deflists, footnotes, citations, math, metadata blocks, smart quotes, `~` subscripts | Everything in [06-front-matter §1.3](06-front-matter.md#13-pandoc--three-different-things-called-metadata). Also Pandoc's *escaping*: `\_`, `\#`, hard-coded `&nbsp;` after Word imports. |
+| **Pandoc** | **3.12** | **2026-09-29** | Pandoc Markdown: tables, deflists, footnotes, citations, math, metadata blocks, smart quotes, `~` subscripts | Everything in [06-front-matter §1.3](06-front-matter.md#13-pandoc-three-different-things-called-metadata). Also Pandoc's *escaping*: `\_`, `\#`, hard-coded `&nbsp;` after Word imports. |
 | **Obsidian** | — (continuous) | — | `---` YAML front matter, `[[wikilinks]]`, `> [!callout]`, `===` embeds, `$math$` | Wikilinks and callouts. Wikilink *resolution* is a vault problem, not a parser problem — see [§7](#7-cross-ecosystem-dialect-matrix). |
 | **Hugo** | — (rolling, monthly) | — | `---` YAML / `+++` TOML / `{` JSON front matter, shortcodes, goldmark extensions | Front matter (all three formats) and **shortcodes must render as literal text** — they are a template language. |
 | **MkDocs** | **1.6.1** | 2024-08-30 | Python-Markdown + Material for MkDocs: `attr_list`, `def_list`, `admonition` (`!!! note`), `toc`, `pymdownx.*` | The "MkDocs profile": `attrs` + `deflist` + `container`. All three plugins exist for markdown-it. |

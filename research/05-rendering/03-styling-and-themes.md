@@ -16,7 +16,7 @@ because it is what lets a theme be **data** instead of **code**.
 <link rel="stylesheet" href="/css/content.css" />
 <link rel="stylesheet" href="/css/components.css" />
 <link rel="stylesheet" href="/css/print.css" media="print" />
-```text
+```
 
 | Layer | Job | Ships to the user? |
 |-------|-----|--------------------|
@@ -80,7 +80,7 @@ a { color: inherit; }                  /* link colour comes from a token */
     scroll-behavior: auto !important;
   }
 }
-```text
+```
 
 The `:where()` selector is deliberate: zero specificity. Our component and
 content rules then win without `!important`, and a user stylesheet can still win
@@ -179,7 +179,7 @@ JavaScript, no theme-specific CSS file, no `if (theme === 'dark')` anywhere.
 }
 
 :root[data-theme="dark"] { /* same dark overrides, unconditional */ }
-```text
+```
 
 ### 3.1 The auto/light/dark triple
 
@@ -215,7 +215,7 @@ apply(localStorage.getItem(KEY) ?? 'auto');
 mql.addEventListener('change', () => {
   if (!document.documentElement.hasAttribute('data-theme')) apply('auto');
 });
-```text
+```
 
 `data-theme-resolved` exists so that syntax-highlighting code and inline SVG
 icons can react to the *effective* theme without re-implementing the cascade.
@@ -244,7 +244,7 @@ white-flash-on-dark-startup problem.
     "--syn-comment": "#565f89"
   }
 }
-```text
+```
 
 ```ts
 export function applyTheme(t: Theme) {
@@ -256,7 +256,7 @@ export function applyTheme(t: Theme) {
   s.setProperty('--syntax-theme', t.mode);
   document.documentElement.setAttribute('data-theme', t.mode);
 }
-```text
+```
 
 Two rules that matter: only custom properties (so a theme file can never inject
 a selector), and only from the token allowlist (so a theme file can never set
@@ -309,7 +309,7 @@ script). Two caveats we must handle:
 
 ```css
 :lang(zh), :lang(ja), :lang(ko) { --measure: 40em; }   /* em, not ch: CJK is full-width */
-```text
+```
 
 Using `em` for CJK is the correct unit: one CJK glyph is one em wide, so `40em`
 is literally 40 characters.
@@ -324,7 +324,7 @@ is literally 40 characters.
 .markdown-body h1, h2, h3, h4, h5, h6 {
   line-height: var(--leading-tight);
 }
-```text
+```
 
 1.65 for body prose is at the upper end of the comfortable band (1.5–1.7) and
 is what long-form reading guidelines converge on. Headings at 1.25 because
@@ -335,7 +335,7 @@ User-adjustable, clamped so a misconfiguration cannot produce unreadable output:
 ```ts
 fontSize:  clamp(14, stored ?? 17, 24)      // px
 lineHeight: clamp(1.3, stored ?? 1.65, 2.2) // unitless
-```text
+```
 
 `line-height: 1.65` is unitless on purpose. A unitless line-height inherits into
 children as a multiplier; a `px` line-height does not, which produces
@@ -379,7 +379,7 @@ wrap can differ per platform. We do not fight this.
     "kern"   1,   /* kerning */
     "liga"   0;   /* (last wins — see below) */
 }
-```text
+```
 
 Careful, and worth writing down because the naive rule is wrong:
 **ligatures on, except inside code.** In prose, `fi` as a ligature is a
@@ -394,13 +394,13 @@ code with `font-variant-ligatures: none` for this reason.
   font-variant-ligatures: none;
   font-variant-numeric: tabular-nums;     /* so 0/O and 1/l are distinguishable */
 }
-```text
+```
 
 For prose numerals that should align in tables:
 
 ```css
 .markdown-body table { font-variant-numeric: tabular-nums lining-nums; }
-```text
+```
 
 Old-style figures are a nice touch and a real hazard in code. Where a document
 uses numerals for data, `onum` is pleasant:
@@ -420,7 +420,7 @@ numbers looks lovely and in a table of IDs looks like a bug.
   -webkit-hyphens: auto;
   hyphenate-limit-chars: 6 3 3;   /* min word 6, min before 3, min after 3 */
 }
-```text
+```
 
 `hyphens: auto` needs a `lang` attribute to work — the browser uses the
 language to load the right hyphenation dictionary, and with no `lang` most
@@ -436,7 +436,7 @@ Never hyphenate in these places regardless:
   hyphens: manual;
   -webkit-hyphens: manual;
 }
-```text
+```
 
 ### 4.6 Text wrapping
 
@@ -448,7 +448,7 @@ Never hyphenate in these places regardless:
 .markdown-body h1, .markdown-body h2, .markdown-body h3 {
   text-wrap: balance;         /* headings are ≤3 lines; balancing is free quality */
 }
-```text
+```
 
 `text-wrap: pretty` is Chromium's last-line-orphan avoidance: it will pull a word
 down to avoid a single-word last line. `balance` distributes lines evenly and
@@ -484,7 +484,7 @@ headings use whole multiples; lists and quotes use a fraction.
 
 .markdown-body blockquote { margin-inline: 0; padding-inline-start: var(--space-s); }
 .markdown-body pre { margin-block: var(--space-m); }
-```text
+```
 
 `:is()` and `>` combinators keep specificity at or near the element default, so
 component styles can still win without `!important`. The adjacent-sibling margin
@@ -536,7 +536,7 @@ oversight.
   overflow-wrap: anywhere;
   white-space: break-spaces;
 }
-```text
+```
 
 Notes that cost us real debugging time before:
 
@@ -558,7 +558,7 @@ others:
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
-```text
+```
 
 With wrap on, line numbers must go away (a wrapped line has no line number) —
 so the setting also disables the gutter. Ship them as one toggle.
@@ -745,7 +745,7 @@ file a designer reads first.
   margin-block: var(--space-m);
 }
 .markdown-body .math-inline { white-space: nowrap; }
-```text
+```
 
 Notes worth keeping:
 
@@ -847,7 +847,7 @@ span    ← add to tag allowlist
 class   ← already allowed (global)
 style   ← still forbidden. Highlighters emit classes, and we map classes to
           colours in CSS. Never let a highlighter emit inline style.
-```text
+```
 
 Both Prism and Shiki emit classes, so this costs nothing and keeps `style`
 permanently forbidden. Shiki's `codeToHtml` with default options inlines styles

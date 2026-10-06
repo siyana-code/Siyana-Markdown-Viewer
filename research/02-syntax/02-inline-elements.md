@@ -743,7 +743,7 @@ RULE (CM §6.3)
 CM §6.3 states the limit without a dedicated example. **Our fixture must
 include** a label of exactly 999 characters (must match) and 1000 characters
 (must not match). This is a cheap defence against a pathological
-label-scanning loop. → [04 §8](04-edge-cases-and-traps.md#8-link-label-nesting-and-the-999-character-limit)
+label-scanning loop. → [§6.4 below](#64-the-999-character-label-limit)
 
 ---
 
@@ -885,7 +885,7 @@ Probes of the same build:
 parts of GFM §6.9 but **not** the `www.` part, and its paren/punctuation
 handling differs from the spec. If we ship bare-URL linkification, it must be
 our own rule engine matching GFM §6.9 exactly, with fixtures from GFM Examples
-622–633. → [03 §5](03-extensions-and-dialects.md#5-gfm-autolink-literals-gfm-69)
+622–633. → [03 §5](03-extensions-and-dialects.md#24-autolink-literals-gfm-69-gfm)
 
 ---
 
@@ -1097,7 +1097,7 @@ not make. Each needs an ADR.
 | 4 | Soft break → `<br />` globally? | Obsidian's "Strict line breaks" | Offer the toggle, **default off** (CM behaviour). |
 | 5 | Emit `id` anchors on headings? | not mandated | **Yes**, generated deterministically from the heading text, so `#fragment` links work. Document the slug algorithm. |
 | 6 | Table alignment: `align=` or `style=`? | cmark-gfm vs markdown-it | **`style="text-align:…"`**, because `align` is deprecated in HTML5. Noted as a GFM deviation in the fixture. |
-| 7 | Extension conflicts: `~~x~~` is GFM strikethrough but pandoc `subscript` | — | GFM default; pandoc mode is a separate opt-in ([03 §12](03-extensions-and-dialects.md#12-our-recommendation-matrix)). |
+| 7 | Extension conflicts: `~~x~~` is GFM strikethrough but pandoc `subscript` | — | GFM default; pandoc mode is a separate opt-in ([03 §12](03-extensions-and-dialects.md#15-our-recommendation-matrix)). |
 
 **Next:** [03-extensions-and-dialects.md](03-extensions-and-dialects.md) —
 everything beyond CommonMark, plus the cross-tool compatibility matrix.

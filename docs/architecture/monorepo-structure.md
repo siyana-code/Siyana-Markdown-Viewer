@@ -29,7 +29,7 @@ Siyana-Markdown-Viewer/
 ├── biome.json
 ├── tsconfig.base.json
 └── .markdownlint-cli2.jsonc
-```text
+```
 
 ## The dependency rule
 
@@ -101,7 +101,7 @@ export type RenderError =
   | { kind: 'parse-failure'; detail: string }
 
 export function render(source: Uint8Array, options?: RenderOptions): RenderResult
-```text
+```
 
 The `RenderResult.html` being explicitly marked untrusted is deliberate. It is a
 type-level reminder that the sanitizer step has not happened yet.
@@ -124,7 +124,7 @@ export const DEFAULT_POLICY: SanitizePolicy
 
 export function sanitize(html: string, policy?: SanitizePolicy): SanitizeResult
 export function isSafeUrl(url: string, scheme: ReadonlySet<string>): boolean
-```text
+```
 
 Exported separately so it can be reviewed, tested, and fuzzed on its own, and so
 the security-critical code has one address in the repository.
@@ -150,7 +150,7 @@ export interface FileSystemAdapter { /* see architecture/overview.md */ }
 export function createDesktopAdapter(scope: RootScope): FileSystemAdapter
 export function createWebAdapter(caps: WebFsCapabilities): FileSystemAdapter
 export function createMobileAdapter(): FileSystemAdapter
-```text
+```
 
 `RootScope` is the security-relevant object: it holds the approved roots and is
 the thing that refuses a traversal.
@@ -205,7 +205,7 @@ Scripts only — no code:
     "conformance:report": "node packages/test-fixtures/bin/report.ts"
   }
 }
-```text
+```
 
 ### `Cargo.toml` (workspace root, only if a Rust component is adopted)
 
@@ -223,7 +223,7 @@ license = "MIT"
 [workspace.dependencies]
 serde = { version = "1", features = ["derive"] }
 thiserror = "2"
-```text
+```
 
 Both lockfiles are committed. For an application, a reproducible build is a
 security property.

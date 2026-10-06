@@ -180,7 +180,7 @@ flowchart TD
     style B fill:#e0f0ff
     style C fill:#fff4d6
     style D fill:#e0ffe0
-```text
+```
 
 | Level | Saves | Costs | Mechanism |
 |-------|-------|-------|-----------|
@@ -259,7 +259,7 @@ Safari majors within a release or two, so 2.48/2.49 is the likely boundary —
 @supports not (content-visibility: auto) {
   .md-block[data-virtualised] { display: none; }
 }
-```text
+```
 
 ```ts
 export const hasContentVisibility =
@@ -269,13 +269,13 @@ export const hasContentVisibility =
 /** Reported to the perf harness so our measurements are honest about which
  *  code path produced them. */
 window.__perf.contentVisibility = hasContentVisibility;
-```text
+```
 
 🔧 **This is the pattern for every modern-CSS dependency in this project.** A CSS
 feature is *used unconditionally*, *detected at runtime*, and *compensated in JS
 when absent*. There is no version sniffing of the webview, because on Windows the
 version changes every two weeks
-([09-platform/01-windows.md §2](../09-platform/01-windows.md#2-webview2--what-it-actually-is)).
+([09-platform/01-windows.md §2](../09-platform/01-windows.md#2-webview2-what-it-actually-is)).
 
 ### 4.3 `contain-intrinsic-size`, and why `auto` matters
 
@@ -309,7 +309,7 @@ close:
 .md-block[data-kind="heading"]   { contain-intrinsic-size: auto 2.4em; }
 .md-block[data-kind="code"]     { contain-intrinsic-size: auto calc(var(--src-lines) * 1.5em + 2em); }
 .md-block[data-kind="table"]    { contain-intrinsic-size: auto calc(var(--src-rows) * 2.2em + 2em); }
-```text
+```
 
 We set `--src-chars`/`--src-lines` from the source offsets we already know from
 the block-wise parse, at ~zero cost. **Better scrollbar stability than a flat
@@ -353,7 +353,7 @@ el.getBoundingClientRect(); el.getClientRects();  // layout
 el.scrollHeight; el.scrollTop = n;                // layout + paint
 window.getComputedStyle(el);                     // style recalc
 el.focus();                                      // may force scroll-into-view
-```text
+```
 
 🔧 **RECOMMENDED**, three rules:
 
@@ -401,7 +401,7 @@ root:
     <pre><code class="language-rust">…</code></pre>
   </section>
 </article>
-```text
+```
 
 ```css
 .md-block {
@@ -457,7 +457,7 @@ export function scanBlocks(text: string): BlockSpan[];
 
 /** Stage 2 — parses one block's inlines and returns its HTML. */
 export function renderBlock(text: string, span: BlockSpan): string;
-```text
+```
 
 ### 6.2 The scheduler
 
@@ -496,7 +496,7 @@ async function openDocument(doc: Doc) {
   scheduleRest(article, spans, first);
   performance.mark('doc:open:done');
 }
-```text
+```
 
 `scheduleRest` uses **`scheduler.yield()` when available** and falls back to a
 `MessageChannel`/`setTimeout(0)` shim otherwise. Both yield to input and paint;
@@ -524,7 +524,7 @@ function scheduleRest(root: HTMLElement, spans: BlockSpan[], done: Set<number>) 
     }
   })();
 }
-```text
+```
 
 🔧 **The worker question.** 🔴 For ≥ 20 MB, parse in a **Worker** and ship HTML
 strings back. Two costs we must accept: (a) one structured-clone of the text per
@@ -636,7 +636,7 @@ document.addEventListener('contentvisibilityautostatechange', (e) => {
     .then(html => { if (sec.isConnected) { cache.set(key, html); applyHighlight(sec, html); } })
     .catch(() => { if (sec.isConnected) applyPlain(sec); });
 });
-```text
+```
 
 🔧 Notes on the design:
 
@@ -704,7 +704,7 @@ proves the `@supports` fallback works.
   "scroll": { "fpsP50": 58, "fpsP1": 44, "longTasksDuringScroll": 3 },
   "findP95Ms": 41
 }
-```text
+```
 
 **The three questions the experiment must answer, before we commit:**
 

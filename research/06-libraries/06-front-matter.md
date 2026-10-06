@@ -86,7 +86,7 @@ Pandoc has three *separate extensions*, and this is where people get confused:
 **(a) `pandoc_title_block`** — a percent-prefixed block, must be the very
 first thing:
 
-```
+```text
 % title
 % author(s) (separated by semicolons)
 % date
@@ -118,7 +118,7 @@ YAML.)"*
 
 **(c) `mmd_title_block`** — MultiMarkdown style:
 
-```
+```yaml
 Title:   My title
 Author:  John Doe
 Date:    September 1, 2008
@@ -254,7 +254,7 @@ p.parse('---\ntitle: Hello "World"\n---\n\n# Body').children
 ```
 
 We are not adopting the unified pipeline (see
-[01-js-parsers §3.5](01-js-parsers.md#35-the-performance-problem--measured)),
+[01-js-parsers §3.5](01-js-parsers.md#35-the-performance-problem-measured)),
 so this is here for completeness.
 
 ---
@@ -294,7 +294,7 @@ we render the `---` lines as thematic breaks. This is Jekyll's rule
 
 ### 3.2 The algorithm
 
-```
+```markdown
 detectFrontMatter(source: string): { format, raw, data, endOffset } | null
 
   1. Strip a UTF-8 BOM.                       // Jekyll: BOM causes "very, very bad things"
@@ -327,7 +327,7 @@ the block parser; our standalone splitter has to do it explicitly.
 ### 3.3 Detection in our corpus
 
 The 15-file real-world corpus from
-[01-js-parsers §3.5](01-js-parsers.md#35-the-performance-problem--measured)
+[01-js-parsers §3.5](01-js-parsers.md#35-the-performance-problem-measured)
 contains front matter in exactly one file — `micromark-readme.md`'s own
 `--- outline: deep` fences (which is *inside* Markdown content, not front
 matter, and must not be detected). That is a useful accident: it proves the

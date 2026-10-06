@@ -110,7 +110,7 @@ packages/perf/
 │  └─ memory.mjs         # process-tree RSS/PSS sampling over time
 ├─ fixtures/             # symlinks into packages/test-fixtures/sizes/
 └─ analyze.mjs           # median/p95, diff vs. the last recorded run, exit code
-```text
+```
 
 ### Startup measurement (external, not internal)
 
@@ -144,7 +144,7 @@ requestAnimationFrame(() => requestAnimationFrame(() => {
   performance.mark('doc:painted');             // two rAFs = the frame is on screen
   performance.measure('doc:open', 'doc:open:start', 'doc:painted');
 }));
-```text
+```
 
 🔧 The **double-`rAF`** is not cargo cult: a single `rAF` runs *before* paint, so
 one `rAF` measures "scheduled", not "visible". Two is the cheapest correct
@@ -178,7 +178,7 @@ for p in $(tree "$root"); do
 done
 echo "procs=$n rss_mib=$((rss/1024)) pss_mib=$((pss/1024))"
 kill "$root" 2>/dev/null; wait "$root" 2>/dev/null
-```text
+```
 
 ```powershell
 # perf/tree-rss.ps1 <seconds> <exe> — Windows

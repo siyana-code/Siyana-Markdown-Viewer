@@ -43,7 +43,7 @@ flowchart TD
     F1 --> R
     G1 --> R
     H1 --> R
-```text
+```
 
 ## Reading order
 

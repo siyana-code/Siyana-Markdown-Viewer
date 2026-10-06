@@ -108,7 +108,7 @@ pipeline = HTML::Pipeline.new [
   HTML::Pipeline::SyntaxHighlightFilter
 ]
 result = pipeline.call(source)
-```text
+```
 
 GitHub's production pipeline is a long chain of these filters, one per feature:
 Markdown → sanitize → syntax highlight → task lists → mention links → emoji →
@@ -202,7 +202,7 @@ stars, 100% CommonMark, with a plugin architecture for extensions.)
 
 | Skipped | Consequence for us |
 |---|---|
-| **No reading mode** | It is a *preview* inside an editor. There is no way to hide the editor. **Focus mode is our whole product** — [01-reading-ux §3](../12-ux/01-reading-ux.md#1-reading-modes) |
+| **No reading mode** | It is a *preview* inside an editor. There is no way to hide the editor. **Focus mode is our whole product** — [01-reading-ux §3](../12-ux/01-reading-ux.md#3-reading-modes) |
 | **No file tree** | VS Code's is a generic file tree with a Markdown-specific *outline* below it. It is not a document browser |
 | **No corpus search** | VS Code's search does not search inside `.md` file *content* by default; you must search text, and the results are not rendered |
 | **No backlinks panel** | "Find All References" is a command with a modal list, not a persistent panel in the reading surface |
@@ -458,7 +458,13 @@ push 2026-10-01. From the README:
 | 2 | **Numbered equations, citations, and cross-references** | The three things a scientific document needs and no general Markdown renderer provides. Cross-references in particular should be in our long-term plan |
 | 3 | **Executable content with output caching** | Documentation that cannot go stale |
 | 4 | **Notebooks as a first-class document type** | For the future, notebooks are a format a viewer will eventually have to render |
-| 5 | **Graceful architecture migration** | v2 replaced the v1 Sphinx engine while keeping v1 alive on a branch and importable | Contrast with Logseq's removals — [03-logseq §3](../13-competitors/03-logseq-and-zettlr.md#3-the-architecture-shift--this-is-the-single-most-important-thing-to-understand). **This is how to do it** |
+
+Two things are worth stealing outright.
+
+**Graceful architecture migration.** v2 replaced the v1 Sphinx engine while
+keeping v1 alive on a branch and importable. Contrast with Logseq's removals —
+[03-logseq §3](../13-competitors/03-logseq-and-zettlr.md#3-the-architecture-shift-this-is-the-single-most-important-thing-to-understand).
+**This is how to do it.**
 
 ### What it deliberately skips
 
@@ -729,7 +735,7 @@ workflow with it.
 |---|---|---|---|
 | 1 | GitHub | One AST → HTML → chain of single-purpose filters → **sanitize twice** | [05 rendering](../05-rendering/), [11 security](../11-security/) |
 | 2 | GitHub | The library does not sanitise; the pipeline does. Make the contract explicit | [05 rendering](../05-rendering/) |
-| 3 | GitHub | Anchors are a *filter*, added after sanitization. So the renderer must own ids, not author HTML | [02 §2](../12-ux/02-navigation-and-find.md#2-heading-anchals) |
+| 3 | GitHub | Anchors are a *filter*, added after sanitization. So the renderer must own ids, not author HTML | [02 §2](../12-ux/02-navigation-and-find.md#2-heading-anchors) |
 | 4 | `cmark-gfm` | One AST → HTML / man / LaTeX / CommonMark / XML. Multi-output from one parse | [10 performance](../10-performance/) |
 | 5 | VS Code | **Double-click a rendered element → open source at that line.** 90% of editing's value for 5% of the work | [01-reading-ux §11](../12-ux/01-reading-ux.md#11-the-second-verb-editing-deferred-not-refused) |
 | 6 | VS Code | A visible, user-controllable three-level security model | [11 security](../11-security/) |
@@ -741,7 +747,7 @@ workflow with it.
 | 12 | Docusaurus | Versioning → we persist reading position per file | [01-reading-ux](../12-ux/01-reading-ux.md) |
 | 13 | Docusaurus | **MDX is a security decision, not a formatting one.** We do not support it | [11 security](../11-security/) |
 | 14 | VitePress | On-demand loading only | [10 performance](../10-performance/) |
-| 15 | Hugo/Goldmark | Support `{#id}` attributes. Validate against Goldmark as an oracle. Promote standalone images to `<figure>` | [02 §2](../12-ux/02-navigation-and-find.md#2-heading-anchals), [03 §5](../12-ux/03-theming.md#5-images-and-figures) |
+| 15 | Hugo/Goldmark | Support `{#id}` attributes. Validate against Goldmark as an oracle. Promote standalone images to `<figure>` | [02 §2](../12-ux/02-navigation-and-find.md#2-heading-anchors), [03 §5](../12-ux/03-theming.md#5-images-and-figures) |
 | 16 | Jupyter Book | **Interactive web + typeset PDF are both first-class outputs** | [01-reading-ux §12](../12-ux/01-reading-ux.md#12-print-and-pdf-as-a-first-class-output) |
 | 17 | Jupyter Book | Migrate additively; keep the old version alive | [14 architecture](../14-architecture-options/) |
 | 18 | Importers | **We build none. We must render all eleven producers' output.** No input may cause failure | [01-reading-ux](../12-ux/01-reading-ux.md) |

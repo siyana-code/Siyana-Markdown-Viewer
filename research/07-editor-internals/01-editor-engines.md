@@ -155,7 +155,7 @@ the single best size/quality trade in this whole document.**
 **tree fragments**. Its `parse(input, fragments, ranges)` signature is the
 mechanism behind CodeMirror's incremental parsing, and it is directly usable
 by us without CodeMirror at all. Verified working in
-[03](03-incremental-parsing.md#3-lezer-incremental-parsing-verified):
+[03](03-incremental-parsing.md#43-lezer-incremental-parsing-verified):
 
 ```js
 import { parser } from '@lezer/markdown'
@@ -217,7 +217,7 @@ attribution obligation, not a restriction on us.)
 
 We walked the published `min/vs` tree:
 
-```
+```text
 unpkg.com/monaco-editor@0.57.0/min/  →  137 .js files,  24,583 KB total
 
 /min/vs/editor.main.js                 2,735 KB
@@ -500,7 +500,7 @@ Driven through Lezer's real public API on a 67-character document
 (`# Title`, a paragraph with emphasis, a two-item bullet list, a two-column
 table), `@lezer/markdown` configured with `GFM`:
 
-```
+```text
 cold parse (67 chars)                     9.7 – 14.5 ms
 incremental reparse after a word change   1.05 – 1.39 ms
 incremental reparse after a table edit    1.26 – 1.64 ms
@@ -516,11 +516,11 @@ hypothesis that incremental reparse cost grows sub-linearly with document size
 while cold parse grows linearly is the whole basis of the live-preview
 architecture, and it is **untested at 1 MiB**. That is the single most
 important benchmark we have not run, and it goes at the top of
-[03's measurement plan](03-incremental-parsing.md#7-what-we-still-need-to-measure).
+[03's measurement plan](03-incremental-parsing.md#8-what-we-still-need-to-measure).
 
 ### 8.2 Tree shape, which is what scroll sync needs
 
-```
+```text
 Document(ATXHeading1(HeaderMark),
          Paragraph(Emphasis(EmphasisMark,EmphasisMark)),
          BulletList(ListItem(ListMark,Paragraph),ListItem(ListMark,Paragraph)),
@@ -530,7 +530,7 @@ Document(ATXHeading1(HeaderMark),
 Top-level children are `ATXHeading1`, `Paragraph`, `BulletList`, `Paragraph` —
 with byte offsets available on every node. We verified the mapping:
 
-```
+```text
 line 1  -> HeaderMark  [0,1)
 line 3  -> Paragraph   [9,27)
 line 5  -> ListMark    [29,30)

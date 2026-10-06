@@ -138,7 +138,7 @@ jobs:
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
-```text
+```
 
 Notes that matter:
 
@@ -185,7 +185,7 @@ The official example is a *starting point*. Ours adds:
         run: |
           test -f latest.json || (echo 'latest.json missing' && exit 1)
           # every url in latest.json must have a sibling .sig on the release
-```text
+```
 
 The last two steps are the ones most projects skip and most regret skipping: the
 first is a **runtime** failure only users would find, and the second is a silent
@@ -254,7 +254,7 @@ jobs:
           # electron-builder reads these for Authenticode on Windows
           WIN_CSC_LINK: ${{ secrets.WINDOWS_CERTIFICATE }}
           WIN_CSC_KEY_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
-```text
+```
 
 The equivalent `electron-builder.yml` fragments:
 
@@ -357,13 +357,13 @@ xcrun notarytool submit "Siyana Markdown Viewer.dmg" \
      --apple-id "<appleid>" --team-id "<TEAMID>" \
      --password "<app-specific-password>" --wait
 xcrun stapler staple "Siyana Markdown Viewer.dmg"
-```text
+```
 
 Notarization requires the `--options runtime` (hardened runtime) signature. Signing
 without notarizing, or notarizing without stapling, both produce Gatekeeper
 prompts. Do not add macOS to the matrix halfway.
 
-### 2.3 Linux — see [02-linux.md §4](02-linux.md#4-code-signing-on-linux--the-honest-version)
+### 2.3 Linux — see [02-linux.md §4](02-linux.md#4-code-signing-on-linux-the-honest-version)
 
 Summary: sign the AppImage with GPG, publish the fingerprint over HTTPS, tell
 users the verification is manual, and add a GPG-signed PPA when we have one.
@@ -389,7 +389,7 @@ use tauri_plugin_updater::UpdaterExt;
 let channel = if beta { "beta" } else { "stable" };
 let update_url = format!("https://{channel}.myserver.com/{{{{target}}}}-{{{{arch}}}}/{{{{current_version}}}}");
 let update = app.updater_builder().endpoints(vec![update_url])?.build()?.check().await?;
-```text
+```
 
 Note the **doubled braces**: `format!` eats single braces, so `{{target}}` must be
 written `{{{{target}}}}`.
@@ -444,7 +444,7 @@ downloaded bytes**, not a checksum comparison.
     }
   }
 }
-```text
+```
 
 ✅ **VERIFIED** — required keys are `"version"`, `"platforms.[target].url"` and
 `"platforms.[target].signature"`; `pub_date` must be RFC 3339; `"signature"` is
@@ -502,13 +502,13 @@ macOS `releases.json`:
     }
   ]
 }
-```text
+```
 
 Windows `RELEASES` file (generated at build time, lists the `.nupkg` delta):
 
 ```console
 B0892F3C7AC91D72A6271FF36905FEF8FE993520 electron-fiddle-0.36.3-full.nupkg 103298365
-```text
+```
 
 ✅ **VERIFIED** — the recommended layout is
 `my-app-updates/{darwin|win32}/{x64|arm64}/…` with platform+arch folders, and
@@ -550,7 +550,7 @@ flatpak build-export --gpg-sign=KEYID ~/repo org.siyana.markdownviewer stable \
     build-dir generated-sources
 # publish the older commit's ref and point the remote at it
 flatpak update --commit <sha> org.siyana.markdownviewer//stable
-```text
+```
 
 Users can also do it themselves, which means **a Flatpak user with a bad update
 does not need us to do anything.** That is worth a great deal.
@@ -601,7 +601,7 @@ sequenceDiagram
     App->>App: minisign_verify(pubkey_FROM_BINARY, bytes, signature)
     Note over App: attacker controls Srv AND CDN<br/>but not the pubkey inside the<br/>already-installed app
     App->>App: run installer
-```text
+```
 
 ✅ **VERIFIED** — this is exactly Tauri's model: the pubkey lives in
 `tauri.conf.json` and is compiled into the binary, and *"this cannot be
@@ -659,7 +659,7 @@ async fn check_for_update(channel: Channel) -> Result<Option<Update>> {
     }
     client.check().await
 }
-```text
+```
 
 Server-side rules:
 
@@ -768,7 +768,7 @@ flowchart TD
     I -->|no| K["Ramp to 0%, open incident,<br/>publish notes"]
     style K fill:#ffe0e0
     style J fill:#e0ffe0
-```diff
+```
 
 - **Every release is reproducible from the tag.** Pin dependencies with a
   lockfile; no floating `lts/*` in the release workflow.

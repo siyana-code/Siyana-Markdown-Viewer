@@ -51,7 +51,7 @@ replace existing ones, high speed, safe by default, community-written plugins.
 Those claims hold up. In our CommonMark run, the `commonmark` preset scored
 **649 of 652** — the three failures are all the same cosmetic thing:
 
-```
+```text
 ex 239  [Block quotes]  ">\n"
   got : "<blockquote></blockquote>\n"
   want: "<blockquote>\n</blockquote>\n"
@@ -216,7 +216,7 @@ validateLink(url) {
 
 We exercised it:
 
-```
+```text
 "javascript:alert(1)"   -> false
 "JaVaScRiPt:alert(1)"   -> false      (lowercased before the test)
 "  javascript:x"        -> false      (trimmed)
@@ -228,14 +228,14 @@ We exercised it:
 
 And in a render:
 
-```
+```markdown
 md.render('[d](JaVaScRiPt:alert(1))')  ->  <p>[d](JaVaScRiPt:alert(1))</p>
 md.render('[d](JAVASCRIPT:alert(1))')  ->  <p>[d](JAVASCRIPT:alert(1))</p>
 ```
 
 The link is simply not created. Contrast with `marked`, same input, same run:
 
-```
+```markdown
 marked('[a](javascript:alert(1)) [c](data:text/html,<script>1</script>))')
 -> <p><a href="javascript:alert(1)">a</a>
    <a href="data:text/html,%3Cscript%3E1%3C/script%3E">c</a></p>
@@ -402,7 +402,7 @@ Measured against CommonMark 0.31.2 (652 examples), byte-exact:
 Failing sections are structural, not cosmetic: List items ×28, Images ×19,
 Lists ×18, Thematic breaks ×13, Setext headings ×13. Typical example:
 
-```
+```text
 ex 4  [Tabs]  "  - foo\n\n\tbar\n"
   got : <ul>\n<li><p>foo</p>\n<p>bar</p>\n</li>\n</ul>
   want: <ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>
@@ -557,7 +557,7 @@ HTML by default means a Markdown document containing `<script>` renders as
 visible text, not as a script tag. And on link destinations it is the
 strictest of all:
 
-```
+```markdown
 micromark('[a](javascript:alert(1)) [b](vbscript:x) [c](data:text/html,<script>1</script>))')
 -> <p><a href="">a</a> <a href="">b</a> <a href="">c</a></p>
 ```
@@ -610,7 +610,7 @@ slower than marked** on the same bytes in the same process.
 Per-file detail on the two heavy documents shows the cost is structural, not
 startup:
 
-```
+```text
 commonmark-spec.md (201 KiB)
   commonmark.js   18.8 ms
   marked          21.9 / 26.8 ms
@@ -703,7 +703,7 @@ Method: download `https://spec.commonmark.org/0.31.2/spec.json` (**652
 examples**), render `example.markdown` with each engine, compare to
 `example.html` **byte for byte** after CRLF normalisation. No tolerance.
 
-```
+```text
 CommonMark spec 0.31.2 — released 2024-01-28, 652 examples
 ```
 
@@ -747,7 +747,7 @@ particular configuration. We measured the configurations.
 
 ## 7. Performance, measured
 
-See [§3.5](#35-the-performance-problem--measured) for the tables. Full
+See [§3.5](#35-the-performance-problem-measured) for the tables. Full
 harness, corpus generation and reproduction steps:
 [07-evaluation-framework §6](07-evaluation-framework.md#6-benchmark-plan).
 

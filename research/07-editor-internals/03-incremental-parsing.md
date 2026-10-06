@@ -130,7 +130,7 @@ joined.trim() === md.render(src).trim()
 
 **Verified true.** And per block:
 
-```
+```json
 [heading_open   ] lines 0-2   => "<h1>A</h1>"
 [paragraph_open ] lines 2-4   => "<p>para one</p>"
 [table_open     ] lines 4-8   => "<table>…"
@@ -354,7 +354,7 @@ cs.iterChanges((fromA, toA, fromB, toB, text) =>
 On the 67-character document (`# Title`, a paragraph with emphasis, a
 two-item list, a 2×2 table), three separate runs:
 
-```
+```text
 cold parse (67 chars)                        9.7 – 14.5 ms
 incremental reparse after a word change      1.05 – 1.39 ms
 incremental reparse after a table edit       1.26 – 1.64 ms
@@ -410,7 +410,7 @@ in O(log n). It is the model CodeMirror's `ChangeSet.mapPos` implements and
 the model our block index needs.
 
 We do not adopt ProseMirror (see
-[01-editor-engines.md](01-editor-engines.md#32-why-it-is-the-wrong-model-for-us--and-this-is-the-crux))
+[01-editor-engines.md](01-editor-engines.md#32-why-it-is-the-wrong-model-for-us-and-this-is-the-crux))
 but the *concept* is what makes the block index work: **an edit produces a
 map, and every cached position is translated through it.**
 
@@ -583,7 +583,7 @@ because it is exactly what every native text field does.
 
 ## 7. The architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │  CodeMirror EditorView                                          │
 │    @codemirror/state  — EditorState, Text, ChangeSet            │
@@ -629,7 +629,7 @@ because it is exactly what every native text field does.
 
 ### 7.1 Module layout
 
-```
+```text
 packages/core/src/
   parse/
     markdown-it.ts        # the configured instance, frozen
@@ -687,7 +687,7 @@ blocks, and we have designed it to (the `height: 0` convention).
 
 For the **initial** parse of a large file, offload:
 
-```
+```text
 main thread                        worker
 ───────────                        ──────
 read file (fs)  ── string ───────► md.parse() + BlockIndex build

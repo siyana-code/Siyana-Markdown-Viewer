@@ -38,7 +38,7 @@ backend, no accounts, and no network dependency.
                          opt-in only, per document
                                    ▼
                             The internet
-```text
+```
 
 ## Containers
 
@@ -139,7 +139,7 @@ interface FileSystemAdapter {
   resolveLocalAsset(basePath: PathRef, relative: string): Promise<AssetRef | null>
   showOpenDialog(options: OpenOptions): Promise<PathRef[]>
 }
-```text
+```
 
 The `resolveLocalAsset` method is where path traversal is refused, so there is
 one place to review rather than several.
@@ -162,7 +162,7 @@ The full flow, from a double-click to pixels.
 11. UI        decorate: highlight code, render math, render diagrams
               ── deferred to idle; never on the critical path
 12. UI        paint
-```text
+```
 
 Error handling at every step:
 

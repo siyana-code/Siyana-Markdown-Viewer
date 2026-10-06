@@ -159,7 +159,7 @@ how much authority it has and what happens if we violate it.
 2. **A DIALECT is a mode, not a layer.** Turning on "pandoc mode" is allowed to
    *disable* CORE behaviour (pandoc's `strikeout` / `subscript`, for example,
    reinterpret `~~x~~`). We therefore will not implement DIALECTs as a single
-   "superset" mode — see [03 §12](03-extensions-and-dialects.md#12-our-recommendation-matrix).
+   "superset" mode — see [03 §12](03-extensions-and-dialects.md#15-our-recommendation-matrix).
 
 ---
 
@@ -237,7 +237,7 @@ indicators of inline structure."*
 
 is **two list items**, not one item containing a code span. This single rule
 forces the two-phase parser (line-by-line blocks, then per-block inlines) that
-every conforming implementation uses. → [01 §2](01-block-elements.md#2-precedence-commonmark-31)
+every conforming implementation uses. → [01 §2](01-block-elements.md#2-precedence-cm-31-example-42)
 
 ### 5.2 The `---` line has three claimants and a fixed priority order
 
@@ -270,7 +270,7 @@ CommonMark §6.2 requires a delimiter-stack algorithm with left/right-flanking
 classification, an `_`-specific extra condition, and the **rule of three**.
 `foo*bar*` is emphasis; `foo_bar_` is not. A regex will never be correct.
 The section contains **132 official examples** (Examples 350–481) — more than
-any other section. → [02 §4](02-inline-elements.md#4-emphasis-and-strong-emphasis-commonmark-62)
+any other section. → [02 §4](02-inline-elements.md#4-emphasis-and-strong-emphasis-cm-62-examples-350481)
 
 ### 5.5 The dangerous inputs are not the weird ones, they are the *repetitive* ones
 
@@ -351,7 +351,7 @@ Honesty register. These are *not* covered and should not be assumed:
 | Mermaid grammar itself | We treat ```` ␃␃␃mermaid ```` as "opaque fenced block handed to Mermaid.js"; the diagram DSL is out of scope. | `13-competitors/` |
 | KaTeX / MathJax rendering of math | This folder covers `$…$` *recognition*, not TeX typesetting. | `05-rendering/` |
 | GitHub's HTML sanitiser (`github/markup`) | Only the GFM `tagfilter` extension is in scope; GitHub's real sanitiser is a separate allow-list. | `11-security/` |
-| An actual WHATWG Markdown standard | **Does not exist.** See [03 §6](03-extensions-and-dialects.md#6-whatwg--there-is-no-whatwg-markdown). | n/a |
+| An actual WHATWG Markdown standard | **Does not exist.** See [03 §6](03-extensions-and-dialects.md#4-whatwg-there-is-no-whatwg-markdown). | n/a |
 
 ---
 
@@ -361,7 +361,7 @@ Honesty register. These are *not* covered and should not be assumed:
   examples, add the new `spec.json` under a new pinned directory
   (`packages/test-fixtures/commonmark/0.32/`), and run both. Do not silently
   replace 0.31.2.
-* **New extension requests.** Go through [03 §12](03-extensions-and-dialects.md#12-our-recommendation-matrix).
+* **New extension requests.** Go through [03 §12](03-extensions-and-dialects.md#15-our-recommendation-matrix).
   A new syntax needs: a source citation, at least one `SOURCE`/`HTML`/`RULE`
   block, and three fixtures (valid, invalid, and one interaction case).
 * **New trap.** Add it to [04](04-edge-cases-and-traps.md) *and* to the fixture

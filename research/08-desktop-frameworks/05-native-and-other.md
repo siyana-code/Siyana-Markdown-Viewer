@@ -128,7 +128,7 @@ impl App for Viewer {
         });
     }
 }
-```text
+```
 
 **Strengths:**
 - **Exceptional for tools and debug UIs.** Widely used in that niche precisely
@@ -250,7 +250,7 @@ while let Some(line_range) = breaker.next_line() {
     let metrics = breaker.line_metrics(line_range, &lf);
     // lay out this line, get its width, draw it
 }
-```text
+```
 
 **Why this matters enormously for us:** it means the hardest, most
 error-prone part of a text renderer — shaping, fallback, bidi, line breaking —

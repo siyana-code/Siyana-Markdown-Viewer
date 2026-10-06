@@ -381,12 +381,12 @@ matters: people who complain when it is missing.
 | # | Lesson | Where it lands |
 |---|---|---|
 | T1 | **A reading experience that hides syntax is the good experience.** Even if we never edit, our output must be indistinguishable from a well-set page | [01-reading-ux §2](../12-ux/01-reading-ux.md#2-typography-the-product) |
-| T2 | **Focus mode and typewriter mode are table stakes.** Focus mode ships in v1; typewriter mode is a small feature over it | [01-reading-ux §3](../12-ux/01-reading-ux.md#1-reading-modes) |
+| T2 | **Focus mode and typewriter mode are table stakes.** Focus mode ships in v1; typewriter mode is a small feature over it | [01-reading-ux §3](../12-ux/01-reading-ux.md#3-reading-modes) |
 | T3 | **Reading-minutes in the status bar** — a reader metric that signals the product's centre of gravity | [01-reading-ux](../12-ux/01-reading-ux.md) |
 | T4 | **PDF export with heading bookmarks.** Small, shows care | [01-reading-ux §12](../12-ux/01-reading-ux.md#12-print-and-pdf-as-a-first-class-output) |
 | T5 | **An automatic TOC**, not an author-inserted `[TOC]`. Typora requires the author to opt in; we must not | [02 §3](../12-ux/02-navigation-and-find.md#3-the-table-of-contents) |
 | T6 | **DOMPurify is the right sanitizer.** Two independent projects now use it | [04-accessibility §2](../12-ux/04-accessibility.md#23-the-sanitizer-allow-list-we-must-ship), [11 security](../11-security/) |
-| T7 | **KaTeX, not MathJax**, for inline math. Faster, smaller, synchronous layout. VS Code made the same call | [01-reading-ux §7](../12-ux/01-reading-ux.md#7-read-docs-with-math-and-diagrams) |
+| T7 | **KaTeX, not MathJax**, for inline math. Faster, smaller, synchronous layout. VS Code made the same call | [01-reading-ux §7](../12-ux/01-reading-ux.md#jtbd-7-read-docs-with-math-and-diagrams) |
 | T8 | **CJK emphasis flanking is a real, live bug class.** Test it explicitly | [02 syntax](../02-syntax/), `packages/test-fixtures` |
 | T9 | **Export themes are separate from UI themes.** MarkText documents "themes for exporting". Correct: the print stylesheet is its own medium | [01-reading-ux §12](../12-ux/01-reading-ux.md#12-print-and-pdf-as-a-first-class-output) |
 | T10 | **Portable mode / no install required.** Users value running from a USB stick | Product requirement |

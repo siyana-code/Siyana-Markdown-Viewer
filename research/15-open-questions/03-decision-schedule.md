@@ -88,15 +88,15 @@ graph TD
     class D1,D3,D13 gate
     class D2,D4,D5,D6,D7 early
     class D22,D24,D25,D26,D27,D30,D33 late
-```text
+```
 
 ### The three decisions that gate everything
 
 | Gate | Question | Why it gates | Default if the deadline passes |
 |---|---|---|---|
-| **D1** | Editing in v1? ([Q-06](01-question-register.md#q-06)) | Determines the FS surface, session state, autosave, conflict handling, and the editor dependency. Everything in doc 03 §7 exists only if we edit. | **Viewer only.** Explicit save, no autosave, no editor dependency. |
-| **D3** | Desktop shell ([Q-02](01-question-register.md#q-02)) | Determines size, webview, security model, updater, ARM, and the Rust/TS balance. | **Tauri 2.12.** Smallest surface, best fit for a local-first tool, and the research already assumes it. |
-| **D13** | Phase-1 scope list ([Q-52](01-question-register.md#q-52)) | Everything else is "is this in scope?" — an undefined scope makes every other decision arbitrary. | **The exclusions drafted in [R-04](../15-open-questions/02-risk-register.md#r-04).** |
+| **D1** | Editing in v1? ([Q-06](01-question-register.md#q-06-does-v1-support-editing-at-all)) | Determines the FS surface, session state, autosave, conflict handling, and the editor dependency. Everything in doc 03 §7 exists only if we edit. | **Viewer only.** Explicit save, no autosave, no editor dependency. |
+| **D3** | Desktop shell ([Q-02](01-question-register.md#q-02-which-desktop-shell-tauri-electron-flutter-wails-native)) | Determines size, webview, security model, updater, ARM, and the Rust/TS balance. | **Tauri 2.12.** Smallest surface, best fit for a local-first tool, and the research already assumes it. |
+| **D13** | Phase-1 scope list ([Q-52](01-question-register.md#q-52-what-is-explicitly-out-of-scope-for-phase-1)) | Everything else is "is this in scope?" — an undefined scope makes every other decision arbitrary. | **The exclusions drafted in [R-04](../15-open-questions/02-risk-register.md#r-04-scope-creep-toward-an-obsidian-clone).** |
 
 ---
 
@@ -157,7 +157,7 @@ gantt
     v0.4 SmartScreen mature                 :milestone, m6, 2027-10-15, 0d
     Phase 2 web kickoff                     :milestone, m7, 2027-07-01, 0d
     Phase 3 mobile kickoff                  :milestone, m8, 2028-01-15, 0d
-```text
+```
 
 `crit` marks decisions on the critical path. Everything else can slip a month
 without harm — the gates cannot.
@@ -172,14 +172,14 @@ Six weeks from today. Only the gates plus the immediately dependent items.
 
 | Decision | Questions | Why it must land first |
 |---|---|---|
-| **D1** Editing in v1 | [Q-06](01-question-register.md#q-06) | Sets the FS contract's shape (doc 03 §7 is entirely conditional) |
-| **D3** Desktop shell | [Q-02](01-question-register.md#q-02) | Sets the build, the IPC, the ARM story, and doc 07 entirely |
-| **D13** Phase-1 scope | [Q-52](01-question-register.md#q-52) | Without it, "done" is undefined |
-| **D5** Monorepo & tooling | [Q-14](01-question-register.md#q-14), [Q-15](01-question-register.md#q-15) | The repo must exist before anything can be built |
-| **D4** Core language | [Q-03](01-question-register.md#q-03), [Q-18](01-question-register.md#q-18) | Determines whether `core/` is TS or Rust — the first line of code depends on it |
-| **D26** Project identity | [Q-58](01-question-register.md#q-58), [Q-59](01-question-register.md#q-59), [Q-60](01-question-register.md#q-60) | Bundle id and app-data dir are baked into the first build |
-| — measure | [Q-23](01-question-register.md#q-23), [Q-44](01-question-register.md#q-44) | Both answered by a two-hour spike on a real build |
-| — measure | [Q-14](01-question-register.md#q-14) | Try Turborepo's Cargo inference for two hours; fall back per doc 01 §12 |
+| **D1** Editing in v1 | [Q-06](01-question-register.md#q-06-does-v1-support-editing-at-all) | Sets the FS contract's shape (doc 03 §7 is entirely conditional) |
+| **D3** Desktop shell | [Q-02](01-question-register.md#q-02-which-desktop-shell-tauri-electron-flutter-wails-native) | Sets the build, the IPC, the ARM story, and doc 07 entirely |
+| **D13** Phase-1 scope | [Q-52](01-question-register.md#q-52-what-is-explicitly-out-of-scope-for-phase-1) | Without it, "done" is undefined |
+| **D5** Monorepo & tooling | [Q-14](01-question-register.md#q-14-is-turborepos-cargo-inference-reliable-enough-to-rely-on), [Q-15](01-question-register.md#q-15-does-minimumreleaseage-10080-7-days-block-security-patches) | The repo must exist before anything can be built |
+| **D4** Core language | [Q-03](01-question-register.md#q-03-rust-core-or-typescript-core), [Q-18](01-question-register.md#q-18-is-sanitizeddocument-a-distinct-type-from-markdowndocument) | Determines whether `core/` is TS or Rust — the first line of code depends on it |
+| **D26** Project identity | [Q-58](01-question-register.md#q-58-domain-name-and-website-hosting), [Q-59](01-question-register.md#q-59-product-name-siyana-markdown-viewer-or-siyana-markdown), [Q-60](01-question-register.md#q-60-bundle-identifier-and-reverse-dns-namespace) | Bundle id and app-data dir are baked into the first build |
+| — measure | [Q-23](01-question-register.md#q-23-tauri-ipc-overhead-for-large-binary-payloads), [Q-44](01-question-register.md#q-44-exact-schema-of-tauris-generated-bundlejson) | Both answered by a two-hour spike on a real build |
+| — measure | [Q-14](01-question-register.md#q-14-is-turborepos-cargo-inference-reliable-enough-to-rely-on) | Try Turborepo's Cargo inference for two hours; fall back per doc 01 §12 |
 
 **Exit criterion:** the three gates are `decided`, `pnpm install && cargo check`
 works on two platforms, and a Windows dev build opens a file.
@@ -188,17 +188,17 @@ works on two platforms, and a Windows dev build opens a file.
 
 | Decision | Questions | Notes |
 |---|---|---|
-| **D2** Parser strategy | [Q-01](01-question-register.md#q-01), [Q-04](01-question-register.md#q-04), [Q-05](01-question-register.md#q-05), [Q-12](01-question-register.md#q-12), [Q-49](01-question-register.md#q-49) | The golden tests are written against it; changing it later is a rewrite |
-| **D9** Security baseline | [Q-07](01-question-register.md#q-07), [Q-38](01-question-register.md#q-38) | **Critical path.** Cannot ship without it |
-| **D6** Render update strategy | [Q-36](01-question-register.md#q-36), [Q-39](01-question-register.md#q-39) | Decided from the M1 benchmark, not by preference |
-| **D7** Filesystem contract | [Q-21](01-question-register.md#q-21), [Q-22](01-question-register.md#q-22) | The adapter contract test suite is the deliverable |
-| **D28** Privacy & telemetry | [Q-63](01-question-register.md#q-63), [Q-64](01-question-register.md#q-64) | **Critical path.** The README's claim depends on it |
-| **D8** Window model | [Q-51](01-question-register.md#q-51), [Q-54](01-question-register.md#q-54) | Tabs vs windows changes the session model |
-| **D27** Workspace write policy | [Q-27](01-question-register.md#q-27) | Small, but blocks the session-persistence work |
-| **D46** Minimum OS versions | [Q-46](01-question-register.md#q-46) | Affects the webview checks and the README |
-| **D20** Release cadence | [Q-47](01-question-register.md#q-47) | Affects SmartScreen reputation strategy |
-| **D77** Linux artefact priority | [Q-77](01-question-register.md#q-77) | Affects CI matrix shape |
-| **D67/70/71** Governance, security response, dependency policy | [Q-67](01-question-register.md#q-67), [Q-70](01-question-register.md#q-70), [Q-71](01-question-register.md#q-71) | Cheap, and they cannot be retrofitted credibly |
+| **D2** Parser strategy | [Q-01](01-question-register.md#q-01-which-markdown-parser-is-the-core-parser), [Q-04](01-question-register.md#q-04-which-markdown-dialects-ship-on-by-default), [Q-05](01-question-register.md#q-05-how-do-we-handle-----ambiguity), [Q-12](01-question-register.md#q-12-footnotes-gfm-native-or-the-classic-pandoc-extension), [Q-49](01-question-register.md#q-49-do-we-support-mdx-qmd-txt) | The golden tests are written against it; changing it later is a rewrite |
+| **D9** Security baseline | [Q-07](01-question-register.md#q-07-do-we-support-raw-html-and-in-what-mode), [Q-38](01-question-register.md#q-38-do-remote-images-load-by-default) | **Critical path.** Cannot ship without it |
+| **D6** Render update strategy | [Q-36](01-question-register.md#q-36-our-own-block-patcher-or-a-vdom-reactsolid), [Q-39](01-question-register.md#q-39-is-content-visibility-auto-safe-with-our-measurement-code) | Decided from the M1 benchmark, not by preference |
+| **D7** Filesystem contract | [Q-21](01-question-register.md#q-21-is-a-chromium-only-web-target-acceptable), [Q-22](01-question-register.md#q-22-atomic-save-on-non-atomic-platforms-shadow-backup-or-refuse) | The adapter contract test suite is the deliverable |
+| **D28** Privacy & telemetry | [Q-63](01-question-register.md#q-63-telemetry-none-at-all-or-opt-in), [Q-64](01-question-register.md#q-64-crash-reporting-sentry-or-a-local-crash-log-the-user-can-paste) | **Critical path.** The README's claim depends on it |
+| **D8** Window model | [Q-51](01-question-register.md#q-51-is-single-document-mode-a-real-product-or-a-fallback), [Q-54](01-question-register.md#q-54-do-we-sync-documents-across-tabswindows-in-one-process) | Tabs vs windows changes the session model |
+| **D27** Workspace write policy | [Q-27](01-question-register.md#q-27-workspace-write-frequency-on-every-scroll-settle-or-on-close) | Small, but blocks the session-persistence work |
+| **D46** Minimum OS versions | [Q-46](01-question-register.md#q-46-minimum-os-versions) | Affects the webview checks and the README |
+| **D20** Release cadence | [Q-47](01-question-register.md#q-47-release-cadence-and-how-smartscreen-reputation-depends-on-it) | Affects SmartScreen reputation strategy |
+| **D77** Linux artefact priority | [Q-77](01-question-register.md#q-77-appimage-vs-deb-vs-flatpak-priority-for-v1) | Affects CI matrix shape |
+| **D67/70/71** Governance, security response, dependency policy | [Q-67](01-question-register.md#q-67-governance-who-merges-who-releases), [Q-70](01-question-register.md#q-70-security-disclosure-process-and-response-sla), [Q-71](01-question-register.md#q-71-dependency-policy-dependabot-review-sla-licence-scanning) | Cheap, and they cannot be retrofitted credibly |
 
 **Exit criterion:** a user can open a folder, read a document, use find, search
 across the folder, and close and reopen with their state intact — with an error
@@ -208,19 +208,19 @@ banner rather than a crash on a malformed file.
 
 | Decision | Questions | Notes |
 |---|---|---|
-| **D15** Linux distribution | [Q-42](01-question-register.md#q-42), [Q-43](01-question-register.md#q-43), [Q-46](01-question-register.md#q-46) | ARM runner and arm64 WebKitGTK availability |
-| **D16** Windows distribution | [Q-45](01-question-register.md#q-45) | Determines the Phase-2 Store work |
-| **D17** Updater manifest | [Q-44](01-question-register.md#q-44) | `requireSignedVersion: true` is not negotiable |
-| **D19** Accessibility bar | [Q-55](01-question-register.md#q-55), [Q-56](01-question-register.md#q-56) | Cannot be retrofitted credibly |
-| **D30** Security response | [Q-70](01-question-register.md#q-70), [Q-71](01-question-register.md#q-71) | Needed before the first public release |
-| **D10** Search scope | [Q-31](01-question-register.md#q-31) | v1 scope of tier (b) |
-| **D35** Tier-(c) gate | [Q-35](01-question-register.md#q-35) | **The most important date in Phase 1.** Decides whether 60 days of index work happen |
-| **D12** Decoration stack | [Q-09](01-question-register.md#q-09), [Q-10](01-question-register.md#q-10), [Q-11](01-question-register.md#q-11) | Bundle budget |
-| **D11** Large-file limits | [Q-13](01-question-register.md#q-13) | From the M2 benchmark |
-| **D26** Ecosystem integration | [Q-57](01-question-register.md#q-57) | Design-token reuse |
-| **D8** Wikilinks | [Q-08](01-question-register.md#q-08) | The scope-creep test: wikilinks need an index |
-| **D41** EPUB | [Q-41](01-question-register.md#q-41) | Likely "no" — that is a legitimate outcome |
-| **D29** Community process | [Q-73](01-question-register.md#q-73), [Q-74](01-question-register.md#q-74), [Q-75](01-question-register.md#q-75) | Before the issue tracker opens to the world |
+| **D15** Linux distribution | [Q-42](01-question-register.md#q-42-can-ubuntu-2404-arm-run-our-containerised-linux-build), [Q-43](01-question-register.md#q-43-is-webkit2gtk-41-available-on-ubuntu-2204-arm64), [Q-46](01-question-register.md#q-46-minimum-os-versions) | ARM runner and arm64 WebKitGTK availability |
+| **D16** Windows distribution | [Q-45](01-question-register.md#q-45-does-the-microsoft-store-accept-nsis-or-do-we-need-msix) | Determines the Phase-2 Store work |
+| **D17** Updater manifest | [Q-44](01-question-register.md#q-44-exact-schema-of-tauris-generated-bundlejson) | `requireSignedVersion: true` is not negotiable |
+| **D19** Accessibility bar | [Q-55](01-question-register.md#q-55-accessibility-bar-wcag-22-aa-floor-or-aaa-target), [Q-56](01-question-register.md#q-56-screen-reader-testing-who-how-how-often) | Cannot be retrofitted credibly |
+| **D30** Security response | [Q-70](01-question-register.md#q-70-security-disclosure-process-and-response-sla), [Q-71](01-question-register.md#q-71-dependency-policy-dependabot-review-sla-licence-scanning) | Needed before the first public release |
+| **D10** Search scope | [Q-31](01-question-register.md#q-31-regex-field-scoped-queries-fuzzy-which-ship-in-v1) | v1 scope of tier (b) |
+| **D35** Tier-(c) gate | [Q-35](01-question-register.md#q-35-when-is-the-tier-c-index-gate) | **The most important date in Phase 1.** Decides whether 60 days of index work happen |
+| **D12** Decoration stack | [Q-09](01-question-register.md#q-09-which-syntax-highlighting-engine-and-does-it-belong-in-core), [Q-10](01-question-register.md#q-10-math-katex-mathjax-or-neither-in-v1), [Q-11](01-question-register.md#q-11-mermaid-and-other-diagram-languages-in-process) | Bundle budget |
+| **D11** Large-file limits | [Q-13](01-question-register.md#q-13-what-is-the-maxfilebytes-truncation-threshold) | From the M2 benchmark |
+| **D26** Ecosystem integration | [Q-57](01-question-register.md#q-57-how-do-we-handle-the-siyana-ecosystems-other-apps) | Design-token reuse |
+| **D8** Wikilinks | [Q-08](01-question-register.md#q-08-do-we-support-wikilinks-target-and-embed) | The scope-creep test: wikilinks need an index |
+| **D41** EPUB | [Q-41](01-question-register.md#q-41-do-we-ship-epub-export-in-v1) | Likely "no" — that is a legitimate outcome |
+| **D29** Community process | [Q-73](01-question-register.md#q-73-good-first-issue-strategy-and-issue-triage-load), [Q-74](01-question-register.md#q-74-how-do-we-honestly-answer-why-not-obsidian), [Q-75](01-question-register.md#q-75-how-do-we-say-no-in-public) | Before the issue tracker opens to the world |
 
 **Exit criterion:** a signed build passes the performance budgets (doc 06 §9),
 passes the losslessness gate, survives the fuzz corpus, and installs cleanly on
@@ -235,12 +235,12 @@ still open, the default in this document applies and we ship.
 
 | Date | Decision | Notes |
 |---|---|---|
-| 2027-06-30 | [Q-32](01-question-register.md#q-32) workspace size distribution, [Q-34](01-question-register.md#q-34) ranking, [Q-25](01-question-register.md#q-25) backups, [Q-26](01-question-register.md#q-26) bookmarks, [Q-30](01-question-register.md#q-30) sidecar state, [Q-20](01-question-register.md#q-20) linting, [Q-40](01-question-register.md#q-40) print, [Q-45](01-question-register.md#q-45) Store packaging, [Q-50](01-question-register.md#q-50) notebooks, [Q-65](01-question-register.md#q-65) localization, [Q-66](01-question-register.md#q-66) funding, [Q-78](01-question-register.md#q-78) account ownership, [Q-76](01-question-register.md#q-76) reproducibility | Informed by real users |
-| 2027-07-01 | Phase 2 web kickoff: [Q-21](01-question-register.md#q-21), [Q-28](01-question-register.md#q-28), [Q-16](01-question-register.md#q-16) | Scope the web target before writing it |
+| 2027-06-30 | [Q-32](01-question-register.md#q-32-what-is-the-real-distribution-of-workspace-sizes) workspace size distribution, [Q-34](01-question-register.md#q-34-bm25-or-recencypath-ranking) ranking, [Q-25](01-question-register.md#q-25-one-shadow-backup-file-or-timestamped-rotation) backups, [Q-26](01-question-register.md#q-26-do-users-want-per-workspace-bookmarks) bookmarks, [Q-30](01-question-register.md#q-30-should-workspace-state-live-beside-the-notes-in-git) sidecar state, [Q-20](01-question-register.md#q-20-eslint-prettier-or-biomeoxlint) linting, [Q-40](01-question-register.md#q-40-print-and-pdf-output-how-far) print, [Q-45](01-question-register.md#q-45-does-the-microsoft-store-accept-nsis-or-do-we-need-msix) Store packaging, [Q-50](01-question-register.md#q-50-notebook-formats-ipynb) notebooks, [Q-65](01-question-register.md#q-65-localization-which-languages-and-which-pipeline) localization, [Q-66](01-question-register.md#q-66-funding-sponsors-grants-paid-tier-donations) funding, [Q-78](01-question-register.md#q-78-who-owns-the-store-and-signing-accounts) account ownership, [Q-76](01-question-register.md#q-76-binary-reproducibility-is-it-a-goal) reproducibility | Informed by real users |
+| 2027-07-01 | Phase 2 web kickoff: [Q-21](01-question-register.md#q-21-is-a-chromium-only-web-target-acceptable), [Q-28](01-question-register.md#q-28-is-navigatorstoragepersist-worth-a-permission-prompt), [Q-16](01-question-register.md#q-16-does-bun-save-meaningful-ci-time-at-our-repository-size) | Scope the web target before writing it |
 | 2027-10-15 | v0.4: SmartScreen reputation mature | Not a decision, a milestone |
-| 2028-01-15 | Phase 3 mobile kickoff: [Q-24](01-question-register.md#q-24), [Q-33](01-question-register.md#q-33) | Re-validate the adapter contract against real SAF and iOS |
-| 2028-03-31 | [Q-17](01-question-register.md#q-17) WASM escalation, [Q-19](01-question-register.md#q-19) config package, [Q-29](01-question-register.md#q-29) storage engine | Only if their triggers fire |
-| 2028-06-30 | [Q-53](01-question-register.md#q-53) extensibility | Only with adoption evidence |
+| 2028-01-15 | Phase 3 mobile kickoff: [Q-24](01-question-register.md#q-24-ios-external-edits-nsfilecoordinator-or-re-stat-on-resume), [Q-33](01-question-register.md#q-33-is-a-js-index-viable-on-low-end-android) | Re-validate the adapter contract against real SAF and iOS |
+| 2028-03-31 | [Q-17](01-question-register.md#q-17-one-core-or-a-second-wasm-renderer-that-must-agree) WASM escalation, [Q-19](01-question-register.md#q-19-does-siyanaconfig-become-a-landfill) config package, [Q-29](01-question-register.md#q-29-does-tier-c-search-force-sqlite) storage engine | Only if their triggers fire |
+| 2028-06-30 | [Q-53](01-question-register.md#q-53-plugin-theme-ecosystem-ever) extensibility | Only with adoption evidence |
 
 ---
 
@@ -337,7 +337,7 @@ Copy-pasteable. The order is the point.
 - Q-50 notebooks — trigger: 5+ requests
 - Q-76 reproducibility — trigger: distribution trust blocks
 - Q-78 accounts — trigger: a signing account is created
-```diff
+```
 
 ---
 

@@ -127,7 +127,7 @@ Logseq's problem and it will be ours if we are not careful.
 
 | # | Lesson | Where it lands |
 |---|---|---|
-| 1 | **Block-level addressing is valuable — for the reading side it means: link to a heading, and support deep anchor targets robustly.** A reader's "block" is a section | [02 §2](../12-ux/02-navigation-and-find.md#2-heading-anchals) |
+| 1 | **Block-level addressing is valuable — for the reading side it means: link to a heading, and support deep anchor targets robustly.** A reader's "block" is a section | [02 §2](../12-ux/02-navigation-and-find.md#2-heading-anchors) |
 | 2 | **Never remove a rendering capability in place.** Migrate additively | [05 rendering](../05-rendering/), [14 architecture](../14-architecture-options/) |
 | 3 | **A plugin permission model is a first-class design artefact**, not an afterthought. "No effect" plugins are safe on the web is a genuinely good idea | [14](../14-architecture-options/) |
 | 4 | **Narrowness is a feature.** Every one of Logseq's removed features was individually justified and collectively fatal | The core positioning in [01-obsidian §12](../13-competitors/01-obsidian.md#12-the-gap-stated-precisely) |
@@ -217,7 +217,7 @@ exactly the right shape for a feature like export.
 plus user-supplied templates gives us DOCX, LaTeX, ODT, and EPUB for free,
 without six bespoke implementations. That would make Typora's enormous export
 list tractable — see
-[02-typora-and-marktext §12 T13](../13-competitors/02-typora-and-marktext.md#what-we-learn-from-typora--marktext).
+[02-typora-and-marktext §12 T13](../13-competitors/02-typora-and-marktext.md#12-what-we-learn-from-typora-marktext).
 
 **But:** it also drags in a heavyweight dependency (Pandoc is ~30 MB). For a
 fast viewer, HTML and PDF must work with **no Pandoc present**, with Pandoc as
@@ -279,7 +279,7 @@ product, and it is a category a viewer should not enter.
 |---|---|---|
 | 1 | **Delegate to the tool that already solved the problem** (citeproc/Pandoc for citations, KaTeX for math, Mermaid for diagrams, FTS5 for search) | [06 libraries](../06-libraries/) is written on this principle |
 | 2 | **One export mechanism plus user templates**, not one implementation per format | [01-reading-ux §12](../12-ux/01-reading-ux.md#12-print-and-pdf-as-a-first-class-output) |
-| 3 | **Stable identifiers beat titles.** A note/heading ID that survives a retitle is what makes links durable. Our heading slugs must be stable and our backlinks must survive file renames where the OS allows us to track them | [02 §2](../12-ux/02-navigation-and-find.md#2-heading-anchals), [02 §9](../12-ux/02-navigation-and-find.md#9-backlinks) |
+| 3 | **Stable identifiers beat titles.** A note/heading ID that survives a retitle is what makes links durable. Our heading slugs must be stable and our backlinks must survive file renames where the OS allows us to track them | [02 §2](../12-ux/02-navigation-and-find.md#2-heading-anchors), [02 §9](../12-ux/02-navigation-and-find.md#9-backlinks) |
 | 4 | **A continuous "how much WYSIWYG" control beats discrete modes.** If we ever edit, this is the better shape than Typora's three modes | [01-reading-ux §11](../12-ux/01-reading-ux.md#11-the-second-verb-editing-deferred-not-refused) |
 | 5 | **A category that serves one job extremely well beats a category that serves five jobs adequately.** Zettlr is useless for a README and perfect for a dissertation. That is not a defect — it is the shape of a good product | Our positioning |
 | 6 | **"No telemetry, not even update checks unless you want them"** is a publishable, verifiable privacy stance | [01-obsidian §8.4](../13-competitors/01-obsidian.md#84-local-first-done-properly) |

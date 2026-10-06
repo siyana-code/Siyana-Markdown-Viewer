@@ -36,7 +36,7 @@ are less settled than CommonMark itself.**
 
 ### 2.1 Tables with alignment (GFM §4.10) — **GFM**
 
-Full rule and 8 fixtures: [01 §15](01-block-elements.md#15-tables--gfm-extension-gfm-410-examples-198205).
+Full rule and 8 fixtures: [01 §15](01-block-elements.md#15-tables-gfm-extension-gfm-410-examples-198205).
 
 ```markdown
 | Function name | Description                    |

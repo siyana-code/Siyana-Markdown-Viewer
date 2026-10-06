@@ -21,7 +21,7 @@ resolve path
   → follow symlinks, re-check root      (symlink escape is the attack)
   → stat: size, mtime
   → read bytes
-```text
+```
 
 **Guards:** refuse above the size threshold with an explicit user choice rather
 than silently truncating (`R-P3-06`). A read that returns fewer bytes than
@@ -164,7 +164,7 @@ const container = document.createElement('div')
 container.innerHTML = sanitizedHtml    // sanitizedHtml is the ONLY argument
                                      // to innerHTML anywhere in the codebase
 viewer.replaceChildren(container)
-```text
+```
 
 Enforced by:
 
@@ -232,7 +232,7 @@ keystroke
   → sanitize the small resulting fragment
   → replace only those children
   → schedule decoration for the changed blocks
-```text
+```
 
 Three things make this work:
 
@@ -280,12 +280,12 @@ Every stage reports duration and output size to a debug panel behind a
 developer shortcut. The numbers are used by the CI benchmark harness, so the
 budgets above are measured rather than believed.
 
-```
+```json
 [render] read 84ms  decode 31ms  parse 612ms  transform 18ms
          serialize 96ms  sanitize 142ms  insert 88ms  paint 74ms
          → 214 blocks, 5.2 MB source, 1.9 MB DOM
          decoration deferred: 148 code blocks queued
-```diff
+```
 
 ---
 

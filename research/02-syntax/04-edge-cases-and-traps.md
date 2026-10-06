@@ -142,7 +142,7 @@ Implemented as a linear scan, in this order (§16 of [01](01-block-elements.md#1
 **The security consequence.** `<script>` is a type-1 HTML block and is passed
 through verbatim. `<style type="text/css">` with no closing tag swallows the rest
 of the document. Both are reasons the sanitiser and a raw-HTML size cap are
-mandatory, not optional. → [01 §9.1](01-block-elements.md#91-security-implications--read-this-before-implementing)
+mandatory, not optional. → [01 §9.1](01-block-elements.md#91-security-implications-read-this-before-implementing)
 
 ---
 
@@ -659,7 +659,7 @@ Everything below becomes a fixture. `→` = tab, `␣` = one space.
 | 66 | `‏# H` (U+200F before `#`) | paragraph | `<h1>H</h1>` | U+200F is not a space |
 | 67 | `a\rb` | 2 paragraphs | 1 paragraph | CR is a line ending |
 | 68 | `_a ` × 65 000 | `<p>_a _a …</p>` in < 1 s | **33 minutes** in `marked` | [§12.1](#121-measured-unclosed-emphasis-openers) |
-| 69 | `</` + `<!--` × 20 000 | raw text, < 1 s ideally | 9.6 s in `markdown-it` | [§12.3](#123-measured-unclosed-html-comments--markdown-it's-weak-spot) |
+| 69 | `</` + `<!--` × 20 000 | raw text, < 1 s ideally | 9.6 s in `markdown-it` | [§12.3](#123-measured-unclosed-html-comments-markdown-its-weak-spot) |
 | 70 | `> ` × 2 500 | render, no crash | `RangeError` in `marked` | [§11.1](#111-measured-recursion-limits) |
 | 71 | `\u0000` anywhere | U+FFFD | dropped | §2.3 |
 | 72 | `\u0301` after a letter | preserved as 2 code points | NFC-normalised | §2.2 Ex. 3 + [§8.4](#84-combining-characters-and-code-points-vs-graphemes) |
@@ -682,14 +682,14 @@ explaining which rule it covers.
 | Fullwidth `＃` heading | [§8.3](#83-cjk-and-full-width-characters) |
 | ZWJ family emoji inside emphasis | [§8.2](#82-emoji-zwj-sequences-and-variation-selectors) |
 | 999-character link label (match) and 1 000-character (no match) | [02 §6.4](02-inline-elements.md#64-the-999-character-label-limit) |
-| `$5 and $6` (no math), `$ x $`, `$x $`, `` ␃$x$␃ `` | [03 §9.1](03-extensions-and-dialects.md#91-the-delimiter-rule--this-is-the-whole-spec) |
-| `[[note\|alias]]` inside a GFM table cell | [03 §15.1](#151-the-mode-model) |
-| `> [!note]` as the first line of a list item | [03 §11](03-extensions-and-dialects.md#11-admonitions-alerts-and-rst-style-callouts--extension) |
-| `%%comment%%` inside a code span | [03 §13](03-extensions-and-dialects.md#13-highlight-superscript-subscript-comment--nonstandard) |
-| `%%{init: …}%%` inside a ```` ␃␃␃mermaid ```` fence | [03 §10](#10-mermaid-and-other-diagram-fences--extension) |
+| `$5 and $6` (no math), `$ x $`, `$x $`, `` ␃$x$␃ `` | [03 §9.1](03-extensions-and-dialects.md#91-the-delimiter-rule-this-is-the-whole-spec) |
+| `[[note\|alias]]` inside a GFM table cell | [03 §15.1](03-extensions-and-dialects.md#151-the-mode-model) |
+| `> [!note]` as the first line of a list item | [03 §11](03-extensions-and-dialects.md#11-admonitions-alerts-and-rst-style-callouts-extension) |
+| `%%comment%%` inside a code span | [03 §13](03-extensions-and-dialects.md#13-highlight-superscript-subscript-comment-nonstandard) |
+| `%%{init: …}%%` inside a ```` ␃␃␃mermaid ```` fence | [03 §10](03-extensions-and-dialects.md#10-mermaid-and-other-diagram-fences-extension) |
 | `---` / `title: x` / `---` at byte 0 of a file | [01 §14](01-block-elements.md#14-front-matter-conventions) |
 | `---` alone (no closing fence) | must be a thematic break |
-| `+++` and `{` front matter | [03 §12](#12-front-matter-variants--extension) |
+| `+++` and `{` front matter | [03 §12](03-extensions-and-dialects.md#12-front-matter-variants-extension) |
 
 ---
 

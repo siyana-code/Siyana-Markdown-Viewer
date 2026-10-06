@@ -202,7 +202,7 @@ flowchart TD
 
     style Platform fill:#ffe6e6
     style Engine fill:#fff4d6
-```text
+```
 
 Note the asymmetry that matters: choosing Tauri means **the engine version is the
 OS vendor's problem on Windows and the distro's problem on Linux**, whereas
@@ -241,7 +241,7 @@ opinions on the record.
    [01-windows.md](01-windows.md#3-packaging-msix-vs-nsis-vs-msi).
 7. **Every release artifact is cryptographically signed, and the signature is
    over the artifact itself — never over a checksum published beside it.** See
-   [03-distribution-and-updates.md](03-distribution-and-updates.md#integrity).
+   [03-distribution-and-updates.md §5](03-distribution-and-updates.md#5-update-integrity-this-section-is-the-one-that-matters).
 
 ---
 

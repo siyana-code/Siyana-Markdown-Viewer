@@ -181,7 +181,7 @@ function openExternal(parsed) {
   if (!ALLOWED_PROTOCOLS.has(parsed.protocol)) return;
   shell.openExternal(parsed.toString());
 }
-```text
+```
 
 **`file://` — the trap (checklist 18).** The docs are explicit:
 
@@ -224,7 +224,7 @@ app.whenReady().then(() => {
     return net.fetch(pathToFileURL(target).toString());
   });
 });
-```text
+```
 
 Then a **second, scoped protocol for user images** referenced by Markdown —
 this is the equivalent of Tauri's asset protocol, and it is more work:
@@ -247,7 +247,7 @@ app.whenReady().then(() => {
     return net.fetch(pathToFileURL(filePath).toString());
   });
 });
-```text
+```
 
 **Honest verdict: Electron's story here is worse than Tauri's.** Tauri gives you
 `assetProtocol.scope` with globs, allow/deny, and dot-directory semantics as
@@ -314,7 +314,7 @@ function validateSender(frame) {
   if (frame && frame.origin === 'app://viewer') return true;
   return false;
 }
-```text
+```
 
 The docs also warn to use Node's URL parser rather than string prefix checks:
 *"a `startsWith('https://example.com')` test would let
@@ -343,7 +343,7 @@ parentPort.on('message', async ({ id, path, bytes }) => {
     parentPort.postMessage({ id, ok: false, error: String(err) });
   }
 });
-```text
+```
 
 ```js
 // src/main/main.js
@@ -351,7 +351,7 @@ const { utilityProcess } = require('electron');
 const child = utilityProcess.fork(path.join(__dirname, 'parser-host.js'));
 child.postMessage({ id: 1, path: '/home/u/big.md' });
 child.on('message', (msg) => { /* msg.html is already sanitised */ });
-```text
+```
 
 The same pattern in Tauri is just "do it in Rust", which is also isolated. But
 Electron's version keeps the code in **JavaScript**, which matters enormously for
@@ -490,7 +490,7 @@ use it identically so the numbers are comparable):
 # user cares about and it is a *separate process* you will otherwise miss.
 ps -o pid,rss,comm -C siyana-markdown-viewer        # Linux
 tasklist /FI "IMAGENAME eq siyana-markdown-viewer.exe" /FO CSV   # Windows
-```text
+```
 On Windows the renderer will show as multiple `siyana-markdown-viewer.exe`
 processes. **Sum them.** Reporting only the main process understates Electron by
 roughly half — a very common error in blog comparisons.
@@ -738,7 +738,7 @@ publish:
   provider: github
   owner: siyana
   repo: markdown-viewer
-```text
+```
 
 **Note on `npmRebuild: false`:** if we ever add a native module, setting this
 false stops electron-builder from silently rebuilding it against the wrong
@@ -762,7 +762,7 @@ load. `electron-rebuild` handles this:
 ```bash
 # Every time we bump Electron
 npx electron-rebuild -f -w siyana-markdown-viewer
-```text
+```
 
 Or in `package.json`:
 ```json
@@ -919,7 +919,7 @@ test('renders a hostile Markdown file safely', async () => {
   const alerts = await win.evaluate(() => window.__alertsSeen);
   expect(alerts).toEqual([]);
 });
-```text
+```
 
 **This is materially better than Tauri.** Tauri offers `tauri-driver`
 (WebDriver, crate 2.1.0) plus WebdriverIO/Selenium — which works, but is a

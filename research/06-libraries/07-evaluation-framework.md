@@ -148,15 +148,15 @@ weight) / 10**, so the total is out of 10.
 |---|---|---:|---:|---:|---:|---|
 | 1 | CommonMark conformance | 12% | **9.9** — 649/652 = 99.5% in `commonmark` preset | **7.7** — 502/652 = 77.0% | **9.9** — 648/652 = 99.4% with `allowDangerousHtml` | [01 §6](01-js-parsers.md#6-commonmark-conformance-measured) |
 | 2 | GFM / extensions | 8% | **8.5** — GFM 3 of 5 + footnotes + deflist + attrs + container + toc + anchors + emoji + CJK | **4.5** — GFM 4 of 5, no footnotes/deflist/attrs/container | **9.5** — GFM 5 of 5 + footnotes + deflist + math + frontmatter + directives + MDX | plugin tables in [01 §1.6](01-js-parsers.md#16-the-plugin-ecosystem); [03 §7](03-other-ecosystems.md#7-cross-ecosystem-dialect-matrix) |
-| 3 | Security posture | 15% | **9.0** — +3 raw HTML off, +2 schemes blocked (verified), +2 six deps all maintained, +1 pathological-input fixes (3 DoS fixes in 2026), +1 advisories fixed promptly; −0 default-config advisory | **2.0** — raw HTML **on** by default, dangerous schemes pass through (verified), 0 deps (+2), 1.26B downloads means prompt fixing (+1); −5 for unsafe default | **8.0** — +3 raw HTML escaped by default, +2 schemes blocked (verified: `href=""`), −2 for ~100-package tree, −1 for complex config surface | [01 §1.5](01-js-parsers.md#15-security-behaviour-verified-by-hand), [01 §2.3](01-js-parsers.md#23-the-sanitize-option-history--this-matters) |
+| 3 | Security posture | 15% | **9.0** — +3 raw HTML off, +2 schemes blocked (verified), +2 six deps all maintained, +1 pathological-input fixes (3 DoS fixes in 2026), +1 advisories fixed promptly; −0 default-config advisory | **2.0** — raw HTML **on** by default, dangerous schemes pass through (verified), 0 deps (+2), 1.26B downloads means prompt fixing (+1); −5 for unsafe default | **8.0** — +3 raw HTML escaped by default, +2 schemes blocked (verified: `href=""`), −2 for ~100-package tree, −1 for complex config surface | [01 §1.5](01-js-parsers.md#15-security-behaviour-verified-by-hand), [01 §2.3](01-js-parsers.md#23-the-sanitize-option-history-this-matters) |
 | 4 | Bundle size | 7% | **5.5** — 40,506 B gzip | **10.0** — 13,643 B gzip | **8.0** — 15,168 B (micromark) + remark + unified + ~100 transitive pkgs | Bundlephobia, [01 §0](01-js-parsers.md#0-the-four-contenders-at-a-glance) |
 | 5 | Parse performance | 8% | **6.0** — 4.19 KiB/ms | **7.5** — 7.01 KiB/ms (gfm:false), 4.87 (gfm:true) | **2.5** — 0.39 KiB/ms full pipeline, 10.8× slower than A | [01 §7](01-js-parsers.md#7-performance-measured) |
 | 6 | Maintenance | 12% | **9.5** — 22.0k ★, 119.4M dl/mo, last commit 2026-09-11, 3 releases in 2026, multi-contributor, tests+coverage | **8.5** — 37.2k ★, 326.6M dl/mo, last commit 2026-10-05, but 18 CVEs is a higher churn rate | **9.0** — micromark 2.2k ★ / remark 9.0k ★ / unified 5.0k ★, micromark last commit 2026-09-26, but `remark` last release 2023-09-18 and `unified` 2024-06-19 | [01 §0](01-js-parsers.md#0-the-four-contenders-at-a-glance) |
 | 7 | Licence | 8% | **10.0** — MIT | **10.0** — MIT | **10.0** — MIT | registry metadata |
 | 8 | TypeScript | 6% | **10.0** — first-party, bundled since v15; ESM **and** CJS | **6.0** — first-party, ESM-only, `engines.node >= 20` | **8.0** — first-party everywhere, ESM-only (no CJS fallback at all) | [01 §0](01-js-parsers.md#0-the-four-contenders-at-a-glance) |
-| 9 | WASM-ability | 4% | **4.0** — no first-party WASM build exists | **4.0** — same | **2.0** — `micromark/markdown-rs` exists but is dormant (fails G2) | [02 §7](02-rust-parsers.md#7-the-ffi--wasm-question) |
+| 9 | WASM-ability | 4% | **4.0** — no first-party WASM build exists | **4.0** — same | **2.0** — `micromark/markdown-rs` exists but is dormant (fails G2) | [02 §7](02-rust-parsers.md#7-the-ffi-wasm-question) |
 | 10 | Community | 10% | **9.5** — 22.0k ★, 119.4M dl/mo, used by VS Code-adjacent tooling, Vue/Vite ecosystem | **10.0** — 37.2k ★, 326.6M dl/mo, most-downloaded Markdown parser on npm | **9.0** — remark 9.0k ★, react-markdown 15.9k ★, 24.7M dl/mo (remark) | registry + GitHub, 2026-10-06 |
-| 11 | Position info / extensibility | 10% | **8.5** — line-accurate `map` on every block token; 4 ruler phases; block-level cache verified byte-identical | **4.0** — **no `map`**; `token.raw` only; `use()` merge model | **10.0** — mdast `position` with line, column **and** offset on every node; extensible syntax + AST plugins | [01 §7.4](01-js-parsers.md#74-a-concrete-win-we-verified-independent-block-rendering), [01 §3.2](01-js-parsers.md#32-api-shape--three-levels-pick-one) |
+| 11 | Position info / extensibility | 10% | **8.5** — line-accurate `map` on every block token; 4 ruler phases; block-level cache verified byte-identical | **4.0** — **no `map`**; `token.raw` only; `use()` merge model | **10.0** — mdast `position` with line, column **and** offset on every node; extensible syntax + AST plugins | [01 §7.4](01-js-parsers.md#74-a-concrete-win-we-verified-independent-block-rendering), [01 §3.2](01-js-parsers.md#32-api-shape-three-levels-pick-one) |
 
 ### 5.2 Weighted totals
 
@@ -166,7 +166,7 @@ weight) / 10**, so the total is out of 10.
 
 Worked example for A:
 
-```
+```text
  9.9×0.12 = 1.188    7.7×0.12 = 0.924    9.9×0.12 = 1.188
  8.5×0.08 = 0.680    4.5×0.08 = 0.360    9.5×0.08 = 0.760
  9.0×0.15 = 1.350    2.0×0.15 = 0.300    8.0×0.15 = 1.200

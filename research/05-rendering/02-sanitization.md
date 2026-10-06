@@ -69,7 +69,7 @@ Before the how, the *cannot*:
   says so in its non-goals: it "will **NOT** reliably stop HTML that requests
   external resources (tracking pixels, prefetch, etc.). There are too many ways
   to do it." We handle that separately — see
-  [04-media-and-images.md §6](./04-media-and-images.md#6-remote-images-should-we-load-them).
+  [04-media-and-images.md §6](./04-media-and-images.md#6-remote-images-should-we-load-them-by-default).
 - It cannot protect our *export* output, which will be opened by an unknown
   future renderer. See [05-export-and-print.md §5](./05-export-and-print.md#5-how-to-make-an-exported-html-file-safe).
 
@@ -138,7 +138,7 @@ ALLOWLIST = {
   ],
   ...
 }
-```text
+```
 — <https://github.com/gjtorikian/html-pipeline/blob/main/lib/html_pipeline/sanitization_filter.rb>
 
 Note what GitHub does *not* allow: `script`, `style`, `iframe`, `form`,
@@ -159,7 +159,7 @@ section sup
 details summary
 div span abbr bdi bdo cite dfn kbd mark q s samp small sub sup time u var wbr
 input     ← ONLY type=checkbox, disabled, for GFM task lists
-```text
+```
 
 **Attributes, per tag:**
 
@@ -198,7 +198,7 @@ autofocus      fires handlers without user interaction
 dirname        smuggles form data
 patchsrc       declarative-partial-updates remote fetch
 http-equiv     meta refresh
-```text
+```
 
 **Tags never allowed:** `script`, `style` (element), `iframe`, `frame`,
 `frameset`, `object`, `embed`, `applet`, `base`, `meta`, `link`, `form`, `svg`,
@@ -215,7 +215,7 @@ DOMPurify permits HTML, SVG **and** MathML by default, and says so:
 // If you only need HTML, which might be a very common use-case, you can easily
 // set that up as well:
 const clean = DOMPurify.sanitize(dirty, { USE_PROFILES: { html: true } });
-```text
+```
 
 **We use `{ USE_PROFILES: { html: true } }`.** Rendered Markdown has no
 legitimate need for inline SVG or MathML; both are separate features a user can
@@ -249,11 +249,11 @@ Representative payloads, kept as regression tests:
 
 ```html
 <math><mtext><table><mglyph><style><img src=x onerror=alert(1)></style></mglyph></table></mtext></math>
-```text
+```
 
 ```html
 <svg></p><style><a id="</style><img src=x onerror=alert(1)>"></svg>
-```text
+```
 
 The last is the canonical mutation-XSS shape from Gareth Heyes'
 ["Bypassing DOMPurify again with mutation XSS"](https://portswigger.net/research/bypassing-dompurify-again-with-mutation-xss).
@@ -268,7 +268,7 @@ Not XSS — something different and just as useful to an attacker. Markup like:
 ```html
 <img src=x name=getElementById>
 <form><input name=attributes></form>
-```text
+```
 
 shadows properties on `document`, `window`, or form objects, so application code
 doing `document.getElementById(x)` or `form.attributes` reads attacker
@@ -286,7 +286,7 @@ Our stance:
 2. **Enable `SANITIZE_DOM`.**
 3. **Prefix our generated ids** (`h-`, `fn-`, `fnref-`) so document content
    cannot produce `id="main"` or `id="content"` — see
-   [01-ast-to-html.md §2.5](./01-ast-to-html.md#25-escaping-the-slug).
+   [01-ast-to-html.md §2.5](./01-ast-to-html.md#23-escaping-the-slug).
 4. `SANITIZE_NAMED_PROPS` is **not** enabled, because it would rewrite our own
    heading ids and break the TOC. Instead we achieve the same property by not
    allowing `name` at all (§2.2) and by prefixing ids.
@@ -369,7 +369,7 @@ data:image/svg+xml;base64,… BANNED  ← SVG is a script-bearing document
 data:text/html;base64,…     BANNED
 data:text/javascript;base64,… BANNED
 data:application/*;…        BANNED
-```text
+```
 
 Why `image/svg+xml` is banned even though it "looks like an image": an SVG file
 is a **document**, and it can contain `<script>`, `<foreignObject>`, event
@@ -438,7 +438,7 @@ export function classifyUrl(raw: string, ctx: { base?: URL; allowDataImage?: boo
 
   return SAFE_SCHEMES.has(parsed.protocol) ? 'safe' : 'blocked';
 }
-```text
+```
 
 Step 1 is not paranoia. `java\tscript:alert(1)`, `java&#x09;script:` and
 ` javascript:` all execute in browsers, and every hand-rolled filter that missed
@@ -549,7 +549,7 @@ Two of those are worth studying as *classes*:
   sanitized output" is a hard rule and not a style preference.**
 
 Our lockfile pins an exact DOMPurify version and Dependabot is configured to
-open security PRs ([04-dependency-and-supply-chain.md §3](../11-security/04-dependency-and-supply-chain.md#3-monitoring)).
+open security PRs ([04-dependency-and-supply-chain.md §3](../11-security/04-dependency-and-supply-chain.md#3-integrity-verification)).
 
 ---
 
@@ -566,7 +566,7 @@ Safe contract:
 ```js
 const clean = DOMPurify.sanitize(dirty);
 element.innerHTML = clean;
-```text
+```
 
 Unsafe contracts, all of which we must never write:
 
@@ -577,7 +577,7 @@ svgElement.innerHTML = clean;          // SVG/XML context mismatch
 templateEngine.render(clean);          // A second interpreter after HTML
 someLibrary.html(clean);               // The library may mutate or reparse
 wrapper.innerHTML = `<xmp>${clean}</xmp>`;  // rawtext re-contextualization (CVE-2026-65914)
-```text
+```
 
 The HTML spec itself warns that "serialize-then-reparse is not guaranteed to
 round-trip." Our design consequence:
@@ -603,7 +603,7 @@ console.assert(!clean.includes('onerror'));
 // Better test: insert and inspect the resulting DOM.
 container.innerHTML = clean;
 console.assert(!container.querySelector('[onerror]'));
-```text
+```
 
 Our CI must run the second form, in a real browser (Chromium via Playwright),
 against a payload corpus.
@@ -655,7 +655,7 @@ and it is a permanent maintenance burden. Prefer to never need it.
 
 ### 8.1 Order of operations
 
-```
+```text
 bytes
   → decode
   → parse (raw HTML preserved as AST nodes)
@@ -663,7 +663,7 @@ bytes
   → serialize to HTML string          ← our renderer, §01
   → DOMPurify.sanitize(...)          ← THE BOUNDARY
   → insert, once, no post-processing
-```yaml
+```
 
 Not: sanitize → transform. Post-sanitization transform code becomes an
 unsanitized-attribute generator (§1 of [01-ast-to-html.md](./01-ast-to-html.md#3-escaping-rules)
@@ -679,7 +679,7 @@ document.body.innerHTML  element.setAttribute('href'|'src'|'on*'|...)
 Range.createContextualFragment  el.insertAdjacentElement
 $(...).html()  v-html=  (framework bindings)
 DOMParser.parseFromString(…, 'text/html') then adopt — also a parse
-```text
+```
 
 CI check (a real one, not aspirational):
 
@@ -723,7 +723,7 @@ rewritten at build time to inject nonces and hashes for local scripts:
     }
   }
 }
-```text
+```
 
 For Electron, set it per-response via
 `session.defaultSession.webRequest.onHeadersReceived`, and also as a `<meta>`
@@ -749,7 +749,7 @@ if (window.trustedTypes) {
     createHTML: (input) => DOMPurify.sanitize(input, SANITIZE_CONFIG),
   });
 }
-```text
+```
 
 With that, a bare `el.innerHTML = attackerString` **throws** instead of executing.
 Note DOMPurify's constraint: to create the policy, `RETURN_TRUSTED_TYPE: false`
@@ -788,7 +788,7 @@ The document:
 <pre><img src=z onerror=alert(4)></pre>
 
 <table><tr><td width=1 onmouseover="alert(5)">cell</table>
-````text
+````
 
 ### Layer 0 — the parser (CommonMark)
 
@@ -827,7 +827,7 @@ different controls and neither substitutes for the other.**
 
 ```ts
 DOMPurify.sanitize(dirty, SANITIZE_CONFIG);
-```text
+```
 
 What happens, element by element:
 

@@ -40,7 +40,7 @@ Test effort follows that order, not the order that is easiest to write.
                    │ decode, slug, TOC, search,  │  Fast, plentiful
                    │ limits, path resolution      │
                    └─────────────────────────────┘
-```text
+```
 
 ## 1. Unit tests
 
@@ -74,7 +74,7 @@ describe('CommonMark conformance', () => {
     expect(results.failed).toEqual(baseline.commonmark.failedIds)
   })
 })
-```text
+```
 
 The key design decision: **a regression fails the build even if we are already
 above our target pass rate.** If we are at 99.4% and someone drops two examples,
@@ -148,7 +148,7 @@ it('treats escaped text as text', () => {
     })
   )
 })
-```text
+```
 
 **Fuzzing** is the same idea at higher volume with structured mutation: take a
 corpus of valid documents, apply byte mutations, insertions of adversarial
@@ -245,7 +245,7 @@ pnpm test:fuzz                # quick fuzz, CI budget
 pnpm test:fuzz -- --iterations 1000000        # deep, nightly
 pnpm bench                    # performance baselines
 pnpm bench -- --compare       # regression report
-```text
+```
 
 ## Related
 

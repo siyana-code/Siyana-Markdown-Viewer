@@ -99,7 +99,7 @@ function describeError(error: RenderError): string {
       return error.detail
   }
 }
-```text
+```
 
 Rules:
 
@@ -126,7 +126,7 @@ const MAX_DEPTH = 100 // the maximum depth
 // A scroll listener that reads getBoundingClientRect() on every event forces
 // synchronous layout each frame. IntersectionObserver is async and free.
 const observer = new IntersectionObserver(handleHeading, { rootMargin: '0px 0px -70% 0px' })
-```text
+```
 
 ## CSS
 

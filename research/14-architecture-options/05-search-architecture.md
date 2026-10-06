@@ -58,7 +58,7 @@ export interface FindHandle {
   prev(): Promise<void>;
   close(): void;
 }
-```text
+```
 
 ### 2.2 Electron's Ctrl+F problem
 
@@ -71,7 +71,7 @@ const { app, Menu, BrowserWindow } = require('electron');
 Menu.setApplicationMenu(Menu.buildFromTemplate([
   // ...custom menus; omitting the roles that trigger the find bar frees Ctrl+F
 ]));
-```text
+```
 
 and even then, `webContents.findInPage(term, { forward: true })` is the
 programmatic API and it is the only way to *drive* find — there is no API to
@@ -149,7 +149,7 @@ export class PlaintextFind {
     }
   }
 }
-```text
+```
 
 Highlighting happens by wrapping the matched range in the rendered DOM with
 `<mark data-find-index="n">`, splitting text nodes as needed. That is a
@@ -289,7 +289,7 @@ export async function* scanWorkspace(
   if (bytes >= req.maxBytesScanned) yield { kind: 'truncated', reason: 'max-bytes' };
   yield { kind: 'done', elapsedMs: 0, filesScanned: files, bytesScanned: bytes };
 }
-```text
+```
 
 Six decisions in that code, each of which exists because of a specific failure:
 
@@ -314,7 +314,7 @@ export interface ReadCache {
   clear(): void;
   stats(): { entries: number; bytes: number; hits: number; misses: number };
 }
-```text
+```
 
 | Target | Implementation | Cap |
 |---|---|---|
@@ -405,7 +405,7 @@ export interface SearchDocument {
   readonly contentHash: string;       // doc 03 §6 — the identity primitive
   readonly wordCount: number;         // for relative ranking
 }
-```text
+```
 
 Note `contentHash` doing double duty again: it is the index invalidation key
 *and* the future sync version primitive (doc 04 §6.2). One hash, three uses.
@@ -541,7 +541,7 @@ flowchart TD
     classDef idx fill:#fdf4ff,stroke:#a855f7
     class META,TOC,TOK,STOP,STEM,FACET,QUERY,RANK pure
     class FTS5,MINIS,ATOMIC idx
-```text
+```
 
 Note the split of responsibilities: stages 2–4 are **pure functions in `core`**
 (doc 02), so the indexer is a pure function of the document and can be tested in
@@ -577,7 +577,7 @@ gantt
     Incremental update from watcher   :c2, after c1, 14d
     Stale-index handling + verify     :c3, after c2, 10d
     Ranking + facets + snippets       :c4, after c3, 14d
-```text
+```
 
 **The gate is the point of this chart.** `g1` is a real decision with a real
 deadline, backed by `b5`'s benchmarks. If tier (b) answers a query in under
@@ -601,7 +601,7 @@ const CORPORA = [
 // Gate criteria, to be agreed at g1:
 //   tier B must keep p95 keystroke->first-result < 150 ms on docs
 //   and complete a single-term query on vault-10k in < 2 s warm.
-```text
+```
 
 ## 7. Security considerations
 

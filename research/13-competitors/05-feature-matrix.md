@@ -258,14 +258,14 @@ the seven gaps, **it does not ship.**
 
 | Not shipping | Reason |
 |---|---|
-| **Graph view** | Obsidian proves it is beautiful and answers almost no reader question. [01-obsidian §9.4](../13-competitors/01-obsidian.md#94-graph-view-is-large-theatre) |
+| **Graph view** | Obsidian proves it is beautiful and answers almost no reader question. [01-obsidian §9.4](../13-competitors/01-obsidian.md#94-graph-view-is-largely-theatre) |
 | **A plugin marketplace** | Obsidian's 8,449 plugins are why Obsidian is slow on large vaults. Their own roadmap has "Obsidian for Work — control access to plugins" as Active. [01-obsidian §9.1](../13-competitors/01-obsidian.md#91-performance-on-large-vaults) |
-| **A query language / Bases** | Bases is a database engine. A reader does not query. [01-obsidian §10](../13-competitors/01-obsidian.md#canvas-and-bases-verified-from-the-roadmap-and-dev-docs) |
+| **A query language / Bases** | Bases is a database engine. A reader does not query. [01-obsidian §10](../13-competitors/01-obsidian.md#10-canvas-and-bases-verified-from-the-roadmap-and-dev-docs) |
 | **Canvas / whiteboard** | A creation tool, not a reading tool |
 | **Built-in sync** | Files on disk are already syncable with git, Syncthing, Dropbox, or OneDrive — all of which are cross-platform, free, audited, and already installed. Rebuilding it is the single largest piece of unnecessary work in this product space |
-| **Importers** | We build none. We render everyone's output. [04-more-tools §9](../13-competitors/04-more-tools.md#9-notion--obsidian-importers) |
+| **Importers** | We build none. We render everyone's output. [04-more-tools §9](../13-competitors/04-more-tools.md#9-notion-obsidian-importers) |
 | **MDX / arbitrary components in documents** | In a viewer, that is arbitrary code execution. [04-more-tools §5](../13-competitors/04-more-tools.md#5-docusaurus) |
-| **Full editing (v1)** | A multi-year, multi-maintainer project. Ship "open in your editor at this line" instead and mean it. [02-typora §12](../13-competitors/02-typora-and-marktext.md#12-why-marktext-lags--and-the-honest-version) |
+| **Full editing (v1)** | A multi-year, multi-maintainer project. Ship "open in your editor at this line" instead and mean it. [02-typora §12](../13-competitors/02-typora-and-marktext.md#11-why-marktext-lags-and-the-honest-version) |
 
 ---
 

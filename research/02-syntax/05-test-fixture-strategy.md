@@ -223,7 +223,7 @@ packages/test-fixtures/
 
 One JSON object per case, everywhere:
 
-```jsonc
+```
 {
   "id": "traps/020-setext-vs-list",
   "profile": "gfm",                 // commonmark | gfm | pandoc
@@ -234,12 +234,13 @@ One JSON object per case, everywhere:
   "tier": "semantic",               // semantic | spec-exact  (see §5)
   "tags": ["ambiguity", "block"]
 }
-```
+```markdown
 
 `profile` is mandatory: our parser has three profiles
 ([03 §15.1](03-extensions-and-dialects.md#151-the-mode-model)), and every
 fixture must declare which profile it belongs to. A fixture without a profile
 is a bug.
+```
 
 ---
 
@@ -247,7 +248,7 @@ is a bug.
 
 ### 4.1 Canonical command
 
-```bash
+```text
 # CommonMark 0.31.2, both tiers, per-section breakdown
 node packages/test-fixtures/bin/run.mjs \
   --spec   packages/test-fixtures/commonmark/0.31.2/spec.json \
@@ -519,7 +520,7 @@ Each needs a fixture that documents the divergence, not a "fix".
 
 `EXPECTED.json` records, per profile:
 
-```jsonc
+```json
 {
   "profile": "gfm",
   "spec": "commonmark/0.31.2",
@@ -565,7 +566,7 @@ Every extension gets four fixtures. See the checklist in
 [03 §16](03-extensions-and-dialects.md#16-extension-fixture-checklist). Worked
 example — footnotes:
 
-```jsonc
+```js
 // extensions/footnotes.json
 [
   {
@@ -675,9 +676,10 @@ node packages/test-fixtures/bin/pathological.mjs \
   --cases packages/test-fixtures/pathological/cases.json
 ```
 
+````markdown
 ```js
 // pathological.mjs — every case gets its own timeout, like cmark's harness.
-// A case that exceeds the budget FAILS CI; it is never marked "expected".
+// // A case that exceeds the budget FAILS CI; it is never marked "expected".
 import { setTimeout as delay } from 'node:timers/promises';
 
 const BUDGET_MS = 5000;
@@ -702,6 +704,7 @@ export async function runCase(render, testCase) {
   };
 }
 ```
+````
 
 **The budget is 5 s**, copied from `cmark`'s `TIMEOUT = 5`. Rationale: it is
 long enough that a correct implementation on a loaded CI runner passes, and

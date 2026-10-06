@@ -43,7 +43,7 @@ flowchart LR
     style S7 fill:#f0fdf4
     style S2 fill:#e8f4ff
     style S3 fill:#fef2f2
-```text
+```
 
 Stages 0–4 are **pure and run in a Worker**. Stages 5–7 are **DOM and run on
 the main thread**. That split is the single most important structural fact in
@@ -88,7 +88,7 @@ export async function acquire(
   const bytes = await fs.readBytes(handle);
   return { bytes, stamp: st, truncated: false, bytesRead: bytes.length };
 }
-```text
+```
 
 **Instrumentation:** time to first byte, total read ms, bytes, whether the read
 was served from the OS page cache (measurable on desktop via
@@ -146,7 +146,7 @@ export function decode(bytes: Uint8Array, opts: DecodeOptions): DecodeResult {
            replacementCount: countUtf8Replacement(bytes),
            hadNulBytes: false, eol: detectEol(bytes), endsWithNewline: bytes.at(-1) === 0x0A };
 }
-```text
+```
 
 The rule: **never guess a legacy codepage silently.** The banner says
 "`file.md` is not valid UTF-8. Open as… [UTF-8] [Windows-1252] [Shift_JIS]
@@ -235,7 +235,7 @@ export function assertLossless(doc: MarkdownDocument, source: string): void {
   });
   expect(rebuilt.join('')).toBe(source);       // or: coveredSpans tile [0, len) exactly
 }
-```text
+```
 
 The weaker but sufficient formulation, and the one to actually implement:
 `coveredSpans` must **tile** `[0, sourceLength)` with no gaps and no
@@ -268,7 +268,7 @@ export function* walk(root: Block, maxDepth = 512): Generator<Block> {
     for (const child of childrenOf(node).reverse()) stack.push({ node: child, depth: depth + 1 });
   }
 }
-```text
+```
 
 ### Stage 3 — Sanitize and transform
 
@@ -318,7 +318,7 @@ export const DEFAULT_POLICY: SecurityPolicy = Object.freeze({
   tasklists: true,
   tagfilter: true,
 });
-```text
+```
 
 URL rewriting happens here, once, and its result is what gets emitted:
 
@@ -405,7 +405,7 @@ export interface RenderResult {
   readonly warnings: RenderWarning[];
   readonly degraded: DegradedMode | null;
 }
-```text
+```
 
 Why an HTML **string** and not a DOM fragment:
 
@@ -429,7 +429,7 @@ Two things attached to the string for free:
 // Every rendered block carries its source span and a stable key. This is what
 // makes find-in-page, jump-to-line, and the differ possible.
 html += `<section class="blk" data-blk="${i}" data-span="${start}-${end}" data-key="${key}">…</section>`;
-```text
+```
 
 `data-key` must be **content-derived, not index-derived** (see §7).
 
@@ -452,7 +452,7 @@ export function mountDocument(html: string, into: HTMLElement): MountedDoc {
 
   return { root: into };
 }
-```text
+```
 
 `<template>` is inert: its content is in a separate document fragment, scripts do
 not execute, images do not load, and it is not rendered. That property is the
@@ -515,7 +515,7 @@ function decorateOnce(el: Element, fn: () => void, label: string) {
   if (n > 2) { el.setAttribute('data-decorate-failed', label); return; }
   try { fn(); } catch (e) { report(label, e); el.setAttribute('data-decorate-failed', label); }
 }
-```text
+```
 
 ### Stage 7 — Paint
 
@@ -596,7 +596,7 @@ sequenceDiagram
     Note over UI,CORE: If degraded==='raw-text', mountDocument is skipped and
     Note over UI: <pre class="raw-fallback"> with the escaped source is mounted
     Note over UI: instead. The app is NEVER blank. See §6.
-```text
+```
 
 ## 4. The PositionMap, in detail
 
@@ -648,7 +648,7 @@ export function blockKey(b: Block): string {
     default:           return `${b.kind}:${b.span.start}:${hash32(textOf(b).slice(0, 128))}`;
   }
 }
-```text
+```
 
 Why `blockKey` includes `span.start` for paragraphs but not for headings: a
 paragraph's identity genuinely is "the paragraph at this position", because
@@ -738,7 +738,7 @@ export class Pipeline {
     this.#pending.delete(String(version));
   };
 }
-```text
+```
 
 ## 6. Error containment — a parse error must never blank the app
 
@@ -796,7 +796,7 @@ export function renderRawFallback(
   frag.append(wrap);
   return frag;
 }
-```text
+```
 
 Three properties of that fallback that must not be compromised:
 
@@ -816,7 +816,7 @@ instrument it:
 telemetry.capture({ kind: 'render', bytes, blocks, ms, degraded: r.degraded });
 // and a distinct, always-on stderr line in dev builds:
 if (r.degraded) console.warn('[render] degraded', r.degraded, info);
-```text
+```
 
 If `raw-text` ever fires for a corpus file, CI fails. That converts a class of
 runtime failure into a build failure.
@@ -908,7 +908,7 @@ export function diffBlocks(prev: Block[], next: Block[]): BlockPatch[] {
   }
   return patches;
 }
-```text
+```
 
 The `equal` case is the point: **an unchanged block's live DOM node is never
 touched.** Its code highlighting, its rendered math, its laid-out mermaid
@@ -943,7 +943,7 @@ export function applyBlockPatches(root: HTMLElement, patches: BlockPatch[], ctx:
   // it does not know about a block that changed height above the viewport.
   preserveViewport(root, () => { /* …the DOM ops above… */ });
 }
-```text
+```
 
 `queueDecorate` must be **per-block and idle-scheduled**, so a burst of patches
 from a paste of 300 blocks decorates in batches across frames instead of all at
@@ -965,7 +965,7 @@ Full remount is correct (and we should prefer it) when:
 if (patches.filter(p => p.op !== 'redecorate').length > blocks.length * 0.4) {
   fullRemount(nextHtml);        // and this is fine and normal, not a failure
 }
-```text
+```
 
 ### 7.6 Live-preview keystroke flow
 
@@ -1044,7 +1044,7 @@ export class RenderScheduler {
   /** Typing indicator: shows at most every 120 ms, hides 200 ms after last change. */
   setBusy(busy: boolean) { /* …throttled classList.toggle('is-rendering')… */ }
 }
-```text
+```
 
 40 ms is a deliberate number: it is roughly one frame at 25 fps, which is fast
 enough to feel live and slow enough that a fast typist triggers ~6 renders per
@@ -1075,7 +1075,7 @@ smooth 60 fps and a janky app on a 5 MB document.
 
 /* 5. Reserve image space so lazy loading does not cause scroll jumps. */
 .blk img { aspect-ratio: attr(data-ar); height: auto; }  /* or explicit w/h attrs */
-```text
+```
 
 Caveats to verify in M1, not to assume:
 
@@ -1101,7 +1101,7 @@ export function preserveViewport(root: HTMLElement, mutate: () => void) {
   const delta = after.offsetTop - before.offsetTop;
   if (delta !== 0) root.closest<HTMLElement>('.scroll-host')!.scrollTop += delta;
 }
-```text
+```
 
 This is better than the browser's native scroll anchoring because it is keyed
 to *our* block identity, which survives edits, and it is deterministic.
@@ -1188,7 +1188,7 @@ script-src 'self';
 object-src 'none';
 frame-src 'none';
 connect-src 'self'                # no network in v1 (doc 14/04 §6)
-```text
+```
 
 `connect-src 'self'` is a real feature, not just hygiene: it makes "this app
 makes no network requests" **enforced by the webview**, which is a claim we can
@@ -1237,7 +1237,7 @@ describe('raw fallback', () => {
   it('renders <script>alert(1)</script> as visible text', …);          // must NOT execute
   it('offers Retry / Copy / Report and no auto-retry', …);
 });
-```text
+```
 
 ## 13. Decision summary
 

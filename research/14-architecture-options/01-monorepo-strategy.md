@@ -207,7 +207,7 @@ license = "MIT"
 serde = { version = "1", features = ["derive"] }
 notify = "9"
 encoding_rs = "0.8"
-```text
+```
 
 Key property: `crates/smv-fs` is the only crate that touches a real filesystem,
 and it is the only crate the desktop shell depends on. `crates/smv-core` compiles
@@ -265,7 +265,7 @@ declared, plus a `node_modules/.pnpm/` store and symlinks. So this:
 ```ts
 // packages/core/src/render.ts
 import { createHash } from 'node:crypto'   // ❌ core is supposed to be isomorphic
-```text
+```
 
 fails to resolve in `core` (core does not declare `node:crypto`) but would
 "work" under npm hoisting if any other package in the tree happened to depend on
@@ -292,7 +292,7 @@ The flip side is discipline:
     "vitest": "catalog:"
   }
 }
-```text
+```
 
 Three rules that fall out of this and should go in `CONTRIBUTING.md`:
 
@@ -373,7 +373,7 @@ packages/config/
 ├── vitest.base.ts            # shared test setup
 ├── biome.json                # formatter/linter (see below)
 └── stylelint.config.mjs
-```text
+```
 
 ```jsonc
 // packages/config/package.json
@@ -383,7 +383,7 @@ packages/config/
   "private": true,
   "files": ["*.json", "*.js", "*.mjs", "*.ts"]
 }
-```text
+```
 
 ```jsonc
 // packages/core/tsconfig.json
@@ -478,7 +478,7 @@ source resolution.
     { "path": "apps/desktop" }
   ]
 }
-```text
+```
 
 ## 9. Scaling failure modes — what breaks as we grow
 
@@ -552,7 +552,7 @@ graph TD
 
     CORE -.-> RWASM
     CORE ==>|"wasm build (optional)"| RWASM
-```text
+```
 
 Note the deliberate **absence of arrows between the two graphs**. The TS tree
 and the Rust tree share *specifications* (the AST shape), not *code*, except for
@@ -649,7 +649,7 @@ allowBuilds:
   '@tauri-apps/cli': true      # ships platform binaries via postinstall
   esbuild: true
   sharp: false
-```text
+```
 
 ### Root `package.json`
 
@@ -694,7 +694,7 @@ allowBuilds:
     "@types/node": "catalog:"
   }
 }
-```text
+```
 
 `"verify"` is the important entry point. If a developer can run one command that
 does exactly what CI does, "works locally but not in CI" stops being a category
@@ -755,7 +755,7 @@ of bug.
     "clean": { "cache": false }
   }
 }
-```text
+```
 
 ### `rust-toolchain.toml`
 
@@ -828,7 +828,7 @@ for (const pkg of readdirSync(PKGS)) {
   }
 }
 process.exit(errors ? 1 : 0);
-```text
+```
 
 This is 40 lines and it replaces an entire class of review comment.
 
@@ -843,7 +843,7 @@ us, the migration is:
 // package.json — add plain npm scripts for the Rust side
 "rust:test": "cargo test --workspace",
 "bundle:desktop": "pnpm --filter @siyana/desktop bundle"
-```bash
+```
 
 Cargo is perfectly happy being invoked from an npm script. We lose cross-graph
 task ordering — which we can restore with a one-line `dependsOn` in the shell

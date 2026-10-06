@@ -8,7 +8,7 @@ months later. It is a *claim*. This folder records what we checked, against
 which primary source, on which date, and how confident we are.
 
 Everything in `research/01-foundations/` and later must carry one of three
-confidence tags from [the table below](#confidence-tags). A claim without a tag
+confidence tags from [the table below](#3-confidence-tags). A claim without a tag
 is a claim we forgot to check.
 
 ---
@@ -137,7 +137,7 @@ curl -sLO https://spec.commonmark.org/0.31.2/spec.json
 curl -sL  -o normalize.py \
   https://raw.githubusercontent.com/commonmark/commonmark-spec/0.31.2/test/normalize.py
 # then run the harness described in research/06-libraries/
-```text
+```
 
 **Two normalisation levels, and why.** The spec's own Introduction says:
 

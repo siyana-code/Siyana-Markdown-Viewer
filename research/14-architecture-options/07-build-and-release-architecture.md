@@ -57,7 +57,7 @@ strategy:
         target: aarch64-unknown-linux-gnu
         bundle: appimage
         arch: arm64
-```text
+```
 
 Three jobs, not five. Rationale: Windows ARM64 and Linux musl are deferred
 (§3.4, §3.5) and macOS is out of scope. A three-job matrix that is green is
@@ -127,7 +127,7 @@ graph TB
 
     PUB --> RELEASE(["GitHub Release<br/>MSI · NSIS · .deb · AppImage x2<br/>latest.json + signatures"])
     RELEASE --> UPD(["client auto-update check"])
-```text
+```
 
 Note the shape: **build jobs never create the release.** Each one uploads
 artifacts; exactly one `publish` job creates and populates the release. This
@@ -155,7 +155,7 @@ behind — the publish job simply does not run.
     # rust-toolchain.toml in the repo pins the channel and the default targets;
     # listing extra targets here adds to that.
     targets: ${{ matrix.rust-target }}
-```text
+```
 
 `rust-toolchain.toml` (doc 01 §11) pins `1.97.0` with `rustfmt`, `clippy`, and
 `wasm32-unknown-unknown`. That pin is what makes the CI cache key stable
@@ -246,7 +246,7 @@ is not:
         sudo apt-get install -y --no-install-recommends \
           libwebkit2gtk-4.1-dev:arm64 libgtk-3-dev:arm64 libayatana-appindicator3-dev:arm64 \
           librsvg2-dev:arm64 patchelf
-```text
+```
 
 ### 3.4 Windows ARM64 — deferred
 
@@ -290,12 +290,12 @@ Two ways to comply:
       -v "$PWD":/app -w /app \
       ghcr.io/siyana/mdv-linux-build:ubuntu-22.04 \
       bash -lc 'pnpm install --frozen-lockfile && pnpm tauri build --bundles deb,appimage'
-```text
+```
 
 ```yaml
 # Option B: pin the runner image explicitly
 - platform: ubuntu-22.04        # not ubuntu-latest
-```text
+```
 
 Option A is better because the image is versioned, reproducible, and does not
 rot when GitHub retires an image (as macOS 14 is being retired this month). We
@@ -407,7 +407,7 @@ compressing incompressible data.
       apps/desktop/src-tauri/target/release/bundle/**/*.sig
     compression-level: 0
     retention-days: 14
-```text
+```
 
 Then in `publish`:
 
@@ -417,7 +417,7 @@ Then in `publish`:
     pattern: '*'
     merge-multiple: false      # keep per-platform subdirectories
     path: dist
-```text
+```
 
 `merge-multiple: false` matters: without it, three jobs' `latest.json` files
 collide on one path. We want to *read* them, merge them into one manifest, and
@@ -460,7 +460,7 @@ artifact to force a downgrade.
     }
   }
 }
-```text
+```
 
 The manifest we publish (one file, all platforms):
 
@@ -508,7 +508,7 @@ and uploads it; `publish` merges them. This is necessary because Tauri generates
               if(!p.includes('windows-x86_64')) throw new Error('missing windows');
               if(!p.includes('linux-x86_64'))     throw new Error('missing linux x64');
               console.log('platforms:', p.join(', '));"
-```text
+```
 
 The assertion step is the point: a release that is missing a platform should
 fail, not ship. Silent partial releases are how auto-update becomes a support
@@ -609,7 +609,7 @@ flowchart TB
     UPLOAD --> NOTE["update CHANGELOG · create GitHub Release notes"]
     NOTE --> UPDATER["existing installs poll<br/>latest.json → signed download"]
     UPDATER --> NOTE2["Store listing (phase 2)<br/>Flathub (phase 2)"]
-```text
+```
 
 **Checksums** are uploaded as a `SHA256SUMS` file and printed in the release
 body. Cheap, and it lets a user verify a download without trusting our hosting.
@@ -1035,7 +1035,7 @@ jobs:
             echo
             echo "Auto-update manifest: \`latest.json\`"
           } >> "$GITHUB_STEP_SUMMARY"
-```text
+```
 
 ### 8.1 Notes on the workflow, line by line where it matters
 

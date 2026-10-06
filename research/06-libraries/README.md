@@ -23,7 +23,7 @@ are the ones used in the weighted decision matrix in
 
 | # | Criterion | Weight | What "good" means, concretely |
 |---|-----------|--------:|-------------------------------|
-| 1 | **CommonMark conformance** | 12% | Measured, not claimed. We ran all 652 examples of the CommonMark **0.31.2** `spec.json` against every JS candidate. See [01-js-parsers §6](01-js-parsers.md#6-commonmark-conformance-measured-not-claimed). |
+| 1 | **CommonMark conformance** | 12% | Measured, not claimed. We ran all 652 examples of the CommonMark **0.31.2** `spec.json` against every JS candidate. See [01-js-parsers §6](01-js-parsers.md#6-commonmark-conformance-measured). |
 | 2 | **GFM / extension coverage** | 8% | Tables, task lists, strikethrough, autolink literals, tagfilter, footnotes, definition lists, math, front matter, wikilinks. Extensions we need are cheaper than extensions we have to build. |
 | 3 | **Security posture** | 15% | Safe-by-default on raw HTML and dangerous URL schemes, plus a *maintained* advisory history rather than a single ancient CVE. Highest weight because a viewer parses hostile files by definition. |
 | 4 | **Bundle size** | 7% | Minified + gzipped, measured via the Bundlephobia API on the exact pinned version. Counted against our web target first, desktop second (the desktop webview pays it in RAM and cold start). |

@@ -34,7 +34,7 @@ flowchart TD
     F --> X["8c. EXPORT PATH<br/>inline CSS, inline fonts,<br/>inline or link images"]
     X --> X2["STANDALONE .html FILE"]
     P --> X2
-```text
+```
 
 Stage 1 is documented in
 [11-security/03-filesystem-safety.md](../11-security/03-filesystem-safety.md).
@@ -62,7 +62,7 @@ gets its own section.
         │  SCREEN   │ │  PRINT    │ │  EXPORT   │   ← all three are pure functions
         │ (webview) │ │ (PDF)     │ │ (HTML/MD) │      of sanitized HTML + CSS
         └───────────┘ └───────────┘ └───────────┘
-```text
+```
 
 **Rule:** anything past the sanitizer is *already safe for HTML insertion*, and
 the three consumers must not re-parse, re-serialize, or post-process it in a way

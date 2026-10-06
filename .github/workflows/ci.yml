@@ -32,6 +32,12 @@ jobs:
         with:
           node-version: 22
 
+      # scripts/*.py use only the standard library, but setup-python pins the
+      # interpreter so the checks behave the same on every runner.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
       # No `cache:` here on purpose: setup-node fails the step outright when it
       # cannot find a lockfile to key the cache on, and this repository does not
       # have one until the JS workspace is scaffolded. Re-add it in Phase 1.
@@ -92,6 +98,23 @@ jobs:
             }
           done
           echo "All $(ls -d research/*/ | wc -l) research folders have an index and are linked."
+
+      # Structural checks that markdownlint cannot do.
+      #
+      # check-fences  a closing fence may not carry an info string per CommonMark,
+      #                so ```` ```text ```` in closer position silently swallows
+      #                every heading below it. 60-odd files here had the habit.
+      # check-anchors  markdownlint's MD051 is disabled because it computes
+      #                fragments differently from GitHub for numbered headings, so
+      #                anchor links need verifying against GitHub's own algorithm.
+      #
+      # scripts/fix-anchors.py --apply repairs what can be repaired mechanically;
+      # the checks are what gate the commit.
+      - name: Verify code fences
+        run: python scripts/check-fences.py
+
+      - name: Verify anchor links resolve
+        run: python scripts/check-anchors.py
 
       # Guards against shipping unfinished text. Code spans and fences are stripped
       # first, because `grep -r "TODO"` is itself a legitimate example.
