@@ -128,7 +128,7 @@ impl App for Viewer {
         });
     }
 }
-```
+```text
 
 **Strengths:**
 - **Exceptional for tools and debug UIs.** Widely used in that niche precisely

@@ -51,7 +51,7 @@ with the canonical demonstration:
 ```markdown
 - `one
 - two`
-```
+```text
 
 → a `<ul>` with two items (`<li>`one`, `<li>two``), **not** a list containing a
 code span. The backtick is inert because the block structure was decided first.
@@ -225,7 +225,7 @@ Two details that matter enormously in practice `[VERIFIED]`:
    _world_.
    </pre>
    </td></tr></table>
-   ```
+   ```text
 
    → the `**Hello**` stays literal (it is inside the type-6 `<table>` block, which
    the blank line terminated), but `_world_.` becomes `<em>world</em>` because
@@ -266,7 +266,7 @@ Any ASCII punctuation character may be backslash-escaped `[VERIFIED]`,
 
 ```
 \!\"\#\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\\\]\^\_\`\{\|\}\~
-```
+```text
 
 → `!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~`
 
@@ -416,7 +416,7 @@ spec proves it with the paired example `[VERIFIED]`:
 .
 <p>*foo bar
 *</p>
-```
+```text
 
 — "A line ending also counts as whitespace."
 
@@ -454,7 +454,7 @@ left-flanking  := not followed by whitespace
 right-flanking := not preceded by whitespace
                   and ( not preceded by punctuation
                         or ( preceded by punctuation and followed by whitespace/punctuation ) )
-```
+```text
 
 Line start and line end count as whitespace. Verified instantiations from the
 spec's own examples: `***abc` is left-only; `abc***` is right-only;

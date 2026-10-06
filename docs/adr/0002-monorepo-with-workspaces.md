@@ -35,7 +35,7 @@ We use a **monorepo** with two workspace roots that coexist:
 
 Layout:
 
-```
+```text
 apps/
   desktop/           # desktop shell (first)
   web/               # browser build

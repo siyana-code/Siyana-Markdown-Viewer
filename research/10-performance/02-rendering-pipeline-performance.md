@@ -31,7 +31,7 @@ flowchart LR
     style 7 fill:#ffe
     style 8 fill:#ffe
     style 9 fill:#ffe
-```
+```text
 
 Stages 1–4 are **ours** (JS, in a worker if we do it right). Stages 5–9 are
 **the engine's** and we can only influence them via the HTML we emit and the CSS
@@ -164,7 +164,7 @@ every rule pays the `!important` cost.
 .md-block[data-kind="code"] pre { … }
 
 /* Never: .doc .content article .markdown h2:not(.no-style) { … } */
-```
+```text
 
 And:
 - **Never use `!important` in our own stylesheet.** Expose customisability through
@@ -218,7 +218,7 @@ for (const b of blocks) {
   b.style.height = contentHeightFor(b) + 'px';  // invalidate layout
   positions[b.id] = b.offsetTop;                  // ← forces layout NOW
 }
-```
+```text
 
 The good version — ✅ **VERIFIED** — *"you should always batch your style reads
 and do them first (where the browser can use the previous frame's layout values)
@@ -260,7 +260,7 @@ of layout work that `content-visibility` was specifically designed to avoid.
 
 🔴 **Banned inside the render path and inside scroll handlers:**
 
-```
+```text
 offsetHeight  offsetWidth  offsetTop  offsetLeft  offsetParent
 clientHeight  clientWidth  clientTop  clientLeft
 scrollHeight  scrollWidth  scrollTop (read)
@@ -291,7 +291,7 @@ const BANNED_IN_RENDER = new Set([
   'clientHeight','clientWidth','clientTop','clientLeft',
   'scrollHeight','scrollWidth',
 ]);
-```
+```text
 
 CI fails. The cost of the rule is one afternoon; the cost of not having it is one
 reflow in a scroll handler that nobody can find.
@@ -447,7 +447,7 @@ document.addEventListener('contentvisibilityautostatechange', onRelevant);
 
 // (d) CSS-only scrolling is always the cheapest scrolling.
 viewport { scrollbar-gutter: stable; overflow-anchor: auto; }
-```
+```text
 
 🔴 **`overflow-anchor`** deserves a mention: ✅ it is the browser's built-in
 scroll-anchoring that stops content jumping when things above the viewport change
@@ -593,7 +593,7 @@ export class HighlightPool {
 
   dispose(): void { this.#workers.forEach(w => w.terminate()); }   // 🔴 always
 }
-```
+```text
 
 🔴 **Rules:**
 
@@ -693,7 +693,7 @@ with a `size-adjust` that makes its metrics match the web font:
 :root {
   font-family: "Siyana Serif", "Siyana Serif Fallback", serif;
 }
-```
+```text
 
 🔴 **The reflow-on-swap is still not zero even with perfect metric matching** —
 per-glyph advance widths differ, so lines break at different points. What

@@ -138,7 +138,7 @@ jobs:
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
-```
+```text
 
 Notes that matter:
 
@@ -254,7 +254,7 @@ jobs:
           # electron-builder reads these for Authenticode on Windows
           WIN_CSC_LINK: ${{ secrets.WINDOWS_CERTIFICATE }}
           WIN_CSC_KEY_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
-```
+```text
 
 The equivalent `electron-builder.yml` fragments:
 
@@ -357,7 +357,7 @@ xcrun notarytool submit "Siyana Markdown Viewer.dmg" \
      --apple-id "<appleid>" --team-id "<TEAMID>" \
      --password "<app-specific-password>" --wait
 xcrun stapler staple "Siyana Markdown Viewer.dmg"
-```
+```text
 
 Notarization requires the `--options runtime` (hardened runtime) signature. Signing
 without notarizing, or notarizing without stapling, both produce Gatekeeper
@@ -444,7 +444,7 @@ downloaded bytes**, not a checksum comparison.
     }
   }
 }
-```
+```text
 
 ✅ **VERIFIED** — required keys are `"version"`, `"platforms.[target].url"` and
 `"platforms.[target].signature"`; `pub_date` must be RFC 3339; `"signature"` is
@@ -502,7 +502,7 @@ macOS `releases.json`:
     }
   ]
 }
-```
+```text
 
 Windows `RELEASES` file (generated at build time, lists the `.nupkg` delta):
 
@@ -550,7 +550,7 @@ flatpak build-export --gpg-sign=KEYID ~/repo org.siyana.markdownviewer stable \
     build-dir generated-sources
 # publish the older commit's ref and point the remote at it
 flatpak update --commit <sha> org.siyana.markdownviewer//stable
-```
+```text
 
 Users can also do it themselves, which means **a Flatpak user with a bad update
 does not need us to do anything.** That is worth a great deal.
@@ -601,7 +601,7 @@ sequenceDiagram
     App->>App: minisign_verify(pubkey_FROM_BINARY, bytes, signature)
     Note over App: attacker controls Srv AND CDN<br/>but not the pubkey inside the<br/>already-installed app
     App->>App: run installer
-```
+```text
 
 ✅ **VERIFIED** — this is exactly Tauri's model: the pubkey lives in
 `tauri.conf.json` and is compiled into the binary, and *"this cannot be
@@ -742,7 +742,7 @@ the one procedure that cannot be improvised.
 | Data-loss bug (file watcher wrote a truncated cache over a good one) | Yank the release, publish a "do not upgrade" notice in the README, push a hotfix | hours |
 | Render regression (blank pages on WebKitGTK 2.36) | Cut a new patch release with the fix; do **not** roll back (rollback reintroduces the bug for new users) | hours |
 | The updater itself is broken | Serve the **previous version's** manifest from the dynamic endpoint. Clients on the broken version compare `<` and stay put. ✅ **VERIFIED** — possible via the dynamic endpoint. | minutes |
-||||| Signing key compromised | 🔧 **This is the disaster scenario.** Distribute a release signed by the new key immediately via every channel; rotate per §5.2. Because the pubkey is compiled in, a client that only trusts the old key will refuse the fix. 🔧 This is why key rotation (§5.2) must support `[old, new]` overlap **before** the key is ever needed for an emergency. |||||
+| Signing key compromised | 🔧 **This is the disaster scenario.** Distribute a release signed by the new key immediately via every channel; rotate per §5.2. Because the pubkey is compiled in, a client that only trusts the old key will refuse the fix. 🔧 This is why key rotation (§5.2) must support `[old, new]` overlap **before** the key is ever needed for an emergency. | days |
 
 🔧 **RECOMMENDED** — publish an `app-releases` channel in the repo and a
 `RELEASES.md` that records, for every version: what broke, who reported it, and
@@ -768,7 +768,7 @@ flowchart TD
     I -->|no| K["Ramp to 0%, open incident,<br/>publish notes"]
     style K fill:#ffe0e0
     style J fill:#e0ffe0
-```
+```diff
 
 - **Every release is reproducible from the tag.** Pin dependencies with a
   lockfile; no floating `lts/*` in the release workflow.

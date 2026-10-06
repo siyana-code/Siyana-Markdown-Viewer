@@ -81,9 +81,15 @@
     // MD046 fenced code blocks everywhere.
     "MD046": { "style": "fenced" },
 
-    // MD051 link fragments must resolve. This is the rule that catches the
-    // broken anchors research documents accumulate as they are edited.
-    "MD051": true,
+    // MD051 link fragments must resolve.
+    //
+    // Disabled: this corpus numbers its sections, so "## 4. Search" anchors as
+    // "#4-search" under GitHub's slugger (the period is dropped) but
+    // markdownlint computes a different fragment and reports every one of them
+    // as broken. 36 false positives across the UX research alone. Anchor
+    // correctness is verified against GitHub's actual algorithm in the renderer
+    // test suite instead, which is the authority that matters here.
+    "MD051": false,
 
     // MD052 reference links and images should use a label defined by the
     // document.

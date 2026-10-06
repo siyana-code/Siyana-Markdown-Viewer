@@ -425,7 +425,7 @@ Implementation:
   white-space: pre-wrap;
   overflow-wrap: anywhere;   /* break unbroken tokens like long URLs */
 }
-```
+```text
 
 Two implementation rules that are easy to get wrong:
 

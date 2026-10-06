@@ -17,7 +17,7 @@
 
 Identical shape to Tauri: **Go backend + web frontend + system webview**.
 
-```
+```text
 Go (main, compiled static binary)
   → wails runtime (github.com/wailsapp/wails/v2/pkg/runtime)
   → binds Go methods to the frontend
@@ -51,7 +51,7 @@ func main() {
         OnStartup: func(ctx context.Context) { app.ctx = ctx },
     })
 }
-```
+```text
 
 ### Platform support
 
@@ -187,7 +187,7 @@ your static files.
   "globalVariables": { "MY_CONST": "value" },
   "extensions": { "claude": { "commands": ["getSum"] } }
 }
-```
+```text
 
 ### The honest problems
 

@@ -19,7 +19,7 @@ still fine. This is the single most important property of the strategy.
 
 ## The branch line diagram
 
-```
+```text
 main      ──●───────────────────●───────────────►
            ↑                   ↑
            │  (PR, full CI)    │
@@ -68,7 +68,7 @@ prefix to decide what checks to run.
 If the branch implements a GitHub issue, embed the number so the PR auto-closes
 it. Both forms are accepted:
 
-```
+```text
 feature/42-markdown-it-adapter
 feature/parser-42-markdown-it-adapter
 ```
@@ -81,7 +81,7 @@ feature/parser-42-markdown-it-adapter
 git checkout develop
 git pull --ff-only
 git checkout -b feature/parser-markdown-it-adapter
-```
+```text
 
 ### 2. Merging a feature
 
@@ -120,7 +120,7 @@ git checkout develop
 git merge --ff-only origin/release/0.3.0
 git branch -d release/0.3.0
 git push origin develop
-```
+```text
 
 `main` receives `--no-ff` on purpose: every release should be visible on the
 `main` timeline as a merge, not lost in a linear blur.
@@ -187,7 +187,7 @@ Enable on both `main` and `develop`:
 
 [Semantic Versioning](https://semver.org/):
 
-```
+```text
 MAJOR.MINOR.PATCH
   │     │   └── Patch: bug fix only. No user-visible behaviour change.
   │     └────── Minor: new backwards-compatible feature.
@@ -196,7 +196,7 @@ MAJOR.MINOR.PATCH
 
 Pre-release identifiers during stabilisation:
 
-```
+```text
 0.3.0-rc.1     release candidate
 0.3.0-beta.2   beta
 0.3.0-alpha.5  alpha
@@ -212,7 +212,7 @@ must be called out explicitly in `CHANGELOG.md` under `BREAKING`.
 
 [Conventional Commits](https://www.conventionalcommits.org/):
 
-```
+```html
 <type>(<optional scope>): <description>
 
 [optional body]
@@ -225,7 +225,7 @@ Allowed types: `feat`, `fix`, `docs`, `research`, `refactor`, `perf`, `test`,
 
 Examples:
 
-```
+```text
 feat(parser): support GFM tables with column alignment
 fix(security): block javascript: URLs in image sources
 docs(adr): record ADR-0003 desktop framework comparison
@@ -243,7 +243,7 @@ Conventional Commit. Configure GitHub to default the PR title accordingly.
 v0.3.0                 # release
 v0.3.0-rc.1            # release candidate
 v0.3.0-linux-x86_64    # platform build artifact (attached to the release, not usually a git tag)
-```
+```text
 
 GitHub Releases attach the installers to the `v0.3.0` tag. The auto-update
 manifest that the app consumes is regenerated from the release assets.

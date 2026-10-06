@@ -360,7 +360,7 @@ du -sh dist/*.AppImage dist/*.exe
 # Flutter
 flutter build linux --release && du -sh build/linux/x64/release/bundle/
 flutter build windows --release
-```
+```text
 
 ### 2. Memory — same document, same machine, sum the whole process tree
 
@@ -394,7 +394,7 @@ requestAnimationFrame(() => {
   const t = performance.now();
   console.log(`FIRST_PAINT_MS=${t}`);
 });
-```
+```text
 Wall-clock from process spawn to that log line. 30 cold launches, drop the page
 cache between runs where possible, report **median and p95** (startup is
 heavy-tailed; means mislead). Same machine, same document, for every framework.

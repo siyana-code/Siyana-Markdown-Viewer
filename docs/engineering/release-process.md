@@ -2,7 +2,7 @@
 
 ## Overview
 
-```
+```text
   develop
      │  full CI green, milestone reached
      ▼
@@ -40,7 +40,7 @@ breaking changes, but they must be listed under `BREAKING` in the release notes.
 ```bash
 git checkout develop && git pull --ff-only
 git checkout -b release/0.3.0
-```
+```text
 
 ### 2. Stabilise
 
@@ -75,7 +75,7 @@ One version for the whole workspace — see
 
 ### Security
 - Rejected `javascript:` URLs in image sources before sanitization ([#160](https://github.com/siyana-code/Siyana-Markdown-Viewer/issues/160))
-```
+```text
 
 Every user-visible change links its issue. Every security change is listed under
 `Security` with a plain description of the impact — not a CVE number alone.
@@ -117,7 +117,7 @@ git checkout develop
 git merge --ff-only origin/release/0.3.0
 git branch -d release/0.3.0
 git push origin develop
-```
+```text
 
 Pushing the tag triggers `.github/workflows/release.yml`, which re-verifies the
 version, reruns the quality gates, builds every platform, and publishes to

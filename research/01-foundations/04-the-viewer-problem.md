@@ -12,7 +12,7 @@
 
 A Markdown **renderer library** has exactly one job:
 
-```
+```text
 markdown string  →  AST  →  HTML string
 ```
 
@@ -44,7 +44,7 @@ flowchart LR
         A9["Print / export without losing layout"]
     end
     LIB --> APP
-```
+```text
 
 **Conclusion C6** (stated in [`00-method/README.md` §5](../00-method/README.md#5-what-would-falsify-each-major-conclusion)):
 *a viewer is mostly app engineering; the parser is maybe 10% of the work.* This

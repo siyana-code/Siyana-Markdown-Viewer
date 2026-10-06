@@ -28,7 +28,7 @@ interface FsAdapter {
   /** Watch for changes. Bounded events. */
   watch(paths: string[], onChange: (p: string) => void): Promise<WatchHandle>;
 }
-```
+```text
 
 **Every path that enters the system goes through `readDocument` or a picker.**
 There is no "render this path the frontend already had." A path that reached us
@@ -129,7 +129,7 @@ async function readDocument(candidate: string, roots: ReadonlySet<string>): Prom
 
   return { real, bytes, mtimeMs: st.mtimeMs };
 }
-```
+```text
 
 Level 4 deserves an explicit justification, because someone will ask why an
 extension check is needed on top of containment. Two reasons:
@@ -162,7 +162,7 @@ files on machines that they've compromised."
 notes.md::$DATA                 # the default stream — same file, different spelling
 notes.md:hidden.txt             # a completely separate hidden file
 \\?\C:\path::$DATA
-```
+```yaml
 
 CWE-69: "Improper Handling of Windows `::DATA` Alternate Data Stream."
 <https://cwe.mitre.org/data/definitions/69.html>
@@ -200,7 +200,7 @@ CVE-2026-53571's fix "resolves Windows 8.3 short names before applying
 \\.\PhysicalDrive0          # device path; raw disk access
 \\?\C:\Windows\System32\... # extended-length prefix, bypasses MAX_PATH normalization
 \\.\GLOBALROOT\Device\...   # namespace escape
-```
+```yaml
 
 CWE-40: "Path Traversal: `\UNC\share\name` (Windows UNC Share)."
 <https://cwe.mitre.org/data/definitions/40.html>
@@ -299,7 +299,7 @@ Two operations with opposite correct answers:
 
 A two-line loop causes an infinite walk, unbounded memory, and a hung app:
 
-```
+```text
 ~/notes/a/link -> ~/notes
 ```
 
@@ -340,7 +340,7 @@ async function* walk(dir: string, budget: WalkBudget): AsyncGenerator<Entry> {
 }
 
 interface WalkBudget { maxDepth: 6; maxEntries: 50_000; maxBytes: 512 * 1024 * 1024; entriesSeen: number; bytesSeen: number; }
-```
+```text
 
 `maxDepth: 6` and `maxEntries: 50_000` are not arbitrary; they are the point at
 which a user with more files than that is better served by search than by a tree,
@@ -403,7 +403,7 @@ async function readDocumentRaceFree(candidate: string, roots: ReadonlySet<string
     await fh.close();
   }
 }
-```
+```text
 
 `O_NOFOLLOW` on the **final** component only. Interior symlinks are followed —
 which is correct, because canonicalization already resolved them and the
@@ -495,7 +495,7 @@ export async function readStable(path: string, opts: {
   }
   throw { ...lastErr, hint: `${lastErr.hint} The file may be being saved by another program.` };
 }
-```
+```text
 
 Four attempts with linear backoff totalling ~1.2 s covers every real editor
 write. A slow network share gets its own longer timeout path.
@@ -546,7 +546,7 @@ if (result.mtimeMs !== before.mtimeMs) {
   // The file was replaced between our stat and our read; the result is the
   // newer one, which is correct. Nothing to do, but note it in the log.
 }
-```
+```text
 
 The rename also breaks `fs.watch` on the *path*: watching a file that gets
 replaced by rename requires watching the **directory**, not the file. On Linux,
@@ -632,7 +632,7 @@ export function decodeDocument(bytes: Uint8Array): DecodeResult {
   const lossy = fatal.decode(bytes);
   return finish(lossy, 'utf-8', 'low', false, bytes.length, /* hadInvalidBytes */ true);
 }
-```
+```text
 
 `SNIFF` is 64 KB — long enough for a 16-bit-statistics detection to be
 confident, short enough that a wrong guess on the first byte does not ruin the
@@ -673,7 +673,7 @@ confident wrongness.
 ```ts
 const replacements = (text.match(/\uFFFD/g) ?? []).length;
 if (replacements > 0) statusBar.showEncodingWarning(replacements);
-```
+```text
 
 ### 6.5 Newlines
 
@@ -726,7 +726,7 @@ function hasLoneSurrogate(s: string): boolean {
   }
   return false;
 }
-```
+```text
 
 Where it bites, and the mitigation, is in
 [05-rendering/01-ast-to-html.md §2.2](../05-rendering/01-ast-to-html.md#22-dedupe-precisely):
@@ -790,7 +790,7 @@ async function* readChunks(path: string, size = 1 << 20): AsyncGenerator<Uint8Ar
     await fh.close();
   }
 }
-```
+```text
 
 Chunk boundaries must be handled by the decoder, not by luck: a multi-byte UTF-8
 sequence or a UTF-16 surrogate pair can straddle a chunk boundary. Use
@@ -868,7 +868,7 @@ export async function writeDocument(target: string, bytes: Uint8Array, opts: {
     throw e;
   }
 }
-```
+```text
 
 Four things each prevent a distinct disaster:
 
@@ -915,7 +915,7 @@ file, and here is what that means concretely:
 
 ```
 .notes.md.lock     # our own, contains pid + timestamp + hostname
-```
+```text
 
 ```ts
 export async function acquireLock(target: string): Promise<Lock | null> {
@@ -952,7 +952,7 @@ async function isStale(lockPath: string, maxAgeMs = 30_000): Promise<boolean> {
   try { process.kill(pid, 0); return false; }                  // alive ⇒ not stale
   catch (e: any) { return e.code === 'ESRCH'; }                // dead ⇒ stale
 }
-```
+```text
 
 A live-process check is a heuristic on a remote share, and a pid check is
 meaningless across machines — hence the mtime threshold as the primary signal and

@@ -2,7 +2,7 @@
 
 ## Layout
 
-```
+```text
 Siyana-Markdown-Viewer/
 │
 ├── apps/
@@ -33,7 +33,7 @@ Siyana-Markdown-Viewer/
 
 ## The dependency rule
 
-```
+```text
                     ┌──────────────────────────────┐
    may import  ───▶ │  packages/core               │  ───▶ nothing
                     │  packages/sanitize           │
@@ -101,7 +101,7 @@ export type RenderError =
   | { kind: 'parse-failure'; detail: string }
 
 export function render(source: Uint8Array, options?: RenderOptions): RenderResult
-```
+```text
 
 The `RenderResult.html` being explicitly marked untrusted is deliberate. It is a
 type-level reminder that the sanitizer step has not happened yet.
@@ -150,7 +150,7 @@ export interface FileSystemAdapter { /* see architecture/overview.md */ }
 export function createDesktopAdapter(scope: RootScope): FileSystemAdapter
 export function createWebAdapter(caps: WebFsCapabilities): FileSystemAdapter
 export function createMobileAdapter(): FileSystemAdapter
-```
+```text
 
 `RootScope` is the security-relevant object: it holds the approved roots and is
 the thing that refuses a traversal.
@@ -205,7 +205,7 @@ Scripts only — no code:
     "conformance:report": "node packages/test-fixtures/bin/report.ts"
   }
 }
-```
+```text
 
 ### `Cargo.toml` (workspace root, only if a Rust component is adopted)
 

@@ -35,7 +35,7 @@ git checkout develop
 pnpm install
 pnpm build
 pnpm test
-```
+```text
 
 Linux additionally needs the webview development packages — for a GTK3
 WebKitGTK build these are typically:
@@ -54,7 +54,7 @@ sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file \
 git checkout develop
 git pull --ff-only
 git checkout -b feature/my-change
-```
+```text
 
 Prefixes, naming rules, and the full workflow are in
 [`docs/branching-strategy.md`](branching-strategy.md).

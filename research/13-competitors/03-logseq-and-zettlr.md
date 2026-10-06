@@ -131,7 +131,7 @@ Logseq's problem and it will be ours if we are not careful.
 | 2 | **Never remove a rendering capability in place.** Migrate additively | [05 rendering](../05-rendering/), [14 architecture](../14-architecture-options/) |
 | 3 | **A plugin permission model is a first-class design artefact**, not an afterthought. "No effect" plugins are safe on the web is a genuinely good idea | [14](../14-architecture-options/) |
 | 4 | **Narrowness is a feature.** Every one of Logseq's removed features was individually justified and collectively fatal | The core positioning in [01-obsidian §12](../13-competitors/01-obsidian.md#12-the-gap-stated-precisely) |
-||||| 5 | **Markdown-only is a legitimate scope decision** for a product whose files must interoperate everywhere |||||
+| 5 | **Markdown-only is a legitimate scope decision** for a product whose files must interoperate everywhere | |
 | 6 | **Migration communication is product design.** Write the "what is being removed" document before you remove it | |
 
 ---

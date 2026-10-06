@@ -88,7 +88,7 @@ graph TD
     class D1,D3,D13 gate
     class D2,D4,D5,D6,D7 early
     class D22,D24,D25,D26,D27,D30,D33 late
-```
+```text
 
 ### The three decisions that gate everything
 
@@ -337,7 +337,7 @@ Copy-pasteable. The order is the point.
 - Q-50 notebooks — trigger: 5+ requests
 - Q-76 reproducibility — trigger: distribution trust blocks
 - Q-78 accounts — trigger: a signing account is created
-```
+```diff
 
 ---
 

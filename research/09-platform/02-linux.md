@@ -33,7 +33,7 @@ sudo apt install libwebkit2gtk-4.1-dev \
   libssl-dev \
   libayatana-appindicator3-dev \
   librsvg2-dev
-```
+```text
 
 Note what is *not* there: `libgtk-3-dev`, `patchelf`, `libappindicator3-dev`.
 Those come in transitively. 🟡 And note `libayatana-appindicator3-dev` declares
@@ -334,7 +334,7 @@ flatpak run --command=pkg-config org.freedesktop.Sdk//24.08 --modversion webkit2
 flatpak run --command=ldconfig org.freedesktop.Platform//24.08 -p | awk '/\.so/ {print $1}'
 flatpak run --command=cat org.freedesktop.Platform//24.08 /usr/manifest.json \
   | jq -r '."modules"|.[]|."name"' | sort -u
-```
+```text
 
 **How we resolve it (🔧 RECOMMENDED):**
 
@@ -425,7 +425,7 @@ Signatures found with key fingerprints: $KEY_ID
 =================== Validator report: ===================
 Signature checked for key with fingerprint $KEY_ID:
 Validation successful
-```
+```text
 
 ### 4.2 deb, rpm, Launchpad
 
@@ -519,7 +519,7 @@ user-configurable and often localized (e.g. `~/Dokumente` on German systems).
 xdg-user-dir DOCUMENTS      # -> /home/ann/Dokumente
 xdg-user-dir DOWNLOAD
 xdg-open "$HOME/notes.md"   # respects the user's preferred app
-```
+```text
 
 🔧 **RECOMMENDED.** "Open containing folder" and "Save as… default directory"
 must go through `xdg-user-dir` / the portal, never through a hardcoded
@@ -588,7 +588,7 @@ An app contributes by shipping its own XML into
     <sub-class-of type="text/plain"/>
   </mime-type>
 </mime-info>
-```
+```text
 
 Then refresh and claim defaults:
 
@@ -624,7 +624,7 @@ and we receive a **document-portal path**:
 
 ```text
 /run/user/1000/doc/Ab3kQ2p7nZ9/note.md
-```
+```text
 
 ✅ **VERIFIED** — `xdg-desktop-portal`'s `FileChooser` returns URIs that the
 Document portal maps into the sandbox's `doc` directory; the path is **valid only
@@ -753,7 +753,7 @@ only *matters* on Windows.
  *  want to conflate NFC/NFD filenames on macOS.
  */
 export const pathKey = (p: string) => p.normalize("NFC").toLowerCase();
-```
+```text
 
 Rules:
 

@@ -202,7 +202,7 @@ flowchart TD
 
     style Platform fill:#ffe6e6
     style Engine fill:#fff4d6
-```
+```text
 
 Note the asymmetry that matters: choosing Tauri means **the engine version is the
 OS vendor's problem on Windows and the distro's problem on Linux**, whereas

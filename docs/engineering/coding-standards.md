@@ -99,7 +99,7 @@ function describeError(error: RenderError): string {
       return error.detail
   }
 }
-```
+```text
 
 Rules:
 

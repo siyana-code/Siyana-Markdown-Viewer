@@ -138,7 +138,7 @@ ALLOWLIST = {
   ],
   ...
 }
-```
+```text
 — <https://github.com/gjtorikian/html-pipeline/blob/main/lib/html_pipeline/sanitization_filter.rb>
 
 Note what GitHub does *not* allow: `script`, `style`, `iframe`, `form`,
@@ -159,7 +159,7 @@ section sup
 details summary
 div span abbr bdi bdo cite dfn kbd mark q s samp small sub sup time u var wbr
 input     ← ONLY type=checkbox, disabled, for GFM task lists
-```
+```text
 
 **Attributes, per tag:**
 
@@ -184,7 +184,7 @@ denied.
 
 **Attributes never allowed, in any configuration, ever:**
 
-```
+```text
 on*            all event handlers
 style          CSS injection / exfiltration; DOMPurify is NOT a CSS sanitizer
 srcdoc         a whole nested document, not recursed into
@@ -215,7 +215,7 @@ DOMPurify permits HTML, SVG **and** MathML by default, and says so:
 // If you only need HTML, which might be a very common use-case, you can easily
 // set that up as well:
 const clean = DOMPurify.sanitize(dirty, { USE_PROFILES: { html: true } });
-```
+```text
 
 **We use `{ USE_PROFILES: { html: true } }`.** Rendered Markdown has no
 legitimate need for inline SVG or MathML; both are separate features a user can
@@ -249,7 +249,7 @@ Representative payloads, kept as regression tests:
 
 ```html
 <math><mtext><table><mglyph><style><img src=x onerror=alert(1)></style></mglyph></table></mtext></math>
-```
+```text
 
 ```html
 <svg></p><style><a id="</style><img src=x onerror=alert(1)>"></svg>
@@ -268,7 +268,7 @@ Not XSS — something different and just as useful to an attacker. Markup like:
 ```html
 <img src=x name=getElementById>
 <form><input name=attributes></form>
-```
+```text
 
 shadows properties on `document`, `window`, or form objects, so application code
 doing `document.getElementById(x)` or `form.attributes` reads attacker
@@ -359,7 +359,7 @@ because embedded images in Markdown are a real feature (`<img src="data:image/pn
 works in GitHub). We allow it **only** for `img[src]`, **only** for these media
 types, and **only** under a size cap:
 
-```
+```text
 data:image/png;base64,…     allowed
 data:image/jpeg;base64,…    allowed
 data:image/gif;base64,…     allowed
@@ -438,7 +438,7 @@ export function classifyUrl(raw: string, ctx: { base?: URL; allowDataImage?: boo
 
   return SAFE_SCHEMES.has(parsed.protocol) ? 'safe' : 'blocked';
 }
-```
+```text
 
 Step 1 is not paranoia. `java\tscript:alert(1)`, `java&#x09;script:` and
 ` javascript:` all execute in browsers, and every hand-rolled filter that missed
@@ -566,7 +566,7 @@ Safe contract:
 ```js
 const clean = DOMPurify.sanitize(dirty);
 element.innerHTML = clean;
-```
+```text
 
 Unsafe contracts, all of which we must never write:
 
@@ -603,7 +603,7 @@ console.assert(!clean.includes('onerror'));
 // Better test: insert and inspect the resulting DOM.
 container.innerHTML = clean;
 console.assert(!container.querySelector('[onerror]'));
-```
+```text
 
 Our CI must run the second form, in a real browser (Chromium via Playwright),
 against a payload corpus.
@@ -663,7 +663,7 @@ bytes
   → serialize to HTML string          ← our renderer, §01
   → DOMPurify.sanitize(...)          ← THE BOUNDARY
   → insert, once, no post-processing
-```
+```yaml
 
 Not: sanitize → transform. Post-sanitization transform code becomes an
 unsanitized-attribute generator (§1 of [01-ast-to-html.md](./01-ast-to-html.md#3-escaping-rules)
@@ -679,7 +679,7 @@ document.body.innerHTML  element.setAttribute('href'|'src'|'on*'|...)
 Range.createContextualFragment  el.insertAdjacentElement
 $(...).html()  v-html=  (framework bindings)
 DOMParser.parseFromString(…, 'text/html') then adopt — also a parse
-```
+```text
 
 CI check (a real one, not aspirational):
 
@@ -723,7 +723,7 @@ rewritten at build time to inject nonces and hashes for local scripts:
     }
   }
 }
-```
+```text
 
 For Electron, set it per-response via
 `session.defaultSession.webRequest.onHeadersReceived`, and also as a `<meta>`
@@ -788,7 +788,7 @@ The document:
 <pre><img src=z onerror=alert(4)></pre>
 
 <table><tr><td width=1 onmouseover="alert(5)">cell</table>
-````
+````text
 
 ### Layer 0 — the parser (CommonMark)
 

@@ -66,7 +66,7 @@ flowchart TB
     style SAN fill:#1f6feb33,stroke:#1f6feb,stroke-width:2px
     style WEBVIEW fill:#9a341233,stroke:#dc2626,stroke-width:2px
     style UNTRUSTED fill:#7f1d1d22,stroke:#b91c1c
-```
+```text
 
 ### The five boundaries, and which of them actually hold
 

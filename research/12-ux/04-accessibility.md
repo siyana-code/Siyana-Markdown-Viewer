@@ -108,7 +108,7 @@ A correct Markdown renderer emits:
   <figure><img src="…" alt="…"><figcaption>Figure 1 — …</figcaption></figure>
   <pre><code class="language-rust">…</code></pre>
 </article>
-```
+```text
 
 A screen reader, a search engine, a print stylesheet, a browser's find-in-page,
 and every assistive technology built since 1998 all understand that. **If our
@@ -227,7 +227,7 @@ we comply with the MPL file-level requirements for any files we modify).
   z-index: 100;
 }
 .skip-link:focus-visible { transform: none; }
-```
+```text
 
 Two more skip links are justified: "Skip to table of contents" and "Skip to
 search", for readers who mostly use navigation.
@@ -366,7 +366,7 @@ objects can be vestibular triggers."
     scroll-behavior: auto !important;
   }
 }
-```
+```text
 
 The blanket rule above is the community-standard snippet. It is *not* enough
 on its own: JS-driven motion (smooth scrolling, inertia, drag physics) is not

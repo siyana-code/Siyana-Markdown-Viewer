@@ -15,7 +15,7 @@ Test effort follows that order, not the order that is easiest to write.
 
 ## Layers
 
-```
+```text
                     ┌─────────────────────────────┐
  1  E2E / manual    │ Open a file, read it.      │  Few, slow, human-checked
                     └──────────────┬──────────────┘
@@ -74,7 +74,7 @@ describe('CommonMark conformance', () => {
     expect(results.failed).toEqual(baseline.commonmark.failedIds)
   })
 })
-```
+```text
 
 The key design decision: **a regression fails the build even if we are already
 above our target pass rate.** If we are at 99.4% and someone drops two examples,
@@ -148,7 +148,7 @@ it('treats escaped text as text', () => {
     })
   )
 })
-```
+```text
 
 **Fuzzing** is the same idea at higher volume with structured mutation: take a
 corpus of valid documents, apply byte mutations, insertions of adversarial

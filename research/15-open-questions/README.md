@@ -53,7 +53,7 @@ date after which it becomes someone else's problem.
 
 ### Where a question goes when it becomes a decision
 
-```
+```text
 question (this folder, status: open)
    ↓  owner decides, evidence attached
 PR (docs/pr/00NN-<slug>.md)        ← the evidence and the reasoning

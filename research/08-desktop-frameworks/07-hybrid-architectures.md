@@ -45,7 +45,7 @@ graph TB
     L1["Shared source<br/>written once"] --> L2["Compiled/loaded per target<br/>one implementation"]
     L3["Per-target code<br/>must be written separately"]
   end
-```
+```text
 
 In each diagram:
 - **Blue** = one implementation, shared
@@ -210,7 +210,7 @@ graph TB
     style MOBILE fill:#f9a825,color:#000
     style WEB fill:#c62828,color:#fff
     style WEB text color:#fff
-```
+```text
 
 ### Reuse accounting
 
@@ -391,7 +391,7 @@ graph TB
     style SHARED text color:#fff
     style HOSTS fill:#2e7d32,color:#fff
     style HOSTS text color:#fff
-```
+```text
 
 ### The key structural property
 

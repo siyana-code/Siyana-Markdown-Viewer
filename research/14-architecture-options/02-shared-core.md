@@ -191,17 +191,17 @@ graph TD
     class FS,WIN,SYS,KV,TEL adapter
     class DESK,WEB,MOB shell
     class RIDX,RENC,RWASM rust
-```
+```text
 
 ### The dependency rule, mechanically
 
 ```
-apps/*        →  may import packages/* and anything else
+apps/*→  may import packages/* and anything else
 packages/ui   →  may import packages/doc, packages/config
 packages/fs-adapters → may import packages/core, packages/doc, packages/config
 packages/core →  may import packages/doc, packages/config   ← nothing else, ever
 crates/*      →  independent; reached only through an explicit optional bridge
-```
+```text
 
 Enforced by `scripts/check-boundaries.mjs` (doc 01 §11). A violation is a CI
 error, not a review comment.
@@ -455,7 +455,7 @@ export type OpenPayload =
   | { kind: 'argv'; args: readonly string[] }
   | { kind: 'android-intent'; uri: string; mimeType?: string }
   | { kind: 'ios-url'; bookmark?: ArrayBuffer };
-```
+```text
 
 ### 6.3 `SystemAdapter`
 
@@ -505,7 +505,7 @@ export interface Schema<T> {
   readonly version: number;
   parse(raw: unknown): T;          // throws SchemaError — never returns garbage
 }
-```
+```text
 
 ### 6.5 `TelemetryAdapter`
 
@@ -534,7 +534,7 @@ export const NOOP_TELEMETRY: TelemetryAdapter = {
     throw new Error(`telemetry is disabled but capture() was called: ${event.kind}`);
   },
 };
-```
+```text
 
 ## 7. The `RenderPipeline` facade — what `core` actually exports
 
@@ -597,7 +597,7 @@ The CI invariant that keeps option (c) cheap:
 # .github/workflows/ci.yml (excerpt)
 - name: Rust core still compiles to WASM
   run: cargo check -p smv-core --target wasm32-unknown-unknown
-```
+```text
 
 ## 9. Escalation triggers — when to move parsing to Rust
 
@@ -662,7 +662,7 @@ describe('core never throws on hostile input', () => {
     }
   });
 });
-```
+```text
 
 (Real fuzzing belongs in `cargo-fuzz`/`libfuzzer-sys` on `smv-core` once it
 exists; the TS version is a fast smoke net that runs in CI on every commit.)

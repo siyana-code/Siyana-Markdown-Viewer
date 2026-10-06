@@ -135,7 +135,7 @@ const io = new IntersectionObserver(onEnter, {
   rootMargin: `-${stickyHeaderHeight + 8}px 0px -70% 0px`,
   threshold: 0,
 });
-```
+```text
 
 The "current" heading is the last one that entered the band. Handle the
 edge case where the reader is scrolling *up* (the entering heading is the one

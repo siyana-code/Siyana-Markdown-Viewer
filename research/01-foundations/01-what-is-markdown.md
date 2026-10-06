@@ -111,7 +111,7 @@ documents in proprietary or heavily structured internal formats. RFC 7764 puts
 this on a spectrum, and the diagram is worth reproducing because it is the
 clearest statement of where Markdown sits `[VERIFIED]`:
 
-```
+```text
  informal        /---------formatted text----------\        formal
  <------v-------------v-------------v----------------------v---->
   plain text     informal markup   formal markup    binary format
@@ -390,7 +390,7 @@ Siyana **releases** are *immutable*. See
 - two
 
 > Note: 4 < 5 & "quotes" are escaped.
-```
+```text
 
 ### 6.2 Representation two — rendered HTML (332 bytes, 12 lines)
 
@@ -414,7 +414,7 @@ Output of `commonmark@0.31.2`, verbatim:
 
 ```json
 {"type":"doc","content":[{"type":"heading","attrs":{"level":1},"content":[{"type":"text","text":"Release notes"}]},{"type":"paragraph","content":[{"type":"text","text":"Siyana "},{"type":"strong","content":[{"type":"text","text":"releases"}]},{"type":"text","text":" are "},{"type":"em","content":[{"type":"text","text":"immutable"}]},{"type":"text","text":". See\n"},{"type":"link","attrs":{"href":"changelog.md"},"content":[{"type":"text","text":"the changelog"}]},{"type":"text","text":" and the diagram below."}]},{"type":"image","attrs":{"src":"img/arch.png","alt":"Architecture"}},{"type":"bullet_list","content":[{"type":"list_item","content":[{"type":"paragraph","content":[{"type":"text","text":"one"}]}]},{"type":"list_item","content":[{"type":"paragraph","content":[{"type":"text","text":"two"}]}]}]},{"type":"blockquote","content":[{"type":"paragraph","content":[{"type":"text","text":"Note: 4 < 5 & \"quotes\" are escaped."}]}]}]}
-```
+```text
 
 ### 6.4 Measurements
 

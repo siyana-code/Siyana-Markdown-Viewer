@@ -147,7 +147,7 @@ match webview2_available() {
     }
     Err(e) => log::warn!("WebView2 probe failed: {e}"),
 }
-```
+```text
 
 🔧 **RECOMMENDED.** Ship a `docs/TROUBLESHOOTING.md` entry for
 `WebView2RuntimeNotFound`, and make the error message a clickable link, not a
@@ -362,7 +362,7 @@ VirtualBox shared folders ([CPython PR #95486 — `ntpath.isreserved()`](https:/
 CON  PRN  AUX  NUL
 COM1..COM9, COM¹  COM²  COM³
 LPT1..LPT9, LPT¹  LPT²  LPT³
-```
+```text
 
 The superscript digits are the real trap: Windows treats the ISO/IEC 8859-1
 superscripts as digits, so ``echo test > COM¹`` fails to create a file. Reserved
@@ -509,7 +509,7 @@ read bytes → decode UTF-8 (BOM tolerated, stripped)
            → this is the "canonical text"; everything downstream uses it
            → separately: (mtime, size) for change detection, raw bytes for
              "Save As" fidelity if the user edits
-```
+```diff
 
 ---
 
@@ -779,7 +779,7 @@ New-Item -ItemType SymbolicLink -Path C:\notes -Target D:\vault\notes
 
 # Hard links work without either, same volume only
 New-Item -ItemType HardLink -Path C:\notes.md -Target D:\vault\notes.md
-```
+```text
 
 What this means for us:
 

@@ -15,7 +15,7 @@ document is the implementation spec.
 
 The shell reads the file. Nothing is parsed yet.
 
-```
+```text
 resolve path
   → check inside an approved root       (RootScope)
   → follow symlinks, re-check root      (symlink escape is the attack)
@@ -35,7 +35,7 @@ path and the OS error. Nothing else happens.
 
 ## Stage 1 — Decode (core, main thread)
 
-```
+```text
 bytes
   → detect encoding (UTF-8, UTF-8+BOM, UTF-16 LE/BE, Latin-1 fallback)
   → strip BOM
@@ -164,7 +164,7 @@ const container = document.createElement('div')
 container.innerHTML = sanitizedHtml    // sanitizedHtml is the ONLY argument
                                      // to innerHTML anywhere in the codebase
 viewer.replaceChildren(container)
-```
+```text
 
 Enforced by:
 
@@ -232,7 +232,7 @@ keystroke
   → sanitize the small resulting fragment
   → replace only those children
   → schedule decoration for the changed blocks
-```
+```text
 
 Three things make this work:
 
@@ -285,7 +285,7 @@ budgets above are measured rather than believed.
          serialize 96ms  sanitize 142ms  insert 88ms  paint 74ms
          → 214 blocks, 5.2 MB source, 1.9 MB DOM
          decoration deferred: 148 code blocks queued
-```
+```diff
 
 ---
 

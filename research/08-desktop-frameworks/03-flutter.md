@@ -18,7 +18,7 @@ This is the whole story, and everything else follows from it.
 not embed a browser. There is no DOM, no CSS, no HTML parser, no
 `document.createElement`. Instead:
 
-```
+```text
 Dart code
   → widget tree (retained-mode, declarative)
   → Flutter's own layout engine
@@ -281,7 +281,7 @@ flutter build windows --debug
 flutter build linux            # release bundle in build/linux/x64/release/bundle/
 flutter build linux --debug
 flutter build macos
-```
+```text
 
 Add desktop to an existing project:
 

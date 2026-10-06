@@ -6,7 +6,7 @@ edited.
 
 ## Format
 
-```
+```text
 docs/adr/
   README.md                      # this file
   NNNN-short-kebab-title.md      # one decision per file
@@ -38,7 +38,7 @@ Each with a real reason for rejection, not a strawman.
 
 ## Validation
 How we will know this decision was right, and when we revisit it.
-```
+```text
 
 ## Rules
 

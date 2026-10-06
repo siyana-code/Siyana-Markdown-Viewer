@@ -175,7 +175,7 @@ app.whenReady().then(() => {
 });
 
 app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });
-```
+```text
 
 Two details worth flagging:
 
@@ -292,7 +292,7 @@ function assertString(v, max) {
   if (typeof v !== 'string') throw new TypeError('expected string');
   if (v.length > max) throw new RangeError('too long');
 }
-```
+```text
 
 Rules this file encodes, each of which will be argued about in review:
 
@@ -358,7 +358,7 @@ directory, that is the difference between "local attacker can rewrite our JS" an
     "onlyLoadAppFromAsar": true
   }
 }
-```
+```text
 
 Flip the fuses **before** signing, in the packaging step, and assert in CI that
 the built artifact's fuse bytes match expectations.
@@ -470,7 +470,7 @@ permission sets to specific window labels. From
     "core:path:default"
   ]
 }
-```
+```text
 
 Note what is **absent**: `fs:allow-write-file`, `shell:allow-execute`,
 `shell:allow-open`, `http:default`, `clipboard-manager:allow-read-text`,
@@ -592,7 +592,7 @@ pub async fn read_document(
 
     Ok(ReadResult { bytes })
 }
-```
+```text
 
 Every one of those seven steps is a security control, and every one is the kind
 of thing that gets "simplified" out of a hotfix. Note step 4 vs 7: cap before
@@ -635,7 +635,7 @@ pub fn open_external(app: tauri::AppHandle, url: String) -> Result<(), DocError>
     app.opener().open_url(parsed, None::<&str>)?;
     Ok(())
 }
-```
+```text
 
 ### 3.5 CSP
 

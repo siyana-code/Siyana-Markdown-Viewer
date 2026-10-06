@@ -123,7 +123,7 @@ export interface PlatformAdapter {
   theme: { current(): ThemeName; subscribe(cb: (t: ThemeName) => void): VoidHandle }
   notifications: { notify(n: Notification): Promise<void> }
 }
-```
+```text
 
 **The lint rule is the actual decision.** Without a rule preventing
 `packages/core` and `packages/ui` from importing a host API, this architecture

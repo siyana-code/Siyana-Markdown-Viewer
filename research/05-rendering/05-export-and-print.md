@@ -28,7 +28,7 @@ flowchart LR
     A --> E["Export writer<br/>inlines CSS + fonts + images"]
     E --> F["standalone .html"]
     A --> G["Plain-text renderer<br/>walks the AST, no HTML"]
-```
+```text
 
 ## 2. The print stylesheet
 
@@ -62,7 +62,7 @@ Expanded here with the parts that only matter on paper.
 
 ```html
 <article class="markdown-body"><h1>Document title</h1>…</article>
-```
+```text
 
 Chromium's `string-set: doctitle content()` on the first heading supplies the
 value. Because support varies, the document must look correct with the margin
@@ -114,7 +114,7 @@ padding, and never split *between* the `<pre>` border and its first line:
   /* Avoid a break immediately after the opening fence by keeping the first
      line with the box: not expressible directly, so we rely on orphans. */
 }
-```
+```text
 
 If a document needs line numbers, the gutter must be a real element with
 `break-inside: avoid` and the numbers printed as part of the line box — a CSS
@@ -165,7 +165,7 @@ print DOM clone. See §3.4.
   }
   :root[data-print-colour="on"] { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
-```
+```text
 
 Syntax highlighting in print is a real design decision. Token colours tuned for
 a backlit screen are frequently below 4.5:1 on paper. Options:
@@ -223,7 +223,7 @@ is already the URL. Printing the URL twice is the classic GFM print bug.
   }
   .scroller { overflow: visible !important; height: auto !important; }
 }
-```
+```text
 
 The `overflow: visible !important` on the scroll container is essential. In a
 virtualized document list the scroller is `overflow-y: auto` with a fixed height;
@@ -356,7 +356,7 @@ async function buildExportDocument(doc: RenderResult, theme: Theme, opts: Export
 </body>
 </html>`;
 }
-```
+```text
 
 `script-src 'none'` in the exported file is what makes an export safe to email
 to somebody. A reader opening `export.html` in a browser gets a document with no
@@ -482,7 +482,7 @@ async function writeExport(dest: fs.FileHandle, parts: AsyncIterable<string>) {
   for await (const chunk of parts) await dest.write(chunk);   // 'wx' flag: no overwrite
   await dest.close();
 }
-```
+```text
 
 `wx` is deliberate: exporting over an existing file without asking loses work
 when the export later fails. Write to `name.html.part` and rename on success —
@@ -579,7 +579,7 @@ When the in-webview PDF is not good enough (large documents, deterministic
 output, batch export), the same sanitized HTML is rendered by headless
 Chromium:
 
-```
+```text
 chromium --headless=new --disable-gpu --no-sandbox-in-container \
   --print-to-pdf=out.pdf --no-pdf-header-footer \
   --virtual-time-budget=10000 \

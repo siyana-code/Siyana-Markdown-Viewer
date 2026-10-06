@@ -32,7 +32,7 @@ client, the updater — is Rust compiled into your binary.
 From the [architecture docs](https://v2.tauri.app/concept/architecture/), the
 crate stack is:
 
-```
+```text
 tauri                       ← the facade; owns IPC, ACL, config, asset embedding
 ├── tauri-runtime           ← abstract window/event-loop interface
 │   └── tauri-runtime-wry   ← the real implementation
@@ -113,7 +113,7 @@ replacement for v1's flat `allowlist`.
 
 ### The three-layer model
 
-```
+```text
 Permission   →  "this operation is allowed, under these conditions"
    ↓
 Capability   →  "these permissions apply to these windows/webviews, on these platforms"
@@ -137,7 +137,7 @@ permissions = [
   "fs:scope-home",
   "fs:allow-mkdir",
 ]
-```
+```text
 
 An official plugin ships granular, individually-grantable permissions. From
 the File System plugin's generated `read-files.toml`:
@@ -179,7 +179,7 @@ Identifier namespacing is enforced at compile time — `<plugin>:default`,
     "core:window:allow-set-title"
   ]
 }
-```
+```text
 
 Capabilities are **platform-scoped**, which matters for a multi-platform app:
 
@@ -251,7 +251,7 @@ async fn parse_document(path: String, window: tauri::WebviewWindow) -> Result<Do
     let _ = window.set_title(&format!("{} — Siyana", meta.title));
     Ok(meta)
 }
-```
+```text
 
 ```ts
 import { invoke } from '@tauri-apps/api/core';
@@ -288,7 +288,7 @@ fn open_file(app: AppHandle, path: std::path::PathBuf) {
         _ => false,
     }).unwrap();
 }
-```
+```text
 
 ### Channels — `Channel<T>` for streaming
 
@@ -326,7 +326,7 @@ import { invoke, Channel } from '@tauri-apps/api/core';
 const onEvent = new Channel<ParseEvent>();
 onEvent.onmessage = (m) => { /* m.event === 'started' | 'progress' | ... */ };
 await invoke('parse_streaming', { path, onEvent });
-```
+```text
 
 **For a Markdown viewer this is the single most useful Tauri feature.** Rendering
 a 100 MB file means streaming block-by-block from Rust into the DOM. `Channel<T>`
@@ -441,7 +441,7 @@ import { convertFileSrc } from '@tauri-apps/api/core';
 // /home/u/Documents/notes/img/a.png
 // -> asset://localhost/%2Fhome%2Fu%2F...%2Fa.png  (or https:// if useHttpsScheme)
 img.src = convertFileSrc(absPath);
-```
+```text
 
 **Four sharp edges** the docs are unusually honest about
 ([asset-protocol docs](https://v2.tauri.app/security/asset-protocol/), last
@@ -544,7 +544,7 @@ Static JSON (works on GitHub Releases / S3 / a gist; `tauri-action` generates it
     "darwin-aarch64":  { "signature": "…", "url": "https://…" }
   }
 }
-```
+```text
 
 Keys are `OS-ARCH` where OS ∈ {`linux`, `darwin`, `windows`} and ARCH ∈ {`x86_64`,
 `aarch64`, `i686`, `armv7`}. `signature` must be the **contents** of the `.sig`
@@ -598,7 +598,7 @@ Splitting build from bundle:
 npm run tauri build -- --no-bundle        # just compile
 npm run tauri bundle -- --bundles app,dmg # bundle outside the App Store
 npm run tauri bundle -- --bundles app --config src-tauri/tauri.appstore.conf.json
-```
+```text
 
 Windows VC runtime: 2.12.0 added `bundle.windows.bundleVCRuntime` to copy the
 VC++ redistributable DLLs into MSI/NSIS installers, locating them via
@@ -705,7 +705,7 @@ lto = true
 opt-level = "s"     # prioritise size; use "3" for speed
 panic = "abort"     # no unwinding tables
 strip = true
-```
+```text
 
 For a **viewer**, `opt-level = "s"` is likely wrong — we want parsing and
 layout fast. Use `opt-level = 3` with `lto = "thin"` and measure. **This is an
@@ -844,7 +844,7 @@ npm run tauri build
 # Electron: sum the asar + the extracted electron dist
 npx electron-builder --linux dir      # unpacked, no installer
 du -sh dist/linux-unpacked/            # honest baseline before compression
-```
+```text
 
 **Memory — on a fixed test document, fixed machine:**
 ```bash

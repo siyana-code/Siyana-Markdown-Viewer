@@ -6,7 +6,7 @@ Siyana Markdown Viewer is a local-first Markdown reader. It runs as a desktop
 application on Windows and Linux, with web and mobile targets planned. It has no
 backend, no accounts, and no network dependency.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────┐
 │                          The user's machine                        │
 │                                                                     │
@@ -46,7 +46,7 @@ backend, no accounts, and no network dependency.
 
 Pure, synchronous, no I/O, no UI, no platform APIs.
 
-```
+```text
 markdown bytes
    │
    ▼
@@ -139,7 +139,7 @@ interface FileSystemAdapter {
   resolveLocalAsset(basePath: PathRef, relative: string): Promise<AssetRef | null>
   showOpenDialog(options: OpenOptions): Promise<PathRef[]>
 }
-```
+```text
 
 The `resolveLocalAsset` method is where path traversal is refused, so there is
 one place to review rather than several.
@@ -162,7 +162,7 @@ The full flow, from a double-click to pixels.
 11. UI        decorate: highlight code, render math, render diagrams
               ── deferred to idle; never on the critical path
 12. UI        paint
-```
+```text
 
 Error handling at every step:
 

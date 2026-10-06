@@ -111,7 +111,7 @@ implementation hits them.
 |---|---|
 | **Caret handling is the hard part** | Any `display` change on an element adjacent to the caret can reflow it. A correct implementation must either (a) keep the caret inside a single always-visible container and move the container, or (b) implement a custom caret with an offset map. Both are substantial work with IME, selection, and autocorrect implications |
 | **IME is a minefield** | Composition (Japanese, Chinese, Korean, Vietnamese) requires the editor to not interfere with the composing region. Any caret remapping during `compositionstart`/`compositionend` will corrupt input. See MarkText's CJK fixes below |
-||||| **Tables are hard** | Inserting a column means generating a full raw row plus the `\|---\|` alignment row, at the right offset, while the caret is elsewhere in the table |||||
+| **Tables are hard** | Inserting a column means generating a full raw row plus the `|---|` alignment row, at the right offset, while the caret is elsewhere in the table |
 | **Math is a source/render hybrid** | `$$` delimiters hidden, formula inserted; editing means temporarily reverting to source. There is no elegant version of this |
 | **Fenced code with a language needs a highlight round-trip** | You are rendering and un-rendering |
 | **Round-trip fidelity** | Serialising the DOM back to Markdown must be exact or the file is corrupted. Every edge case (nested emphasis, autolinks, HTML blocks, entity references) is a potential data-loss bug |

@@ -17,7 +17,7 @@ collaborator. The desktop shell embeds a browser engine with filesystem access.
 
 The escalation path is short and well-trodden:
 
-```
+```text
 Markdown file
   → parser (raw HTML passthrough)
     → sanitizer (if present, or missing)

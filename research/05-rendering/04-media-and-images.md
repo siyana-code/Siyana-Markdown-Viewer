@@ -48,7 +48,7 @@ trap.
 
 ```html
 <base href="file:///home/me/notes/" />
-```
+```diff
 
 - **Pro:** one line; the HTML spec does all the resolution.
 - **Con 1 — it rewrites every relative URL in the document**, including ones
@@ -180,7 +180,7 @@ export function resolveMediaUrl(
   if (!ALLOWED_IMAGE_TYPES.has(extOf(real))) return null;          // extension allowlist
   return { kind: 'bytes', url: `mdimg://${encodePath(real)}` };
 }
-```
+```text
 
 Steps 5's three checks are **independent** and all three are necessary:
 
@@ -320,7 +320,7 @@ async function rasterizeSvg(bytes: Uint8Array, maxEdge = 2048): Promise<{
   if (!sniffImageType(png)) return null;
   return { dataUri: `data:image/png;base64,${encodeBase64(png)}`, mime: 'image/png', … };
 }
-```
+```text
 
 The structural pre-check is cheap and catches the obvious cases:
 
@@ -382,7 +382,7 @@ content.addEventListener('click', (e) => {
   if (!confirmExternal(href)) return;                              // §5.3
   void openExternal(href);   // allowlisted scheme, via the shell plugin
 });
-```
+```text
 
 Electron's checklist, verbatim, is the requirement: "Disable or limit
 navigation", "Disable or limit creation of new windows", and "Do not use
@@ -418,7 +418,7 @@ position a full-viewport transparent link over the window.
 ```html
 <a href="https://evil.example/fake-login"
    style="position:fixed;inset:0;z-index:99999;opacity:0">…</a>
-```
+```text
 
 Mitigation is not a sanitizer flag — it is that `style` is **forbidden**
 ([02-sanitization.md §2.2](./02-sanitization.md#22-our-allowlist)), so
@@ -486,7 +486,7 @@ fetch we said we would not do.
 │      evil.example/track.gif                                 │
 │      [ Load this image ]  [ Load all remote images ]       │
 └────────────────────────────────────────────────────────────┘
-```
+```text
 
 Also show a per-document count in the status bar: "12 remote images blocked" —
 transparency is what turns an annoyance into a feature.
@@ -522,7 +522,7 @@ control must be the rewrite, and the CSP is the backstop for shapes we forgot.
      loading="lazy"
      decoding="async"
      width="1600" height="900" />
-```
+```text
 
 | Concern | Handling |
 |---------|----------|
@@ -579,7 +579,7 @@ layout jump, an unhandled rejection, or an error dialog.
   <span>looked in <code>C:\Users\me\notes\</code></span>
   <button data-action="reveal">Show in file manager</button>
 </div>
-```
+```text
 
 The "looked in" line matters more than it looks. A relative image in a document
 opened from a different directory than the user expects is the single most
@@ -614,7 +614,7 @@ interface MediaCache {
 
 ```ts
 const key = `${realPath}:${st.mtimeMs}:${st.size}`;
-```
+```text
 
 **Never write a cache entry before validating it.** A cache populated from a
 path that was inside the allowed root and later symlinked out must be re-checked

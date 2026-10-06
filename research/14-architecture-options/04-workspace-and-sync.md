@@ -108,7 +108,7 @@ export interface Bookmark {
   label?: string;          // defaults to the heading text or a 40-char excerpt
   createdAt: number;
 }
-```
+```text
 
 ### 1.1 Deliberately excluded
 
@@ -191,7 +191,7 @@ export async function restoreWorkspace(stored: WorkspaceState) {
 // 'prompt' means: we still have the handle, but the user must click something
 // to re-grant. That click is a UX moment, not an error.
 if (perm === 'prompt') return { kind: 'needs-gesture', stored };
-```
+```text
 
 A stale workspace is **kept on disk**, marked stale, and shown greyed out in the
 workspace switcher with a "Reconnect" button. Deleting the user's state because
@@ -308,7 +308,7 @@ function validateWorkspace(raw: unknown): Result<WorkspaceState, string[]> {
     ? { ok: false, errors, input: raw }
     : { ok: true, value: { /* …coerced… */ }, warnings: errors };
 }
-```
+```text
 
 `relPath` validation is a **security boundary**, not a nicety. If a
 hand-crafted state file can put `"../../../.ssh/id_rsa"` into
@@ -445,7 +445,7 @@ CREATE VIRTUAL TABLE search_index USING fts5(
   rel_path UNINDEXED, heading, body,
   tokenize = 'unicode61 remove_diacritics 2'
 );
-```
+```text
 
 Two notes on the schema: `WITHOUT ROWID` is correct for these
 (primary-key-lookup) tables and halves the storage; and the FTS5 tokenizer
@@ -602,7 +602,7 @@ describe('workspace persistence', () => {
   it('a 1 MB+ state file is rejected without allocating 1 GB', …);
   it('does not prototype-pollute via a "__proto__" key in meta', …);
 });
-```
+```text
 
 Property tests worth having:
 

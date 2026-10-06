@@ -88,7 +88,7 @@ query. It needs one palette expressed as pairs:
   --accent-hover:light-dark(#4A3B30, #E6D2BC);
   --border:      light-dark(#D8D2CA, #3A3531);
 }
-```
+```text
 
 `color-scheme: light dark` also gets the *rest* of the platform for free: the
 form control rendering, the scrollbar, the default canvas, and — critically —
@@ -298,7 +298,7 @@ Why this matters, concretely:
   --lh-body: 1.7;
   --space-unit: 0.5rem;
 }
-```
+```text
 
 Every stylesheet rule in the app references **only** these variables. No rule
 may hardcode a hex colour. That single rule is what makes theming a data
@@ -464,7 +464,7 @@ project brief):
 
 WCAG relative luminance per channel:
 
-```
+```text
 c_lin = c/12.92                if c <= 0.03928
 c_lin = ((c+0.055)/1.055)^2.4  otherwise
 L     = 0.2126*R_lin + 0.7152*G_lin + 0.0722*B_lin

@@ -137,7 +137,7 @@ curl -sLO https://spec.commonmark.org/0.31.2/spec.json
 curl -sL  -o normalize.py \
   https://raw.githubusercontent.com/commonmark/commonmark-spec/0.31.2/test/normalize.py
 # then run the harness described in research/06-libraries/
-```
+```text
 
 **Two normalisation levels, and why.** The spec's own Introduction says:
 

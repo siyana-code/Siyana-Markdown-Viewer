@@ -108,7 +108,7 @@ pipeline = HTML::Pipeline.new [
   HTML::Pipeline::SyntaxHighlightFilter
 ]
 result = pipeline.call(source)
-```
+```text
 
 GitHub's production pipeline is a long chain of these filters, one per feature:
 Markdown → sanitize → syntax highlight → task lists → mention links → emoji →
@@ -458,7 +458,7 @@ push 2026-10-01. From the README:
 | 2 | **Numbered equations, citations, and cross-references** | The three things a scientific document needs and no general Markdown renderer provides. Cross-references in particular should be in our long-term plan |
 | 3 | **Executable content with output caching** | Documentation that cannot go stale |
 | 4 | **Notebooks as a first-class document type** | For the future, notebooks are a format a viewer will eventually have to render |
-||||| 5 | **Graceful architecture migration** | v2 replaced the v1 Sphinx engine while keeping v1 alive on a branch and importable | Contrast with Logseq's removals — [03-logseq §3](../13-competitors/03-logseq-and-zettlr.md#3-the-architecture-shift--this-is-the-single-most-important-thing-to-understand). **This is how to do it** |||||
+| 5 | **Graceful architecture migration** | v2 replaced the v1 Sphinx engine while keeping v1 alive on a branch and importable | Contrast with Logseq's removals — [03-logseq §3](../13-competitors/03-logseq-and-zettlr.md#3-the-architecture-shift--this-is-the-single-most-important-thing-to-understand). **This is how to do it** |
 
 ### What it deliberately skips
 

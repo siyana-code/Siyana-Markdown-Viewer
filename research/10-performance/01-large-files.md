@@ -180,7 +180,7 @@ flowchart TD
     style B fill:#e0f0ff
     style C fill:#fff4d6
     style D fill:#e0ffe0
-```
+```text
 
 | Level | Saves | Costs | Mechanism |
 |-------|-------|-------|-----------|
@@ -269,7 +269,7 @@ export const hasContentVisibility =
 /** Reported to the perf harness so our measurements are honest about which
  *  code path produced them. */
 window.__perf.contentVisibility = hasContentVisibility;
-```
+```text
 
 🔧 **This is the pattern for every modern-CSS dependency in this project.** A CSS
 feature is *used unconditionally*, *detected at runtime*, and *compensated in JS
@@ -309,7 +309,7 @@ close:
 .md-block[data-kind="heading"]   { contain-intrinsic-size: auto 2.4em; }
 .md-block[data-kind="code"]     { contain-intrinsic-size: auto calc(var(--src-lines) * 1.5em + 2em); }
 .md-block[data-kind="table"]    { contain-intrinsic-size: auto calc(var(--src-rows) * 2.2em + 2em); }
-```
+```text
 
 We set `--src-chars`/`--src-lines` from the source offsets we already know from
 the block-wise parse, at ~zero cost. **Better scrollbar stability than a flat
@@ -401,7 +401,7 @@ root:
     <pre><code class="language-rust">…</code></pre>
   </section>
 </article>
-```
+```text
 
 ```css
 .md-block {
@@ -457,7 +457,7 @@ export function scanBlocks(text: string): BlockSpan[];
 
 /** Stage 2 — parses one block's inlines and returns its HTML. */
 export function renderBlock(text: string, span: BlockSpan): string;
-```
+```text
 
 ### 6.2 The scheduler
 
@@ -524,7 +524,7 @@ function scheduleRest(root: HTMLElement, spans: BlockSpan[], done: Set<number>) 
     }
   })();
 }
-```
+```text
 
 🔧 **The worker question.** 🔴 For ≥ 20 MB, parse in a **Worker** and ship HTML
 strings back. Two costs we must accept: (a) one structured-clone of the text per
@@ -636,7 +636,7 @@ document.addEventListener('contentvisibilityautostatechange', (e) => {
     .then(html => { if (sec.isConnected) { cache.set(key, html); applyHighlight(sec, html); } })
     .catch(() => { if (sec.isConnected) applyPlain(sec); });
 });
-```
+```text
 
 🔧 Notes on the design:
 

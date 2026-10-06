@@ -207,7 +207,7 @@ license = "MIT"
 serde = { version = "1", features = ["derive"] }
 notify = "9"
 encoding_rs = "0.8"
-```
+```text
 
 Key property: `crates/smv-fs` is the only crate that touches a real filesystem,
 and it is the only crate the desktop shell depends on. `crates/smv-core` compiles
@@ -292,7 +292,7 @@ The flip side is discipline:
     "vitest": "catalog:"
   }
 }
-```
+```text
 
 Three rules that fall out of this and should go in `CONTRIBUTING.md`:
 
@@ -363,7 +363,7 @@ Every package repeating "extends `@tsconfig/strictest`" plus an identical
 The standard fix is a `@siyana/config` package that exports configs rather than
 duplicates them.
 
-```
+```text
 packages/config/
 ├── package.json
 ├── tsconfig.base.json        # strict, ESNext, bundler resolution
@@ -383,7 +383,7 @@ packages/config/
   "private": true,
   "files": ["*.json", "*.js", "*.mjs", "*.ts"]
 }
-```
+```text
 
 ```jsonc
 // packages/core/tsconfig.json
@@ -478,7 +478,7 @@ source resolution.
     { "path": "apps/desktop" }
   ]
 }
-```
+```text
 
 ## 9. Scaling failure modes — what breaks as we grow
 
@@ -563,7 +563,7 @@ we keep it out of the baseline.
 
 ### Concrete tree
 
-```
+```text
 siyana-markdown-viewer/
 ├─ package.json                    # private root, scripts only
 ├─ pnpm-workspace.yaml
@@ -649,7 +649,7 @@ allowBuilds:
   '@tauri-apps/cli': true      # ships platform binaries via postinstall
   esbuild: true
   sharp: false
-```
+```text
 
 ### Root `package.json`
 
@@ -755,7 +755,7 @@ of bug.
     "clean": { "cache": false }
   }
 }
-```
+```text
 
 ### `rust-toolchain.toml`
 
@@ -828,7 +828,7 @@ for (const pkg of readdirSync(PKGS)) {
   }
 }
 process.exit(errors ? 1 : 0);
-```
+```text
 
 This is 40 lines and it replaces an entire class of review comment.
 

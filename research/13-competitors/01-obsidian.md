@@ -239,7 +239,7 @@ changelog. Obsidian cannot.
 
 Obsidian shipped a first-party CLI that is a genuine scriptability surface:
 
-```
+```text
 obsidian daily                                    # today's daily note
 obsidian daily:append content="- [ ] Buy groceries"
 obsidian search query="meeting notes"
