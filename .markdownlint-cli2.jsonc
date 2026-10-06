@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json.schemastore.org/markdownlint-cli2.jsonc",
+  "config": {
+    "default": true,
+    "MD013": {
+      "line_length": 100,
+      "code_blocks": false,
+      "tables": false,
+      "headings": false
+    },
+    "MD024": {
+      "siblings_only": true
+    },
+    "MD029": {
+      "style": "ordered"
+    },
+    "MD033": {
+      "allowed_elements": [
+        "br",
+        "details",
+        "kbd",
+        "img",
+        "summary"
+      ]
+    },
+    "MD041": false,
+    "MD046": {
+      "style": "fenced"
+    },
+    "MD060": {
+      "style": "consistent"
+    }
+  },
+  "globs": [
+    "**/*.md"
+  ],
+  "ignores": [
+    "node_modules/**",
+    "**/target/**",
+    "**/dist/**",
+    "**/.next/**",
+    "vendor/**"
+  ]
+}

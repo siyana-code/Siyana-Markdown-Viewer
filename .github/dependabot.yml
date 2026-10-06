@@ -1,0 +1,107 @@
+# Keep dependencies current without letting them surprise us.
+# Parser and sanitizer updates are security-relevant, so they are grouped to
+# force a human decision rather than an automatic merge.
+
+version: 2
+
+updates:
+  # --- Runtime ---------------------------------------------------------------
+  - package-ecosystem: cargo
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    labels: [dependencies, rust]
+    groups:
+      # The Markdown parser and the HTML sanitizer. Treat as one change so a
+      # version bump cannot be split across two PRs.
+      markdown-parser:
+        patterns:
+          - "markdown-it"
+          - "markdown-it-*"
+          - "comrak"
+          - "pulldown-cmark"
+          - "goldmark"
+          - "micromark*"
+          - "marked"
+      html-sanitizer:
+        patterns:
+          - "dompurify"
+          - "sanitize-html"
+          - "ammonia"
+          - "rehype-sanitize"
+      # Anything that reaches the webview or the filesystem.
+      webview-and-fs:
+        patterns:
+          - "tauri"
+          - "wry"
+          - "tao"
+          - "notify"
+          - "chokidar"
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    labels: [dependencies, javascript]
+    groups:
+      markdown-parser:
+        patterns:
+          - "markdown-it"
+          - "markdown-it-*"
+          - "micromark*"
+          - "marked"
+          - "remark*"
+          - "unified"
+      html-sanitizer:
+        patterns:
+          - "dompurify"
+          - "sanitize-html"
+          - "rehype-sanitize"
+          - "@braintree/sanitize-url"
+      webview-and-fs:
+        patterns:
+          - "electron*"
+          - "@tauri-apps/*"
+          - "chokidar"
+      build-tooling:
+        patterns:
+          - "typescript"
+          - "vite"
+          - "vitest"
+          - "@biomejs/*"
+          - "turbo"
+          - "nx"
+
+  # --- CI --------------------------------------------------------------------
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    labels: [dependencies, ci]
+
+  # --- Containers (future web/mobile targets) --------------------------------
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: monthly
+    labels: [dependencies]
+    ignore:
+      - dependency-name: "node:*"
+
+  - package-ecosystem: gradle
+    directory: /apps/mobile
+    schedule:
+      interval: monthly
+    labels: [dependencies, mobile]
+    ignore:
+      - dependency-name: "com.android.*"
+
+  - package-ecosystem: swift
+    directory: /apps/mobile
+    schedule:
+      interval: monthly
+    labels: [dependencies, mobile]

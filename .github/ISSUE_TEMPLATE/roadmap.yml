@@ -1,0 +1,52 @@
+name: Roadmap / phase proposal
+description: Propose a new phase, or propose work on the roadmap
+title: "[phase] "
+labels: ["roadmap", "needs-triage"]
+body:
+  - type: textarea
+    id: phase
+    attributes:
+      label: Which phase does this affect?
+      description: See docs/roadmap.md
+      placeholder: "Phase 2 — Reading experience"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: target
+    attributes:
+      label: Target
+      options:
+        - Desktop (Windows)
+        - Desktop (Linux)
+        - Desktop (both)
+        - Web
+        - Mobile
+        - Cross-cutting
+    validations:
+      required: true
+
+  - type: textarea
+    id: change
+    attributes:
+      label: Proposed change to the roadmap
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: justification
+    attributes:
+      label: Why
+      description: What evidence supports this? Research, user feedback,
+                   an unmet need?
+    validations:
+      required: true
+
+  - type: textarea
+    id: tradeoffs
+    attributes:
+      label: What does it cost?
+      description: |
+        Be honest. What gets delayed, what gets harder, what new risk does it
+        introduce?

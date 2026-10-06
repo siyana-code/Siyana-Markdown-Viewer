@@ -1,0 +1,127 @@
+# ---------------------------------------------------------------------------
+# Siyana Markdown Viewer — .gitignore
+# Ordered from generic (OS / editors) to specific (toolchains).
+# ---------------------------------------------------------------------------
+
+# --- Operating system ------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# --- Windows ----------------------------------------------------------------
+Thumbs.db
+ehthumbs.db
+*.lnk
+
+# --- Editors / IDEs --------------------------------------------------------
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/tasks.json
+.idea/
+*.iml
+*.ipr
+*.iws
+.fleet/
+.zed/
+*.swp
+*.swo
+*~
+.project
+.settings/
+.buildpath
+.factorypath
+
+# --- Node / JavaScript -----------------------------------------------------
+node_modules/
+jspm_packages/
+.pnpm-store/
+.yarn/cache
+.yarn/install-state.gz
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/
+*.log
+.eslintcache
+stylelintcache
+
+# Build output
+dist/
+build/
+out/
+.output/
+.vercel/
+.netlify/
+.svelte-kit/
+.astro/
+.next/
+.nuxt/
+coverage/
+.nyc_output/
+
+# --- Rust (Tauri backend / CLI tooling) ------------------------------------
+# NOTE: Cargo.lock is intentionally NOT ignored. This is an application,
+# not a library, so it must be committed for reproducible builds.
+target/
+**/*.rs.bk
+*.pdb
+*.dll
+*.exe
+*.rlib
+
+# --- Python (research tooling, scripts) ------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+build/
+venv/
+.venv/
+env/
+ENV/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+*.egg-info/
+
+# --- Flutter / Dart (evaluated option) ------------------------------------
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+build/
+*.iml
+**/generated_plugin_registrant.dart
+
+# --- Go (evaluated option) -------------------------------------------------
+/bin/
+*.exe
+*.test
+*.out
+
+# --- Application build artifacts -------------------------------------------
+release/
+*.msi
+*.appimage
+*.AppImage
+*.deb
+*.rpm
+*.dmg
+*.exe.blockmap
+latest*.yml
+artifacts/

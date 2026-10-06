@@ -1,0 +1,100 @@
+name: Bug report
+description: Something behaves incorrectly
+title: "[bug] "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. A good bug report here usually includes the
+        Markdown that triggers it.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened
+      description: What did you do, what did you expect, what happened instead?
+      placeholder: |
+        I opened a file containing a nested list and the second level rendered
+        as body text instead of a nested list.
+    validations:
+      required: true
+
+  - type: textarea
+    id: markdown-sample
+    attributes:
+      label: Markdown that triggers it
+      description: |
+        Please paste the smallest Markdown that reproduces the problem, inside
+        a four-backtick fence so we can nest fences safely. If the problem is
+        security-related, do NOT post it here — see SECURITY.md.
+      render: markdown
+      placeholder: |
+        ````markdown
+        # Example
+        - item
+          - nested
+        ````
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected output
+      description: What did you expect it to render as?
+      render: markdown
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Windows 11
+        - Windows 10
+        - Linux (distribution and version)
+        - Web
+        - Mobile (Android or iOS)
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: app-version
+    attributes:
+      label: App version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install-method
+    attributes:
+      label: How did you install it?
+      options:
+        - Installer (MSI / NSIS)
+        - AppImage
+        - deb / rpm package
+        - Snap
+        - Flatpak
+        - Built from source
+        - Web build
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Console or error output
+      description: Open the developer console and paste anything relevant.
+      render: shell
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: This is not a security vulnerability
+          required: true
+        - label: I searched existing issues for this
+        - label: I can reproduce it reliably

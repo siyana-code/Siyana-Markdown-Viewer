@@ -1,0 +1,76 @@
+name: Research task
+description: Propose or contribute to a deep-dive study
+title: "[research] "
+labels: ["research", "needs-triage"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: What question are you trying to answer?
+      description: |
+        Research in this repository is question-driven. A good research task
+        states a question we could otherwise answer by guessing.
+      placeholder: |
+        Does the Tauri v2 webview expose a full accessibility tree to screen
+        readers on Windows, or only to Chromium's own devtools?
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Why does the answer change what we build?
+      placeholder: |
+        If webview accessibility is broken on one platform, we may need to
+        ship our own focus-order and live-region handling rather than relying
+        on the host screen reader.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: folder
+    attributes:
+      label: Which research folder?
+      options:
+        - 00-method
+        - 01-foundations
+        - 02-syntax
+        - 03-specifications
+        - 04-parsing-internals
+        - 05-rendering
+        - 06-libraries
+        - 07-editor-internals
+        - 08-desktop-frameworks
+        - 09-platform
+        - 10-performance
+        - 11-security
+        - 12-ux
+        - 13-competitors
+        - 14-architecture-options
+        - 15-open-questions
+        - New folder
+    validations:
+      required: true
+
+  - type: textarea
+    id: sources
+    attributes:
+      label: Sources you have already found
+      description: |
+        Spec text, official docs, source files, or benchmarks you ran
+        yourself. Please include URLs.
+
+  - type: checkboxes
+    id: commitments
+    attributes:
+      label: Commitments
+      options:
+        - label: >
+            I will cite primary sources for factual claims and mark inference
+            as inference
+          required: true
+        - label: I will not fabricate benchmark numbers or citations
+          required: true
+        - label: >
+            I will update the relevant index file
+            (research/README.md) if I add a document

@@ -1,0 +1,19 @@
+# Default owners for everything in the repository.
+# Replaces individual maintainers in review requirements.
+*                       @siyana-code/markdown-viewer-maintainers
+
+# Shell / packaging / release surface needs experienced eyes.
+/apps/desktop/          @siyana-code/markdown-viewer-maintainers
+/.github/workflows/     @siyana-code/markdown-viewer-maintainers
+
+# The core rendering and sanitizer are security-critical.
+/packages/core/         @siyana-code/markdown-viewer-maintainers @siyana-code/security-reviewers
+/packages/sanitize/     @siyana-code/security-reviewers
+
+# Anything that can affect how untrusted content is handled.
+/research/11-security/  @siyana-code/security-reviewers
+/docs/adr/             @siyana-code/markdown-viewer-maintainers
+
+# Research and docs.
+/research/             @siyana-code/markdown-viewer-maintainers
+/docs/                 @siyana-code/markdown-viewer-maintainers

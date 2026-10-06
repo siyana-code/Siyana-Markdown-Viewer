@@ -1,0 +1,70 @@
+name: Feature request
+description: Suggest a capability or improvement
+title: "[feat] "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: |
+        Describe the situation you are in, not the solution you have in mind.
+        "I want to read a folder of notes on a machine with no internet" is a
+        problem. "Add offline mode" is a solution.
+      placeholder: |
+        When I open a large technical document, scrolling stutters because
+        every code block is syntax-highlighted on every frame.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would you like to happen?
+      description: If you have a specific idea, describe it. If not, that is fine.
+      render: markdown
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you have considered
+      render: markdown
+
+  - type: dropdown
+    id: target
+    attributes:
+      label: Which target does this apply to?
+      options:
+        - Desktop (Windows)
+        - Desktop (Linux)
+        - Desktop (both)
+        - Web
+        - Mobile
+        - Core / shared
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: How much does this matter to you?
+      options:
+        - Blocking — I cannot use the tool without it
+        - Important — I would use the tool less without it
+        - Nice to have
+    validations:
+      required: true
+
+  - type: textarea
+    id: markdown-sample
+    attributes:
+      label: Example Markdown
+      description: If the request involves a Markdown syntax or rendering
+                   behaviour, show what you expect it to do.
+      render: markdown
+      placeholder: |
+        ````markdown
+        | Feature | Status |
+        |---------|--------|
+        | Tables  | done   |
+        ````
