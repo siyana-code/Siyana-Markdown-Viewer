@@ -297,6 +297,11 @@ jobs:
   # `languages` input is a comma-separated list, and a matrix over it produces
   # one redundant analysis per language per job. A single job that analyses both
   # is faster and uploads one set of alerts.
+  #
+  # CodeQL is skipped while no source exists (Phase 0 is docs and research
+  # only). "CodeQL could not process any code" is a hard failure, not a warning,
+  # so the probe is required rather than decorative.
+  # ---------------------------------------------------------------------------
   codeql:
     name: CodeQL
     runs-on: ubuntu-latest
@@ -304,14 +309,38 @@ jobs:
       contents: read
       security-events: write
     steps:
+      - name: Detect analysable source
+        id: probe
+        shell: bash
+        run: |
+          # `find` rather than a glob: `**` needs globstar enabled and silently
+          # matches nothing without it, which would look like "no source".
+          langs=""
+          if find . -name '*.ts' -not -path './.git/*' -not -path '*/node_modules/*' \
+               -not -path '*/dist/*' -not -path '*/target/*' -print -quit | grep -q .; then
+            langs="javascript-typescript"
+          fi
+          if find . -name '*.rs' -not -path './.git/*' -not -path '*/target/*' \
+               -print -quit | grep -q .; then
+            langs="${langs:+$langs,}rust"
+          fi
+          echo "langs=$langs" >> "$GITHUB_OUTPUT"
+          if [ -z "$langs" ]; then
+            echo "No analysable source yet; skipping CodeQL."
+          else
+            echo "Analysing: $langs"
+          fi
+
       - uses: actions/checkout@v4
 
       - uses: github/codeql-action/init@v3
+        if: steps.probe.outputs.langs != ''
         with:
-          languages: javascript-typescript,rust
+          languages: ${{ steps.probe.outputs.langs }}
           queries: security-extended
 
       - uses: github/codeql-action/analyze@v3
+        if: steps.probe.outputs.langs != ''
         with:
           category: /language:multi
 
