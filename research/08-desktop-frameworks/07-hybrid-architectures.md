@@ -150,7 +150,7 @@ graph TB
 ### Verdict on (a)
 
 **The maximum-reuse option, and the option the weighting in Table B favours
-(4.70, our top score).** The trade is explicit: pay 150 MB, ~2× the memory, and
+(4.17, our top score).** The trade is explicit: pay 150 MB, ~2× the memory, and
 a 6–7×/year upgrade treadmill, in exchange for a renderer that is genuinely one
 codebase on all three platforms, plus the best debugging and E2E testing in the
 industry.

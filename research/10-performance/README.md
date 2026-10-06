@@ -78,7 +78,7 @@ not pretend it can be decided from marketing pages.
 |--------|------------|--------|--------------|
 | **Idle memory (shell only, empty app)** | Total RSS of the process tree after launch with no document, 60 s | **≤ 350 MiB** Windows (WebView2), **≤ 450 MiB** Linux (WebKitGTK 2.52+), **≤ 600 MiB** for the same on WebKitGTK 2.36 | See [03](03-memory-and-startup.md) — **sum the process tree, report RSS *and* PSS** |
 | **Idle memory (shell + typical doc)** | Open a 100 KB technical doc, scroll to the end, wait 30 s | **≤ 550 MiB** | Same + DevTools heap snapshot to attribute the JS-side growth |
-| **Memory ceiling (100 MB pathological file)** | Open the 100 MB generated file | **≤ 900 MiB**, and must not OOM on a 4 GB machine | Same, plus a "graceful degradation" assertion — see [01](01-large-files.md#the-100-mb-case) |
+| **Memory ceiling (100 MB pathological file)** | Open the 100 MB generated file | **≤ 900 MiB**, and must not OOM on a 4 GB machine | Same, plus a "graceful degradation" assertion — see [01](01-large-files.md#25-engine-limits) |
 | **Leak budget** | Idle RSS after 20 open/close cycles vs. after 1 | **Δ ≤ 5%** | Automated soak test in CI (nightly), fail on regression |
 | **Steady-state after 8 h** | Same as above but 8 h | **Δ ≤ 10%** vs 1 h | Manual, pre-release |
 

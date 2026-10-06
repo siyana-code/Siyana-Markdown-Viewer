@@ -235,10 +235,10 @@ opinions on the record.
    `@supports` guard is not optional decoration; it is the compatibility layer.
 5. **We ship `AppImage` + `deb` + `rpm` on Linux, and we put Flatpak on Flathub
    once stable.** Rationale and the WebKit-version tension are worked through in
-   [02-linux.md](02-linux.md#distribution-formats).
+   [02-linux.md](02-linux.md#3-distribution-formats).
 6. **We ship NSIS + portable ZIP on Windows, and MSIX later if Store distribution
    proves worth the review cycle.** Rationale in
-   [01-windows.md](01-windows.md#msix-vs-nsis-vs-msi).
+   [01-windows.md](01-windows.md#3-packaging-msix-vs-nsis-vs-msi).
 7. **Every release artifact is cryptographically signed, and the signature is
    over the artifact itself — never over a checksum published beside it.** See
    [03-distribution-and-updates.md](03-distribution-and-updates.md#integrity).

@@ -13,7 +13,7 @@ date after which it becomes someone else's problem.
 
 | # | Doc | What it is |
 |---|-----|-----------|
-| 01 | [Question register](01-question-register.md) | 60 numbered questions. Every one has: why it matters, options, evidence we have, evidence we are missing, who decides, by when, and the ADR that will resolve it. |
+| 01 | [Question register](01-question-register.md) | 78 numbered questions. Every one has: why it matters, options, evidence we have, evidence we are missing, who decides, by when, and the ADR that will resolve it. |
 | 02 | [Risk register](02-risk-register.md) | 22 risks with likelihood, impact, exposure score, mitigation, contingency, owner, and status. Includes the ones that end projects. |
 | 03 | [Decision schedule](03-decision-schedule.md) | Which decisions must land before which milestone, in what order, and by when. With a gantt chart and a slip policy. |
 
@@ -109,14 +109,18 @@ being wrong is expensive and late:
 
 | Section | Questions | Decided | Open / researching |
 |---|---|---|---|
-| Rendering & parsing | 13 | 0 | 13 |
-| Platform & packaging | 10 | 0 | 10 |
-| Filesystem & data | 8 | 0 | 8 |
-| Search | 5 | 0 | 5 |
-| Desktop / web / mobile scope | 8 | 0 | 8 |
-| Product, naming, licensing | 8 | 0 | 8 |
-| Community, process, sustainability | 8 | 0 | 8 |
-| **Total** | **60** | **0** | **60** |
+| A · Rendering & parsing | 19 | 0 | 19 |
+| B · Repository & architecture | 7 | 0 | 7 |
+| C · Filesystem & persistence | 10 | 0 | 10 |
+| D · Search | 5 | 0 | 5 |
+| E · Platform, packaging & release | 6 | 0 | 6 |
+| F · Product scope & sequencing | 11 | 0 | 11 |
+| G · Naming, licensing, sustainability, community | 20 | 0 | 20 |
+| **Total** | **78** | **0** | **78** |
+
+(Q numbers are global and deliberately not contiguous within sections — the
+ranges were fixed as cross-references were written into `research/14` and are
+kept stable so those links keep working.)
 
 Nothing is decided. That is correct for a project that has just finished its
 research phase: the outputs of `research/14` and `research/15` are inputs to
