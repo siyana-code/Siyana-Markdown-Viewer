@@ -717,6 +717,7 @@ A consolidated list, each line testable. Level AA unless noted.
 | 1 | **The webview a11y tree is not exposed** on some platform/shell/AT combination | The app is unusable with a screen reader regardless of our HTML quality | Test early, publish an honest support matrix | [§9](#9-the-webview-accessibility-tree-risk) — **do this before locking the framework** |
 | 2 | **The sanitizer strips semantics** we depend on | Silent loss of headings, tables, footnotes, figure captions, and anchor ids | Semantic-preserving allow-list, CI test that asserts a specific semantics-preserving fixture | [§2](#2-semantic-html-is-the-product) |
 | 3 | **The theme palette fails contrast** (as measured: `muted` 3.39:1, `accent` 4.19:1) | AA failure on captions and links for every user | Role-split tokens + CI gate | [03 §8](03-theming.md#8-auditing-our-own-brand-palette) |
+
 ## Sources
 
 - W3C WAI, "What's New in WCAG 2.2" — "WCAG 2.2 was published as a 'W3C Recommendation' web standard on 5 October 2023"; the nine new criteria; "4.1.1 Parsing is obsolete and removed from WCAG 2.2" — <https://www.w3.org/WAI/standards-guidelines/wcag/new-in-22/>

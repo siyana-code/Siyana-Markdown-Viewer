@@ -602,6 +602,7 @@ Differences from the TOC, if any:
 | N12 | Reading position persists per document across restarts | P1 |
 | N13 | All panel toggles are reachable by keyboard alone and each toggle target has `aria-expanded` | P0 |
 | N14 | History navigation (`Alt+←`/`Alt+→`) is the webview's, never reimplemented | P0 |
+
 ## Sources
 
 - Electron, `Menu.setApplicationMenu` — "Passing `null` will suppress the default menu. On Windows and Linux, this has the additional effect of removing the menu bar from the window."; "The default menu will be created automatically if the app does not set one. It contains standard items such as File, Edit, View, and Window."; `&File` → generated `Alt-F` accelerator on Windows and Linux — <https://github.com/electron/electron/blob/main/docs/api/menu.md>

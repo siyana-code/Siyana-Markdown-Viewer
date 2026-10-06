@@ -245,7 +245,7 @@ for a workload that is already inside budget.
 
 ## 5. Enumerating the split
 
-### `core/` — pure logic. No host. No clock. No randomness. No `window`.
+### `core/` — pure logic. No host. No clock. No randomness. No `window`
 
 | Module | Input | Output | Why it is core |
 |--------|-------|--------|----------------|

@@ -612,7 +612,7 @@ this is mostly a Linux concern. Junction points and hard links remain possible.
 **Payload.**
 
 ```
-$ mv notes.md notes.md.tmp && printf '# Half-written' > notes.md && mv notes.md.tmp notes.md &
+mv notes.md notes.md.tmp && printf '# Half-written' > notes.md && mv notes.md.tmp notes.md &
 ```
 
 Editor behaviours that produce garbage rather than an attack: write-in-place

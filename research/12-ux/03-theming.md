@@ -638,6 +638,7 @@ Acceptance rules for a bundled theme:
 | T13 | `<figure>`/`<figcaption>` styling applies to real figure elements, not to `<div>`s with a class | P1 |
 | T14 | Seven bundled starter themes, all passing T7 | P2 |
 | T15 | A "system fonts only" setting exists and disables all bundled font loading | P1 |
+
 ## Sources
 
 - MDN, `prefers-color-scheme` — Baseline *Widely available*, "It's been available across browsers since January 2020" — <https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme>

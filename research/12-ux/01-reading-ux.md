@@ -661,6 +661,7 @@ Acceptance criteria for the reading UX, in priority order. Each is testable.
 | R15 | Paged reading mode | P3 |
 | R16 | Split-view document comparison | P2 |
 | R17 | Inline editing (tier 1) | P2 |
+
 ## Sources
 
 - MDN, `text-wrap` (Baseline *Widely available*, since March 2024) — <https://developer.mozilla.org/en-US/docs/Web/CSS/text-wrap>

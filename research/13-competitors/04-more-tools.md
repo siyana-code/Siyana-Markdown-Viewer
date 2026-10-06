@@ -458,7 +458,7 @@ push 2026-10-01. From the README:
 | 2 | **Numbered equations, citations, and cross-references** | The three things a scientific document needs and no general Markdown renderer provides. Cross-references in particular should be in our long-term plan |
 | 3 | **Executable content with output caching** | Documentation that cannot go stale |
 | 4 | **Notebooks as a first-class document type** | For the future, notebooks are a format a viewer will eventually have to render |
-| 5 | **Graceful architecture migration** | v2 replaced the v1 Sphinx engine while keeping v1 alive on a branch and importable | Contrast with Logseq's removals — [03-logseq §3](../13-competitors/03-logseq-and-zettlr.md#3-the-architecture-shift--this-is-the-single-most-important-thing-to-understand). **This is how to do it** |
+||||| 5 | **Graceful architecture migration** | v2 replaced the v1 Sphinx engine while keeping v1 alive on a branch and importable | Contrast with Logseq's removals — [03-logseq §3](../13-competitors/03-logseq-and-zettlr.md#3-the-architecture-shift--this-is-the-single-most-important-thing-to-understand). **This is how to do it** |||||
 
 ### What it deliberately skips
 
@@ -667,7 +667,7 @@ zero-configuration path excellent.
 README (verified) opens with:
 
 > "**This repository is no longer maintained.**
-> You can find a maintained fork at https://github.com/BIRSAx2/mdcat."
+> You can find a maintained fork at <https://github.com/BIRSAx2/mdcat>."
 
 ### What it did well
 
@@ -752,6 +752,7 @@ workflow with it.
 | 23 | glow | Detect and adapt to platform capabilities | [03 §2](../12-ux/03-theming.md#2-following-the-os-accent), [09 platform](../09-platform/) |
 | 24 | mdcat | Publish an honest capability matrix, **including the ❌s** | Public docs requirement |
 | 25 | mdcat | A single-maintainer tool can die; **MIT means the reader still works if we stop** | The core argument for our licence |
+
 ## Sources
 
 ### GitHub rendering

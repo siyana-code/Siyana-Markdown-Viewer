@@ -31,8 +31,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
 
+      # No `cache:` here on purpose: setup-node fails the step outright when it
+      # cannot find a lockfile to key the cache on, and this repository does not
+      # have one until the JS workspace is scaffolded. Re-add it in Phase 1.
       - name: Install markdown lint tooling
         run: npm install -g markdownlint-cli2@latest
 

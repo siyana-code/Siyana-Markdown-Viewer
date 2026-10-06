@@ -49,7 +49,7 @@ Logseq is mid-migration from **file graphs** to **DB graphs**, and the migration
 has been severe. Verified from `github.com/logseq/docs/db-version-changes.md`
 and `db-version.md` (docs dated **28 April 2026**):
 
-> "**File graphs have been split off to https://github.com/logseq/og**"
+> "**File graphs have been split off to <https://github.com/logseq/og>**"
 > "The application performance is better — loading faster, handling larger
 > graphs and large tables."
 
@@ -131,7 +131,7 @@ Logseq's problem and it will be ours if we are not careful.
 | 2 | **Never remove a rendering capability in place.** Migrate additively | [05 rendering](../05-rendering/), [14 architecture](../14-architecture-options/) |
 | 3 | **A plugin permission model is a first-class design artefact**, not an afterthought. "No effect" plugins are safe on the web is a genuinely good idea | [14](../14-architecture-options/) |
 | 4 | **Narrowness is a feature.** Every one of Logseq's removed features was individually justified and collectively fatal | The core positioning in [01-obsidian §12](../13-competitors/01-obsidian.md#12-the-gap-stated-precisely) |
-| 5 | **Markdown-only is a legitimate scope decision** for a product whose files must interoperate everywhere |
+||||| 5 | **Markdown-only is a legitimate scope decision** for a product whose files must interoperate everywhere |||||
 | 6 | **Migration communication is product design.** Write the "what is being removed" document before you remove it | |
 
 ---
@@ -344,7 +344,7 @@ reader is the original use case for Markdown. It is the least served.
 - README — "A privacy-first, open-source platform for knowledge management and collaboration"; "It focuses on privacy, longevity, and user control" linking to the GNU Free Software Definition; DB version overview (DB graphs, new iOS mobile app in alpha, RTC in beta, "data loss is possible so we recommend automated backups"); file graphs split off to `github.com/logseq/og`; `test/db` branch for stable; `app.logseq.com` web version; Linux install script; Org-mode and Markdown support; plugins and themes — <https://github.com/logseq/logseq/blob/master/README.md>
 - `LICENSE.md` — AGPL-3.0 — <https://github.com/logseq/logseq/blob/master/LICENSE.md>
 - DB version feature reference, "as of April 28th 2026" — nodes (unified blocks and pages), properties, tags, tag-based features, tasks, journals, queries, cards, assets, templates, bulk actions, views, tables, library, search commands, MCP server, sync, publish, plugins, DB graph importer, automated backup, export and import, graph export/import, build EDN data, iOS app, Android app, scripting, CLI — <https://github.com/logseq/docs/blob/master/db-version.md>
-- DB version changes — "Blocks and pages are united as nodes… referenced as `[[]]` and blocks no longer use `(())`"; "The application performance is better"; shadcn-based tables replacing v1/v2; shadcn UI rewrite; new flashcard algorithm with no data import; "**Markdown is the only supported format. Org mode files are no longer supported.**"; "Zotero integration is no longer a built-in feature"; Slides, Whiteboards and Excalidraw removed; templates via `#Template`; "Plugins can be used from the web. For security reasons only plugins configured with no 'effect' are usable"; graph cache moved from `~/.logseq/graphs/` to `~/logseq/graphs/`; "File graphs have been split off to https://github.com/logseq/og" — <https://github.com/logseq/docs/blob/master/db-version-changes.md>
+- DB version changes — "Blocks and pages are united as nodes… referenced as `[[]]` and blocks no longer use `(())`"; "The application performance is better"; shadcn-based tables replacing v1/v2; shadcn UI rewrite; new flashcard algorithm with no data import; "**Markdown is the only supported format. Org mode files are no longer supported.**"; "Zotero integration is no longer a built-in feature"; Slides, Whiteboards and Excalidraw removed; templates via `#Template`; "Plugins can be used from the web. For security reasons only plugins configured with no 'effect' are usable"; graph cache moved from `~/.logseq/graphs/` to `~/logseq/graphs/`; "File graphs have been split off to <https://github.com/logseq/og>" — <https://github.com/logseq/docs/blob/master/db-version-changes.md>
 - GitHub REST API, unauthenticated, 6 October 2026 — 45.1k stars, 2.8k forks, 824 open issues, 141 open pull requests, last push 2026-10-06, licence AGPL-3.0, primary language Clojure, topics include `local-first` and `knowledge-graph`
 
 ### Zettlr

@@ -83,7 +83,7 @@ Markdown renderer in Dart.** Not wrap one — write one.
 
 ## 2. The Markdown-rendering cost, itemised
 
-### The parser exists. The renderer does not.
+### The parser exists. The renderer does not
 
 The Dart `markdown` package (pub.dev, **7.3.1**, 18 Mar 2026 — fetched today)
 provides a CommonMark+GFM-ish parser producing `md.Document` — a tree of

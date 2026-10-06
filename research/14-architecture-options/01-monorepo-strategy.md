@@ -214,7 +214,7 @@ and it is the only crate the desktop shell depends on. `crates/smv-core` compile
 to `wasm32-unknown-unknown` with zero changes, which is what makes doc 02's
 recommendation possible.
 
-### 3.8 Do we need Nx *and* Turborepo? No.
+### 3.8 Do we need Nx *and* Turborepo? No
 
 They overlap heavily and running both means two graphs to reason about and two
 places for a cache to go stale. Pick one. We pick Turborepo.
