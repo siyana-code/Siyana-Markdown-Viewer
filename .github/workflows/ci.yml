@@ -122,24 +122,13 @@ jobs:
       - name: Verify anchor links resolve
         run: python scripts/check-anchors.py
 
-      # Guards against shipping unfinished text. Code spans and fences are stripped
-      # first, because `grep -r "TODO"` is itself a legitimate example.
-      # 15-open-questions is excluded: it legitimately discusses unknowns.
+      # A grep over raw Markdown cannot be used for this: the corpus legitimately
+      # contains the words it looks for. "> [!todo]" is an admonition example,
+      # "Lorem ipsum" is quoted from the CommonMark spec, and "Superseded by
+      # ADR-XXXX" is the status template. The script checks prose only, with code
+      # and inline HTML stripped, and lists its exemptions explicitly.
       - name: Verify no placeholder text left in docs
-        run: |
-          set -euo pipefail
-          hits="$(
-            find docs research -name '*.md' -not -path '*/15-open-questions/*' -print0 \
-            | xargs -0 sed -E 's/^```.*$/@@FENCE@@/; s/`[^`]*`/@@CODE@@/g' \
-            | grep -nE 'TODO|FIXME|XXX|lorem ipsum' \
-            || true
-          )"
-          if [ -n "$hits" ]; then
-            echo "$hits"
-            echo "::error::placeholder text found in docs or research"
-            exit 1
-          fi
-          echo "No placeholder text in docs or research."
+        run: python scripts/check-placeholders.py
 
   # ---------------------------------------------------------------------------
   # Code quality: format and lint.
