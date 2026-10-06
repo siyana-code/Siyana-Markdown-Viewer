@@ -48,7 +48,7 @@ packages/
   search/            # outline, TOC, and search index logic
   test-fixtures/     # CommonMark + GFM spec suites, our own regression fixtures
   config/            # shared Biome, tsconfig, and lint configuration
-```
+```text
 
 Rules:
 

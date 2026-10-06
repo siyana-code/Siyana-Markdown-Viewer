@@ -21,7 +21,7 @@ resolve path
   → follow symlinks, re-check root      (symlink escape is the attack)
   → stat: size, mtime
   → read bytes
-```
+```text
 
 **Guards:** refuse above the size threshold with an explicit user choice rather
 than silently truncating (`R-P3-06`). A read that returns fewer bytes than
@@ -223,7 +223,7 @@ What the user sees. Two things happen immediately after insertion:
 
 Typing must not re-parse and re-insert the whole document. The strategy:
 
-```
+```text
 keystroke
   → update the source buffer
   → mark dirty byte ranges

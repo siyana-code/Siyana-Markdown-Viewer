@@ -255,7 +255,7 @@ Why this matters, concretely:
     }
   }
 }
-```
+```text
 
 ### Rules for the schema
 
@@ -469,7 +469,7 @@ c_lin = c/12.92                if c <= 0.03928
 c_lin = ((c+0.055)/1.055)^2.4  otherwise
 L     = 0.2126*R_lin + 0.7152*G_lin + 0.0722*B_lin
 ratio = (L_lighter + 0.05) / (L_darker + 0.05)
-```
+```yaml
 
 Thresholds: **1.4.3 Contrast (Minimum), Level AA = 4.5:1** for normal text;
 **1.4.11 Non-text Contrast, Level AA = 3:1** for boundaries and graphics

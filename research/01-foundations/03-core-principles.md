@@ -85,7 +85,7 @@ meaning*:
 === underline        →  an underline looks like an underline
 `code`              →  quote marks around a literal
 [text](url)         →  brackets around a reference, destination in parens
-```
+```text
 
 The design statement `[VERIFIED]`, [Markdown Syntax §Philosophy](https://daringfireball.net/projects/markdown/syntax#philosophy):
 
@@ -408,7 +408,7 @@ spec proves it with the paired example `[VERIFIED]`:
 *foo bar *
 .
 <p>*foo bar *</p>
-```
+```text
 
 ```markdown
 *foo bar

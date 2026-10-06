@@ -113,7 +113,7 @@ export function hydrate(section: HTMLElement, html: string): void {
   section.innerHTML = html;
   section.dataset.hydrated = '1';
 }
-```
+```diff
 
 - **One `innerHTML` per block**, not per node, not per document. Per-block keeps
   the string small enough to be cheap, keeps a failure isolated to one block, and
@@ -229,7 +229,7 @@ and then do any writes"*:
 //    → 1 layout total, at the end of the frame
 const measured = blocks.map(b => ({ b, top: b.getBoundingClientRect().top }));
 for (const { b, top } of measured) b.style.transform = `translateY(${top}px)`;
-```
+```text
 
 ✅ **VERIFIED** — and the numbers from that same page's DevTools walkthrough: in
 their trace, *"over 28 milliseconds is spent inside layout for each frame, which,
@@ -417,7 +417,7 @@ viewport.addEventListener('scroll', () => {
   updateOutlineHighlight(t);                        // write → next event forces layout
   updateProgressBar(t / viewport.scrollHeight);    // read scrollHeight → forced layout
 }, { passive: true });                              // passive doesn't save you from your own writes
-```
+```text
 
 🔧 **Four correct patterns:**
 
@@ -655,7 +655,7 @@ local file or an inlined data URI, and the "download" is a file read. So:
                                                not synchronous with first paint */
   size-adjust: 100%;                        /* our own metrics; see §9.2 */
 }
-```
+```text
 
 🔧 **The real font-loading risk in a desktop app is different and more subtle:**
 FOUT between the **system UI font** (used for chrome) and our **body font**. If

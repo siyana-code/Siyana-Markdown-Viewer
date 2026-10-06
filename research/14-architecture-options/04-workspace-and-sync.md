@@ -148,7 +148,7 @@ export interface RecentEntry {
   /** Best-effort; may be stale after the folder is deleted. */
   title?: string;
 }
-```
+```text
 
 Cap at 200 entries, LRU by `lastOpenedAt`. Purge on startup any entry whose
 workspace can no longer be resolved, because showing a recent file that no
@@ -351,7 +351,7 @@ export class WorkspaceWriter {
     telemetry('workspace-written', { bytes: bytes.length, reason });
   }
 }
-```
+```text
 
 Four rules:
 
@@ -616,7 +616,7 @@ it('any WorkspaceState survives a save/load round trip unchanged', (state) => {
 it('load never throws for any byte input', (bytes) => {
   expect(() => load(bytes)).not.toThrow();
 });
-```
+```text
 
 ## 9. Decision summary
 

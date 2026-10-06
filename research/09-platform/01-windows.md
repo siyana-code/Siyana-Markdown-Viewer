@@ -348,7 +348,7 @@ Keep roaming payloads under ~1 MB.
 
 ```text
 <  >  :  "  /  \  |  ?  *      plus NUL (0) and control chars 1..31
-```
+```text
 
 Note that `:` is on the list — which is also the alternate-data-stream
 delimiter. So `notes:work.md` on NTFS is not "a file with a colon in the name";
@@ -720,7 +720,7 @@ happen before any window exists.
     </application>
   </compatibility>
 </assembly>
-```
+```text
 
 **Per-Monitor V2 is what makes a text app usable.** ✅ **VERIFIED** — under PMv2
 Windows sends `WM_DPICHANGED` and does *not* bitmap-stretch; the app is

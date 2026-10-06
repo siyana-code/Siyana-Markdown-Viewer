@@ -231,7 +231,7 @@ function maybeOpenExternally(rawUrl, userGesture) {
   if (!userGesture) return;               // never launch without a real click
   void shell.openExternal(u.toString());
 }
-```
+```text
 
 `userGesture` matters: a document must not be able to make the app launch
 programs by itself. `openExternal` is a **launch primitive** — on Windows it is
@@ -395,7 +395,7 @@ function installProtocols() {
     return new Response(fs.readFileSync(real), { headers: { 'content-type': contentTypeOf(real) } });
   });
 }
-```
+```text
 
 The **opaque token** is the key design choice. If the `mdimg:` URL contained the
 real path, the renderer could mutate it and ask for anything; with a registry
@@ -618,7 +618,7 @@ fn main() {
         ),
     ).unwrap();
 }
-```
+```text
 
 `open_external` is the one command that hands data to the OS, and it must
 re-validate with the same four-scheme allowlist as the Electron path:

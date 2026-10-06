@@ -127,7 +127,7 @@ graph TB
 
     PUB --> RELEASE(["GitHub Release<br/>MSI · NSIS · .deb · AppImage x2<br/>latest.json + signatures"])
     RELEASE --> UPD(["client auto-update check"])
-```
+```text
 
 Note the shape: **build jobs never create the release.** Each one uploads
 artifacts; exactly one `publish` job creates and populates the release. This
@@ -290,7 +290,7 @@ Two ways to comply:
       -v "$PWD":/app -w /app \
       ghcr.io/siyana/mdv-linux-build:ubuntu-22.04 \
       bash -lc 'pnpm install --frozen-lockfile && pnpm tauri build --bundles deb,appimage'
-```
+```text
 
 ```yaml
 # Option B: pin the runner image explicitly
@@ -417,7 +417,7 @@ Then in `publish`:
     pattern: '*'
     merge-multiple: false      # keep per-platform subdirectories
     path: dist
-```
+```text
 
 `merge-multiple: false` matters: without it, three jobs' `latest.json` files
 collide on one path. We want to *read* them, merge them into one manifest, and
@@ -609,7 +609,7 @@ flowchart TB
     UPLOAD --> NOTE["update CHANGELOG · create GitHub Release notes"]
     NOTE --> UPDATER["existing installs poll<br/>latest.json → signed download"]
     UPDATER --> NOTE2["Store listing (phase 2)<br/>Flathub (phase 2)"]
-```
+```text
 
 **Checksums** are uploaded as a `SHA256SUMS` file and printed in the release
 body. Cheap, and it lets a user verify a download without trusting our hosting.

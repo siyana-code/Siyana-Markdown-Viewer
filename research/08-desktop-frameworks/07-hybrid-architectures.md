@@ -104,7 +104,7 @@ graph TB
     style DESKTOP fill:#f9a825,color:#000
     style WEB fill:#f9a825,color:#000
     style MOBILE fill:#f9a825,color:#000
-```
+```text
 
 ### Reuse accounting
 
@@ -430,7 +430,7 @@ export interface PlatformAdapter {
 // The renderer never knows which one it has:
 export let platform: PlatformAdapter;
 export function setPlatform(p: PlatformAdapter) { platform = p; }
-```
+```text
 
 ### Reuse accounting
 

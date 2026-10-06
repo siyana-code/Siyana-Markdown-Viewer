@@ -71,7 +71,7 @@ const { app, Menu, BrowserWindow } = require('electron');
 Menu.setApplicationMenu(Menu.buildFromTemplate([
   // ...custom menus; omitting the roles that trigger the find bar frees Ctrl+F
 ]));
-```
+```text
 
 and even then, `webContents.findInPage(term, { forward: true })` is the
 programmatic API and it is the only way to *drive* find — there is no API to
@@ -314,7 +314,7 @@ export interface ReadCache {
   clear(): void;
   stats(): { entries: number; bytes: number; hits: number; misses: number };
 }
-```
+```text
 
 | Target | Implementation | Cap |
 |---|---|---|
@@ -577,7 +577,7 @@ gantt
     Incremental update from watcher   :c2, after c1, 14d
     Stale-index handling + verify     :c3, after c2, 10d
     Ranking + facets + snippets       :c4, after c3, 14d
-```
+```text
 
 **The gate is the point of this chart.** `g1` is a real decision with a real
 deadline, backed by `b5`'s benchmarks. If tier (b) answers a query in under

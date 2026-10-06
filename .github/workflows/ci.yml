@@ -51,20 +51,29 @@ jobs:
         run: |
           set -euo pipefail
           missing=0
-          while IFS= read -r source target; do
+          while IFS= read -r source lineno target; do
             [ -z "$target" ] && continue
             case "$target" in
               http://*|https://*|mailto:*|tel:*|data:*) continue ;;
               /*) continue ;;                       # absolute path, not a doc link
               */etc/*|*.ssh*|*::\$DATA*|*/Windows/*) continue ;;  # attack examples
             esac
-            resolved="$(dirname "$source")/$target"
-            if [ ! -e "$resolved" ]; then
-              echo "::error file=$source::broken link -> $target"
-              missing=1
-            fi
+            # Skip links that appear inside an inline code span. The syntax
+            # reference quotes real link targets (``[](./target.md)``) inside
+            # backticks as examples; those are specimen text, not navigation.
+            line="$(sed -n "${lineno}p" "$source")"
+            case "$line" in
+              *'`['*|*'[`'*) ;;
+              *)
+                resolved="$(dirname "$source")/$target"
+                if [ ! -e "$resolved" ]; then
+                  echo "::error file=$source::$lineno::broken link -> $target"
+                  missing=1
+                fi
+                ;;
+            esac
           done < <(grep -rnoE '\]\((\.{1,2}/[^)#[:space:]]*)\)' --include='*.md' docs research \
-                   | sed -E 's#^([^:]+):([0-9]+):\]\((.*)\)$#\1 \3#')
+                   | sed -E 's#^([^:]+):([0-9]+):\]\((.*)\)$#\1 \2 \3#')
           if [ "$missing" -ne 0 ]; then
             echo "::error::broken relative links found"
             exit 1

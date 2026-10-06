@@ -52,7 +52,7 @@ unrelated.
 | **line ending** | LF (U+000A), **or** CR (U+000D) not followed by LF, **or** CR followed by LF. |
 | **blank line** | A line with no characters, or only spaces (U+0020) and tabs (U+0009). |
 | **space** | U+0020 only. |
-| **ASCII punctuation** | `!`–`/`, `:`–`@`, `[`–`` ` ``, `{`–`~` (U+0021–2F, U+003A–0040, U+005B–0060, U+007B–007E). |
+| **ASCII punctuation** | `!`–`/`, `:`–`@`, `[`–`` ␃ ``, `{`–`~` (U+0021–2F, U+003A–0040, U+005B–0060, U+007B–007E). |
 | **Unicode punctuation** | Any character in general category `P` *or* `S`. |
 | **Unicode whitespace** | Category `Zs`, plus tab, LF, form feed, CR. |
 
@@ -67,7 +67,7 @@ Two consequences that bite:
 
 ### 1.2 Tabs (CM §2.2, Examples 1–11)
 
-```
+```text
 RULE (CM §2.2)
 
   Tabs are NOT expanded to spaces. But in contexts where spaces help define
@@ -91,7 +91,7 @@ must advance to a *column*, not offset by 4:
 
 ### 1.3 Insecure characters (CM §2.3)
 
-```
+```text
 RULE (CM §2.3)
 
   U+0000 must be replaced with REPLACEMENT CHARACTER (U+FFFD).
@@ -105,7 +105,7 @@ replaced too (changelog 0.20). → [04 §6](04-edge-cases-and-traps.md#6-entity-
 
 ## 2. Precedence (CM §3.1, Example 42)
 
-```
+```text
 RULE (CM §3.1)
 
   Indicators of block structure always take precedence over indicators of
@@ -114,7 +114,7 @@ RULE (CM §3.1)
 
 | Syntax | Verdict | Notes |
 |--------|---------|-------|
-| `- \`one` + newline + `- two\`` → `<ul><li>\`one</li><li>two\`</li></ul>` | **Valid**, §3.1 Ex. 42 | A list with two items — **not** one item containing a code span. The `- ` wins before the backtick is ever considered |
+| `- \`one` + newline + `- two\␃␃ → `<ul><li>\`one</li><li>two\`</li></ul>` | **Valid**, §3.1 Ex. 42 | A list with two items — **not** one item containing a code span. The `- ` wins before the backtick is ever considered |
 
 **Architectural consequence.** Parsing is two-phase:
 
@@ -141,7 +141,7 @@ extension which adds a **leaf block**.
 
 ## 3. Thematic breaks (CM §4.1, Examples 43–61)
 
-```
+```text
 RULE (CM §4.1)
 
   A line consisting of up to THREE spaces of indentation, followed by a
@@ -166,7 +166,7 @@ RULE (CM §4.1)
 
 ### 3.1 The precedence trap
 
-```
+```text
 Foo
 ---
 bar
@@ -182,7 +182,7 @@ setext wins.** See [§6](#6-setext-headings-cm-43-examples-80106) and
 
 ## 4. ATX headings (CM §4.2, Examples 62–79)
 
-```
+```text
 RULE (CM §4.2)
 
   An ATX heading is inline content between an opening sequence of 1–6
@@ -254,7 +254,7 @@ so it is worth restating as a decision table we will implement literally:
 
 ## 6. Setext headings (CM §4.3, Examples 80–106)
 
-```
+```text
 RULE (CM §4.3)
 
   A setext heading is one or more lines of text, each containing at least one
@@ -286,7 +286,7 @@ RULE (CM §4.3)
 | `Foo` / `--- -` → `<p>Foo</p>` + `<hr />` | **Invalid**, §4.3 Ex. 88 | `--- -` is a thematic break (inter-character spaces allowed), so the `Foo` paragraph closes and cannot become a heading |
 | `Foo··` / `-----` → `<h2>Foo</h2>` | **Valid**, §4.3 Ex. 89 | **Trailing spaces in the content line are stripped, so they do NOT create a hard break** |
 | `Foo\` / `----` → `<h2>Foo\</h2>` | **Valid**, §4.3 Ex. 90 | A trailing backslash is literal here, not a hard break |
-| `` `Foo `` / `----` / `` ` `` → `<h2>\`Foo</h2><p>\`</p>` | **Valid**, §4.3 Ex. 91 | Block structure beats the code span |
+| `` ␃Foo `` / `----` / `` ␃ `` → `<h2>\`Foo</h2><p>\`</p>` | **Valid**, §4.3 Ex. 91 | Block structure beats the code span |
 | `> Foo` / `---` → quote + `<hr />` | **Invalid**, §4.3 Ex. 92 | **The underline cannot be a lazy continuation line** |
 | `> foo` / `bar` / `===` → one paragraph in a quote | **Invalid**, §4.3 Ex. 93 | |
 | `- Foo` / `---` → list + `<hr />` | **Invalid**, §4.3 Ex. 94 | |
@@ -304,7 +304,7 @@ RULE (CM §4.3)
 The spec itself enumerates the historical disagreement (CM §4.3, "Compatibility
 note"). Given:
 
-```
+```text
 Foo
 bar
 ---
@@ -334,7 +334,7 @@ the fixture set. → [04 §3](04-edge-cases-and-traps.md#3-list-vs-setext-vs-the
 
 ## 7. Indented code blocks (CM §4.4, Examples 107–118)
 
-```
+```text
 RULE (CM §4.4)
 
   An indented code block is one or more INDENTED CHUNKS separated by blank
@@ -361,7 +361,7 @@ RULE (CM §4.4)
 
 ## 8. Fenced code blocks (CM §4.5, Examples 119–147)
 
-```
+```text
 RULE (CM §4.5)
 
   A code fence is a sequence of AT LEAST THREE consecutive backticks or
@@ -388,23 +388,23 @@ RULE (CM §4.5)
 
 | Syntax | CommonMark verdict | Notes |
 |--------|--------------------|-------|
-| ` ``` ` … ` ``` ` → `<pre><code>` | **Valid**, §4.5 Ex. 119 | |
-| ` ``` ` → ` ``` ` → `<p><code>foo</code></p>` | **Invalid**, §4.5 Ex. 121 | Two backticks is an *inline code span*, not a fence |
-| ` ``` ` / `aaa` / `~~~` / ` ``` ` | **Valid**, §4.5 Ex. 122 | `~~~` inside a backtick fence is literal content |
-| ` ```` ` / `aaa` / ` ``` ` / ```` ```` ```` → closes | **Valid**, §4.5 Ex. 124 | **Closing must be ≥ opening length** |
-| ` ``` ` / ` ``` aaa` / ` ``` ` → the middle line is content | **Valid**, §4.5 Ex. 147 | Closing fences cannot have info strings |
-| ` ``` ``` ` → `<p><code> </code>\naaa</p>` | **Invalid**, §4.5 Ex. 138 | A fence may not contain internal spaces |
-| ` ```ruby` → `<pre><code class="language-ruby">` | **Valid**, §4.5 Ex. 142 | First word of the info string becomes the class — *the spec does not mandate this*, it is conventional |
+| ```` ␃␃␃ ```` … ```` ␃␃␃ ```` → `<pre><code>` | **Valid**, §4.5 Ex. 119 | |
+| ```` ␃␃␃ ```` → ```` ␃␃␃ ```` → `<p><code>foo</code></p>` | **Invalid**, §4.5 Ex. 121 | Two backticks is an *inline code span*, not a fence |
+| ```` ␃␃␃ ```` / `aaa` / `~~~` / ```` ␃␃␃ ```` | **Valid**, §4.5 Ex. 122 | `~~~` inside a backtick fence is literal content |
+| ```` ```` ```` / ␃aaa␃ / ```` ␃␃␃ ```` / ```` ```` ```` → closes | **Valid**, §4.5 Ex. 124 | **Closing must be ≥ opening length** |
+| ```` ␃␃␃ ```` / ```` ␃␃␃ aaa```` / ```` ␃␃␃ ```` → the middle line is content | **Valid**, §4.5 Ex. 147 | Closing fences cannot have info strings |
+| ```` ␃␃␃ ␃␃␃ ```` → `<p><code> </code>\naaa</p>` | **Invalid**, §4.5 Ex. 138 | A fence may not contain internal spaces |
+| ```` ␃␃␃ruby```` → `<pre><code class="language-ruby">` | **Valid**, §4.5 Ex. 142 | First word of the info string becomes the class — *the spec does not mandate this*, it is conventional |
 | `~~~~    ruby startline=3 $%@#$` → `class="language-ruby"` | **Valid**, §4.5 Ex. 143 | Remaining info-string words are **unspecified**; cmark discards them |
-| ```` ````; ```` → `<pre><code class="language-;"></code></pre>` | **Valid**, §4.5 Ex. 144 | A one-character language is legal |
-| ` ``` aa ``` ` → `<p><code>aa</code>\nfoo</p>` | **Invalid**, §4.5 Ex. 145 | Backtick in a backtick-fence info string |
-| `~~~ aa ``` ~~~` / `foo` / `~~~` → `class="language-aa"` | **Valid**, §4.5 Ex. 146 | Tilde fences may have backticks in the info string |
-| ` ``` ` / `aaa` / `    ``` ` → the last line is content | **Valid**, §4.5 Ex. 137 | 4-space-indented closer is not a closer |
-| ` ``` ` / `aaa` / `   ``` ` → closes | **Valid**, §4.5 Ex. 135 | Closer indent need not match opener |
-| `    ``` ` / `    aaa` / `    ``` ` → indented code containing fences | **Invalid**, §4.5 Ex. 134 | 4-space indent |
-| ` ```   ` + ` aaa` + `aaa` + ` ```   ` → two lines, no indent | **Valid**, §4.5 Ex. 131 | N=1 opener removes 1 space of indent |
-| `foo` / ` ``` ` / `bar` / ` ``` ` / `baz` → p, code, p | **Valid**, §4.5 Ex. 140 | Fences interrupt paragraphs and need no blank lines |
-| ` ``` ` / `aaa` → `<pre><code>aaa\n</code></pre>` with no closer | **Valid**, §4.5 | Unclosed fences terminate at container end |
+| ```` ````; ␃␃␃␃ → `<pre><code class="language-;"></code></pre>` | **Valid**, §4.5 Ex. 144 | A one-character language is legal |
+| ```` ␃␃␃ aa ␃␃␃ ```` → `<p><code>aa</code>\nfoo</p>` | **Invalid**, §4.5 Ex. 145 | Backtick in a backtick-fence info string |
+| ````~~~ aa ␃␃␃ ~~~```` / `foo` / `~~~` → `class="language-aa"` | **Valid**, §4.5 Ex. 146 | Tilde fences may have backticks in the info string |
+| ```` ␃␃␃ ```` / `aaa` / ````    ␃␃␃ ```` → the last line is content | **Valid**, §4.5 Ex. 137 | 4-space-indented closer is not a closer |
+| ```` ␃␃␃ ```` / `aaa` / ````   ␃␃␃ ```` → closes | **Valid**, §4.5 Ex. 135 | Closer indent need not match opener |
+| ````    ␃␃␃ ```` / `    aaa` / ````    ␃␃␃ ```` → indented code containing fences | **Invalid**, §4.5 Ex. 134 | 4-space indent |
+| ```` ␃␃␃   ```` + ` aaa` + `aaa` + ```` ␃␃␃   ```` → two lines, no indent | **Valid**, §4.5 Ex. 131 | N=1 opener removes 1 space of indent |
+| `foo` / ```` ␃␃␃ ```` / `bar` / ```` ␃␃␃ ```` / `baz` → p, code, p | **Valid**, §4.5 Ex. 140 | Fences interrupt paragraphs and need no blank lines |
+| ```` ␃␃␃ ```` / `aaa` → `<pre><code>aaa\n</code></pre>` with no closer | **Valid**, §4.5 | Unclosed fences terminate at container end |
 
 ### 8.1 Renderer obligations for fences
 
@@ -416,13 +416,13 @@ The spec does not mandate them, so we must decide and document:
 | Info-string words beyond the first | Preserve in `data-info` | Cheap, enables tooling; never rendered |
 | Escaping of code content | Escape `&`, `<`, `>` only | CM §4.5 Ex. 119 shows `<` → `&lt;`; do **not** escape quotes |
 | `<pre>` needs `white-space` handling | Ship `pre { white-space: pre; }` | Browsers collapse nothing inside `pre` by default, but this protects against inherited `white-space: normal` from a parent |
-| Maximum fence length | Cap at 3 000 (mirrors cmark's behaviour) | Prevents an O(n²) "find matching closer" scan on a pathological ` ````…` |
+| Maximum fence length | Cap at 3 000 (mirrors cmark's behaviour) | Prevents an O(n²) "find matching closer" scan on a pathological ```` ````…␃␃␃␃ |
 
 ---
 
 ## 9. HTML blocks (CM §4.6, Examples 148–191)
 
-```
+```text
 RULE (CM §4.6)
 
   An HTML block is a group of lines treated as RAW HTML and not escaped in the
@@ -450,7 +450,7 @@ The seven types, verbatim from §4.6:
 | ` <div>` / `  *hello*` / `         <foo><a>` → raw | **Valid**, §4.6 Ex. 150 | 3-space indent OK |
 | `    <div>` / `    *hello*` → indented code | **Invalid**, §4.6 Ex. 184 | 4 spaces |
 | `</div>` / `*foo*` → raw HTML block containing `*foo*` | **Valid**, §4.6 Ex. 151 | A *block* may start with a closing tag (type 7) |
-| `<div></div>` / ` ``` c ` / `int x = 33;` / ` ``` ` | **Valid**, §4.6 Ex. 161 | Type 6 swallows the fence: "what looks like a Markdown code block is actually part of the HTML block" |
+| `<div></div>` / ```` ␃␃␃ c ```` / `int x = 33;` / ```` ␃␃␃ ```` | **Valid**, §4.6 Ex. 161 | Type 6 swallows the fence: "what looks like a Markdown code block is actually part of the HTML block" |
 | `<a href="foo">` / `*bar*` / `</a>` → all raw | **Valid**, §4.6 Ex. 162 | `a` is not in the type-6 list, so this is a type-7 block; the tag must be alone on its line |
 | `<Warning>` / `*bar*` / `</Warning>` → all raw | **Valid**, §4.6 Ex. 163 | Type 7 permits any tag name |
 | `<del>` / `*foo*` / `</del>` → raw | **Valid**, §4.6 Ex. 166 | |
@@ -504,7 +504,7 @@ separation gives a trivial way to interleave Markdown and HTML. → [01 §11](#1
 
 ## 10. Link reference definitions (CM §4.7, Examples 192–218)
 
-```
+```text
 RULE (CM §4.7)
 
   A link reference definition consists of:
@@ -553,7 +553,7 @@ RULE (CM §4.7)
 
 ## 11. Paragraphs and blank lines (CM §4.8–4.9, Examples 219–227)
 
-```
+```text
 RULE (CM §4.8)
 
   A paragraph is a sequence of non-blank lines that cannot be interpreted as
@@ -575,7 +575,7 @@ RULE (CM §4.8)
 
 ## 12. Block quotes (CM §5.1, Examples 228–252)
 
-```
+```text
 RULE (CM §5.1)
 
   A block quote marker, optionally preceded by 0–3 spaces of indentation,
@@ -604,7 +604,7 @@ beginning of the paragraph.*
 | `> bar` / `baz` / `> foo` → one quote, 3 lines | **Valid**, §5.1 Ex. 233 | Mixed lazy/non-lazy lines |
 | `> foo` / `---` → quote + `<hr />` | **Valid**, §5.1 Ex. 234 | `---` is *not* paragraph continuation text (it would start a new block), so laziness does not apply |
 | `> - foo` / `- bar` → quote with 1-item list, then a sibling list | **Valid**, §5.1 Ex. 235 | Same reason |
-| `> \`\`\`` / `foo` / `\`\`\`` → empty code, paragraph, empty code | **Valid**, §5.1 Ex. 237 | The fence closes; laziness cannot save the fence body |
+| `> \`\`\␃␃ / `foo` / `\`\`\␃␃ → empty code, paragraph, empty code | **Valid**, §5.1 Ex. 237 | The fence closes; laziness cannot save the fence body |
 | `> foo` / `    - bar` → `<blockquote><p>foo\n- bar</p></blockquote>` | **Valid**, §5.1 Ex. 238 | The real lazy-continuation case: `>     - bar` would be an indented code block, which cannot interrupt a paragraph, so it is paragraph continuation text |
 | `>` alone → `<blockquote>\n</blockquote>` | **Valid**, §5.1 Ex. 239 | Empty quote |
 | `> foo` / blank / `> bar` → **two** block quotes | **Valid**, §5.1 Ex. 242 | Consecutiveness. Markdown.pl gave one quote with two paragraphs |
@@ -633,7 +633,7 @@ the line would open:
 
 ### 13.1 List markers (§5.2)
 
-```
+```text
 RULE (CM §5.2)
 
   A BULLET LIST MARKER is -, +, or *.
@@ -715,7 +715,7 @@ absolute column.
 
 ### 13.5 Tight vs loose lists (§5.3)
 
-```
+```text
 RULE (CM §5.3)
 
   A list is LOOSE if any of its constituent list items are separated by blank
@@ -734,16 +734,16 @@ RULE (CM §5.3)
 | `* a` / `*` / blank / `* c` | Valid, §5.3 Ex. 315 | **loose** | Empty second item still counts as separation |
 | `- a` / `- b` / blank / `  c` / `- d` | Valid, §5.3 Ex. 316 | **loose** | One item directly contains two blocks with a blank line |
 | `- a` / `- b` / blank / `  [ref]: /url` / `- d` | Valid, §5.3 Ex. 317 | **loose** | Even when the separated block is a *reference definition* |
-| `- a` / `- \`\`\`` / `  b` / blank / blank / `  \`\`\`` / `- c` | Valid, §5.3 Ex. 318 | **tight** | Blank lines inside the code block do not count |
+| `- a` / `- \`\`\␃␃ / `  b` / blank / blank / `  \`\`\␃␃ / `- c` | Valid, §5.3 Ex. 318 | **tight** | Blank lines inside the code block do not count |
 | `- a` / `  - b` / blank / `    c` / `- d` | Valid, §5.3 Ex. 319 | **outer tight, inner loose** | Looseness is per-list, not per-document |
 | `* a` / `  > b` / `  >` / `* c` | Valid, §5.3 Ex. 320 | **tight** | Blank line inside a block quote does not count |
-| `- a` / `  > b` / `  \`\`\`` / `  c` / `  \`\`\`` / `- d` | Valid, §5.3 Ex. 321 | **tight** | Consecutive blocks, no blank lines |
-| `1. \`\`\`` / `   foo` / `   \`\`\`` / blank / `   bar` | Valid, §5.3 Ex. 324 | **loose** | |
+| `- a` / `  > b` / `  \`\`\␃␃ / `  c` / `  \`\`\␃␃ / `- d` | Valid, §5.3 Ex. 321 | **tight** | Consecutive blocks, no blank lines |
+| `1. \`\`\␃␃ / `   foo` / `   \`\`\␃␃ / blank / `   bar` | Valid, §5.3 Ex. 324 | **loose** | |
 | `- foo` / `  - bar` / blank / `  baz` | Valid, §5.3 Ex. 325 | **loose** | |
 
 ### 13.6 Same-type rule (§5.3)
 
-```
+```text
 RULE (CM §5.3)
 
   Two list items are of the SAME TYPE if they begin with markers of the same
@@ -833,7 +833,7 @@ Resolution:
 
 > **Status: GFM.** Tag: **GFM**. CommonMark itself has no tables.
 
-```
+```text
 RULE (GFM §4.10)
 
   A table is an arrangement of data with rows and columns: a single header row,
@@ -863,7 +863,7 @@ RULE (GFM §4.10)
 
 | Trap | Fixture | Correct behaviour |
 |------|---------|-------------------|
-| `\|` inside a code span in a cell | GFM Ex. 200 | Escaped: `` `\|` `` → `<code>\|</code>` → renders `|` |
+| A literal pipe inside a code span in a cell | GFM Ex. 200 | **Must be written `\|`** — even inside a code span, an unescaped `\|` ends the cell. Rendered: `<code>&#124;</code>` |
 | Table immediately after a paragraph with no blank line | our own | **Not a table** — the paragraph absorbs the delimiter row (CM §3.1). GFM requires the table to start a new block |
 | Table inside a block quote / list item | our own | Works; each row needs the container's indentation |
 | Table inside a table cell | impossible | "Block-level elements cannot be inserted in a table" (GFM §4.10) |
@@ -882,7 +882,7 @@ parser must check them.
 | 2 | Front matter (pre-pass) | everything | EXTENSION, [§14](#14-front-matter-conventions) |
 | 3 | Blank line | all block starts | §4.9 |
 | 4 | Indented code (≥4 cols) | setext, list | §4.4 |
-| 5 | Fenced code (` ``` `, `~~~`) | paragraph, list | §4.5 |
+| 5 | Fenced code (```` ␃␃␃ ````, `~~~`) | paragraph, list | §4.5 |
 | 6 | ATX heading (1–6 `#` + space/EOL) | paragraph | §4.2 |
 | 7 | HTML block types 1–5 | paragraph | §4.6 |
 | 8 | HTML block types 6–7 | types 1–5 | §4.6 |

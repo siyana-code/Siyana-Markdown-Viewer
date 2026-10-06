@@ -116,7 +116,7 @@ clearest statement of where Markdown sits `[VERIFIED]`:
  <------v-------------v-------------v----------------------v---->
   plain text     informal markup   formal markup    binary format
                  (Markdown)        (HTML, XML, etc.)
-```
+```text
 
 — [RFC 7764 §1.1, Figure 1](https://www.rfc-editor.org/rfc/rfc7764.html)
 
@@ -455,7 +455,7 @@ flowchart TB
     AST --> G3
     AST --> G4
     AST --> G5
-```
+```text
 
 | | Markdown | HTML | Editor AST |
 |---|----------|------|-----------|

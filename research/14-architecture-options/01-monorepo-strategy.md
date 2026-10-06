@@ -265,7 +265,7 @@ declared, plus a `node_modules/.pnpm/` store and symlinks. So this:
 ```ts
 // packages/core/src/render.ts
 import { createHash } from 'node:crypto'   // ❌ core is supposed to be isomorphic
-```
+```text
 
 fails to resolve in `core` (core does not declare `node:crypto`) but would
 "work" under npm hoisting if any other package in the tree happened to depend on
@@ -373,7 +373,7 @@ packages/config/
 ├── vitest.base.ts            # shared test setup
 ├── biome.json                # formatter/linter (see below)
 └── stylelint.config.mjs
-```
+```text
 
 ```jsonc
 // packages/config/package.json
@@ -552,7 +552,7 @@ graph TD
 
     CORE -.-> RWASM
     CORE ==>|"wasm build (optional)"| RWASM
-```
+```text
 
 Note the deliberate **absence of arrows between the two graphs**. The TS tree
 and the Rust tree share *specifications* (the AST shape), not *code*, except for
@@ -694,7 +694,7 @@ allowBuilds:
     "@types/node": "catalog:"
   }
 }
-```
+```text
 
 `"verify"` is the important entry point. If a developer can run one command that
 does exactly what CI does, "works locally but not in CI" stops being a category
@@ -843,7 +843,7 @@ us, the migration is:
 // package.json — add plain npm scripts for the Rust side
 "rust:test": "cargo test --workspace",
 "bundle:desktop": "pnpm --filter @siyana/desktop bundle"
-```
+```bash
 
 Cargo is perfectly happy being invoked from an npm script. We lose cross-graph
 task ordering — which we can restore with a one-line `dependsOn` in the shell

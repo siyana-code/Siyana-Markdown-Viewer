@@ -41,7 +41,7 @@ tauri                       ← the facade; owns IPC, ACL, config, asset embeddi
 ├── tauri-build             ← build.rs codegen + JSON schema generation
 ├── tauri-codegen           ← embeds & compresses assets + icons at compile time
 └── tauri-plugin            ← the plugin trait everything official is built on
-```
+```text
 
 Two **upstream** crates are maintained by the Tauri org and are useful
 standalone:
@@ -153,7 +153,7 @@ commands.allow = [
   "read_file", "read", "open",
   "read_text_file", "read_text_file_lines", "read_text_file_lines_next"
 ]
-```
+```text
 
 Identifier namespacing is enforced at compile time — `<plugin>:default`,
 `<plugin>:<command-name>`, max length 116 chars because of how the Rust
@@ -256,7 +256,7 @@ async fn parse_document(path: String, window: tauri::WebviewWindow) -> Result<Do
 ```ts
 import { invoke } from '@tauri-apps/api/core';
 const meta = await invoke<DocMeta>('parse_document', { path: '/home/u/notes/a.md' });
-```
+```text
 
 As of 2.11.0 you can `#[tauri::command(rename = "...")]` to decouple the Rust
 function name from the IPC command name (#14473) — small but useful for keeping
@@ -432,7 +432,7 @@ Enable it and scope it (`app.security.assetProtocol`):
     }
   }
 }
-```
+```text
 
 Then convert a path in the frontend:
 
@@ -560,7 +560,7 @@ Dynamic server returns `204 No Content` for "no update", or `200` with
 
 ```jsonc
 { "plugins": { "updater": { "windows": { "installMode": "passive" } } } }
-```
+```text
 
 | Mode | Behaviour |
 |------|-----------|
@@ -731,7 +731,7 @@ sudo apt install libwebkit2gtk-4.1-dev \
   libssl-dev \
   libayatana-appindicator3-dev \
   librsvg2-dev
-```
+```yaml
 
 Arch: `webkit2gtk-4.1 webkit2gtk-4.1-soup2 ... libappindicator-gtk3 librsvg`
 Fedora: `webkit2gtk4.1-devel ... libappindicator-gtk3-devel librsvg2-devel`

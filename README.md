@@ -60,7 +60,7 @@ docs/       Decisions and reference docs for THIS project (ADRs, roadmap, standa
 research/   The deep study: Markdown, parsers, shells, security, platform reality
 apps/       desktop/ (Phase 1), web/ (Phase 2), mobile/ (Phase 3)
 packages/   core/, ui/, fs-adapters/, test-fixtures/
-```
+```diff
 
 - [`docs/`](docs/README.md) — what we decided and why
 - [`research/`](research/README.md) — what we learned and why we believe it

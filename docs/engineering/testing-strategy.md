@@ -40,7 +40,7 @@ Test effort follows that order, not the order that is easiest to write.
                    │ decode, slug, TOC, search,  │  Fast, plentiful
                    │ limits, path resolution      │
                    └─────────────────────────────┘
-```
+```text
 
 ## 1. Unit tests
 
@@ -245,7 +245,7 @@ pnpm test:fuzz                # quick fuzz, CI budget
 pnpm test:fuzz -- --iterations 1000000        # deep, nightly
 pnpm bench                    # performance baselines
 pnpm bench -- --compare       # regression report
-```
+```text
 
 ## Related
 

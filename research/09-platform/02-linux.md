@@ -269,7 +269,7 @@ The two escapes:
 ```bash
 ./MyApp.AppImage --appimage-extract          # dump to squashfs-root/, no FUSE
 ./MyApp.AppImage --appimage-extract-and-run  # extract then run
-```
+```text
 
 🟡 Also note that Ubuntu's AppArmor has historically blocked some AppImages on
 24.04 unless a profile is written — a real user-support burden.
@@ -497,7 +497,7 @@ $XDG_CACHE_HOME/siyana-markdown-viewer/
 $XDG_RUNTIME_DIR/siyana-markdown-viewer/
     app.lock                 # single-instance lock
     render-worker.sock       # if we need one
-```
+```text
 
 🔴 **Respect the variables.** A user who sets `XDG_DATA_HOME=/mnt/bigdisk/.local/share`
 wants their themes on the big disk. Hardcoding `~/.local/share` is a bug that
@@ -601,7 +601,7 @@ xdg-mime default siyana-markdown-viewer.desktop text/markdown
 xdg-mime query default text/markdown
 
 xdg-mime query filetype ~/notes.md
-```
+```text
 
 🔧 **RECOMMENDED**:
 
@@ -796,7 +796,7 @@ parent's color scheme
 @media (prefers-color-scheme: dark) {
   :root { --bg: #16181d; --fg: #e6e6e6; }
 }
-```
+```diff
 
 - ✅ **GNOME** exposes `org.gnome.desktop.interface color-scheme` via GSettings
   (`'prefer-dark'` / `'default'`).

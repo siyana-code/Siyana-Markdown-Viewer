@@ -43,7 +43,7 @@ WebKitGTK build these are typically:
 ```bash
 sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file \
                  libxdo-dev libssl-dev librsvg2-dev patchelf
-```
+```text
 
 (Verify against [`research/09-platform/02-linux.md`](research/09-platform/02-linux.md)
 — this is the single most common way a Linux dev setup fails.)

@@ -25,7 +25,7 @@ Markdown file
         → script execution in the renderer
           → IPC bridge
             → filesystem read/write, process launch, network egress
-```
+```text
 
 This is not hypothetical. Electron and Markdown viewers have a long history of
 exactly this class of bug. Our security posture is therefore not an

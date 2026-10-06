@@ -80,7 +80,7 @@ a { color: inherit; }                  /* link colour comes from a token */
     scroll-behavior: auto !important;
   }
 }
-```
+```text
 
 The `:where()` selector is deliberate: zero specificity. Our component and
 content rules then win without `!important`, and a user stylesheet can still win
@@ -244,7 +244,7 @@ white-flash-on-dark-startup problem.
     "--syn-comment": "#565f89"
   }
 }
-```
+```text
 
 ```ts
 export function applyTheme(t: Theme) {
@@ -324,7 +324,7 @@ is literally 40 characters.
 .markdown-body h1, h2, h3, h4, h5, h6 {
   line-height: var(--leading-tight);
 }
-```
+```text
 
 1.65 for body prose is at the upper end of the comfortable band (1.5–1.7) and
 is what long-form reading guidelines converge on. Headings at 1.25 because
@@ -394,7 +394,7 @@ code with `font-variant-ligatures: none` for this reason.
   font-variant-ligatures: none;
   font-variant-numeric: tabular-nums;     /* so 0/O and 1/l are distinguishable */
 }
-```
+```text
 
 For prose numerals that should align in tables:
 
@@ -436,7 +436,7 @@ Never hyphenate in these places regardless:
   hyphens: manual;
   -webkit-hyphens: manual;
 }
-```
+```text
 
 ### 4.6 Text wrapping
 
@@ -536,7 +536,7 @@ oversight.
   overflow-wrap: anywhere;
   white-space: break-spaces;
 }
-```
+```text
 
 Notes that cost us real debugging time before:
 
@@ -842,7 +842,7 @@ Three constraints regardless of choice:
 
 Syntax highlighting requires `<span class="…">`. So:
 
-```
+```text
 span    ← add to tag allowlist
 class   ← already allowed (global)
 style   ← still forbidden. Highlighters emit classes, and we map classes to

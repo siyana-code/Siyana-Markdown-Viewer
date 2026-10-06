@@ -216,7 +216,7 @@ we comply with the MPL file-level requirements for any files we modify).
   </article>
   <aside id="backlinks" aria-label="Backlinks"> … </aside>
 </main>
-```
+```text
 
 ```css
 .skip-link {

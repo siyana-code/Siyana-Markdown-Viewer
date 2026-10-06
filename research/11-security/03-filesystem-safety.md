@@ -81,7 +81,7 @@ function isInside(candidate: string, root: string): boolean {
   const rel = path.relative(root, candidate);
   return rel !== '' && !rel.startsWith('..') && !path.isAbsolute(rel);
 }
-```
+```text
 
 `path.relative` returning a non-`..`-prefixed, non-absolute value is the correct
 containment test, because it is computed on two already-canonical paths.
@@ -195,7 +195,7 @@ CVE-2026-53571's fix "resolves Windows 8.3 short names before applying
 
 **3. UNC paths and device paths.**
 
-```
+```text
 \\server\share\file.md      # UNC; may carry NTLM credentials to an attacker server
 \\.\PhysicalDrive0          # device path; raw disk access
 \\?\C:\Windows\System32\... # extended-length prefix, bypasses MAX_PATH normalization
@@ -301,7 +301,7 @@ A two-line loop causes an infinite walk, unbounded memory, and a hung app:
 
 ```text
 ~/notes/a/link -> ~/notes
-```
+```text
 
 The detection is a visited-set of `(dev, ino)` pairs:
 
@@ -439,7 +439,7 @@ export function explainFsError(e: NodeJS.ErrnoException, path: string): DocError
     default:         return { code: 'io-error',     hint: e.message ?? 'I/O error.', technical: true };
   }
 }
-```
+```text
 
 Three properties this table encodes:
 
@@ -561,7 +561,7 @@ watch(parentDirOf(doc), (event, filename) => {
     onChange(join(parentDirOf(doc), filename.toString()));
   }
 });
-```
+```text
 
 ## 6. Encoding detection: you may not assume UTF-8
 
@@ -691,7 +691,7 @@ function detectNewline(text: string): 'lf' | 'crlf' | 'cr' | 'mixed' {
   if (cr) return 'cr';
   return 'lf';
 }
-```
+```diff
 
 - **Bare CR** is old-Mac (pre-OS X) and also appears in files produced by some
   tools and by hand-crafted payloads. CommonMark 0.31.2 §2.1 treats line
@@ -808,7 +808,7 @@ const ALLOWED_MD_EXT = new Set([
   '.mdx',                  // JSX-flavoured Markdown — content will not render, but it is Markdown
   '.textile', '.org', '.wiki',   // not Markdown, but users put them in notes folders
 ]);
-```
+```text
 
 Two consequences of `'.txt'` being on the list, both accepted:
 
@@ -930,7 +930,7 @@ export async function acquireLock(target: string): Promise<Lock | null> {
     return null;                                     // locked
   }
 }
-```
+```text
 
 ### 10.2 Stale locks
 

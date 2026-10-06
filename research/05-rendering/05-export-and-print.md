@@ -56,7 +56,7 @@ Expanded here with the parts that only matter on paper.
     @top-left  { content: string(doctitle); font: 9pt var(--font-sans); color: var(--fg-muted); }
   }
 }
-```
+```text
 
 `string(doctitle)` requires the title to be set on the element:
 
@@ -135,7 +135,7 @@ is a visible bug:
     user-select: none;
   }
 }
-```
+```text
 
 `.line` spans are real DOM nodes for print purposes, which means the screen
 renderer does not use them (they break soft wrap). Generate them only in the
@@ -278,7 +278,7 @@ ipcMain.handle('export:pdf', async (event, { html, opts }) => {
   win.destroy();
   return pdf;
 });
-```
+```text
 
 `generateTaggedPDF` and `generateDocumentOutline` are the two options worth
 turning on. The outline one means a 200-page exported document has a navigable
@@ -556,7 +556,7 @@ export function toPlainText(ast: Document, opts: { width?: number } = {}): strin
   });
   return out.join('\n').replace(/\n{3,}/g, '\n\n').trim() + '\n';
 }
-```
+```text
 
 Two decisions worth stating:
 

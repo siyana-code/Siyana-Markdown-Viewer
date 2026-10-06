@@ -185,7 +185,7 @@ The official example is a *starting point*. Ours adds:
         run: |
           test -f latest.json || (echo 'latest.json missing' && exit 1)
           # every url in latest.json must have a sibling .sig on the release
-```
+```text
 
 The last two steps are the ones most projects skip and most regret skipping: the
 first is a **runtime** failure only users would find, and the second is a silent
@@ -389,7 +389,7 @@ use tauri_plugin_updater::UpdaterExt;
 let channel = if beta { "beta" } else { "stable" };
 let update_url = format!("https://{channel}.myserver.com/{{{{target}}}}-{{{{arch}}}}/{{{{current_version}}}}");
 let update = app.updater_builder().endpoints(vec![update_url])?.build()?.check().await?;
-```
+```text
 
 Note the **doubled braces**: `format!` eats single braces, so `{{target}}` must be
 written `{{{{target}}}}`.
@@ -508,7 +508,7 @@ Windows `RELEASES` file (generated at build time, lists the `.nupkg` delta):
 
 ```console
 B0892F3C7AC91D72A6271FF36905FEF8FE993520 electron-fiddle-0.36.3-full.nupkg 103298365
-```
+```text
 
 ✅ **VERIFIED** — the recommended layout is
 `my-app-updates/{darwin|win32}/{x64|arm64}/…` with platform+arch folders, and
@@ -659,7 +659,7 @@ async fn check_for_update(channel: Channel) -> Result<Option<Update>> {
     }
     client.check().await
 }
-```
+```text
 
 Server-side rules:
 

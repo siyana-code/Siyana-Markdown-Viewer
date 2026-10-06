@@ -13,7 +13,7 @@
      │  GitHub Release, installers, auto-update manifests
      ▼
   published
-```
+```text
 
 Full CI runs on every release. A release never bypasses it. The only thing the
 tag adds is the semver and `CHANGELOG.md` consistency checks.
@@ -89,7 +89,7 @@ pnpm test
 pnpm test:conformance
 pnpm test:fuzz
 pnpm bench -- --compare
-```
+```text
 
 Plus, manually:
 

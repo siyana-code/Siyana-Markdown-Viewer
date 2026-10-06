@@ -24,7 +24,7 @@ Dart code
   → Flutter's own layout engine
   → Skia / Impeller rasterisation
   → GPU
-```
+```text
 
 Impeller — Flutter's renderer — became the default across platforms, and
 **Impeller on Desktop landed in 3.47** (12 Aug 2026,

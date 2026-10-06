@@ -125,7 +125,7 @@ Implemented as a linear scan, in this order (§16 of [01](01-block-elements.md#1
 
 | Input | Correct | Naive | Rule |
 |-------|---------|-------|------|
-| `<div></div>` / ```` ``` c ```` / `int x = 33;` / ```` ``` ```` | one raw HTML block containing the fences | a `<pre><code>` block | §4.6 Ex. 161 — **type 6 ends at the next blank line** |
+| `<div></div>` / ```` ␃␃␃ c ```` / `int x = 33;` / ```` ␃␃␃ ```` | one raw HTML block containing the fences | a `<pre><code>` block | §4.6 Ex. 161 — **type 6 ends at the next blank line** |
 | `<table><tr><td>` / `<pre>` / `**Hello**,` / blank / `_world_.` / `</pre>` / `</td></tr></table>` | `<table>…**Hello**,</td></tr></table>` then `<p><em>world</em>.</p>` | Markdown parsed inside the `<table>` | §4.6 Ex. 148 — the block's end condition was fixed at its start |
 | `<del>` / `*foo*` / `</del>` | raw: `<del>\n*foo*\n</del>` | `<p><em>foo</em></p>` inside | §4.6 Ex. 166 |
 | `<del>` / blank / `*foo*` / blank / `</del>` | `<del>` raw, then `<p><em>foo</em></p>` | one block | §4.6 Ex. 167 |
@@ -153,7 +153,7 @@ mandatory, not optional. → [01 §9.1](01-block-elements.md#91-security-implica
 | `>>> foo` / `bar` | 3-deep quote, 2-line paragraph | 3-deep quote with 1 line, then a paragraph | §5.1 Ex. 250 |
 | `> foo` / `---` | quote + `<hr />` | `<blockquote><h2>foo</h2></blockquote>` | §5.1 Ex. 234 — `---` is not paragraph continuation text |
 | `> - foo` / `- bar` | quote with 1-item list, then a sibling list | one list of 2 inside the quote | §5.1 Ex. 235 |
-| `> \`\`\`` / `foo` / `\`\`\`` | empty code in quote, `<p>foo</p>`, empty code | one big code block in the quote | §5.1 Ex. 237 |
+| `> \`\`\␃␃ / `foo` / `\`\`\␃␃ | empty code in quote, `<p>foo</p>`, empty code | one big code block in the quote | §5.1 Ex. 237 |
 | `> foo` / `␣␣␣␣- bar` | quote, one paragraph, `- bar` as text | quote ending, list outside | §5.1 Ex. 238 — with `> ` prefixed it *would* be an indented code block, which cannot interrupt a paragraph, so it is continuation text |
 | `␣␣1.␣␣A paragraph` / `with two lines.` / blank / `␣␣␣␣␣␣␣␣indented code` / blank / `␣␣> A block quote.` | one item with all three blocks | item text stops after the first line | §5.2 Ex. 290 — laziness applies to **list items** too (rule #5) |
 | `␣␣1.␣␣A paragraph` / `␣␣␣␣with two lines.` | one tight item | one loose item | §5.2 Ex. 291 — partial indentation deletion |
@@ -184,7 +184,7 @@ code block, or an HTML block.
 | `&#abcdef0;` (7 hex digits) | literal | decoded | §2.5 Ex. 28 — hex limit is 6 |
 | `&#X22;` and `&#x22;` | both `"` | only lowercase `x` | §2.5 Ex. 27 |
 | `&#0;` | U+FFFD | dropped | §2.3 / §2.5 Ex. 26 — **replace, never omit** |
-| `&ouml;` inside `` `code` `` | `&amp;ouml;` | `ö` | §2.5 Ex. 35 |
+| `&ouml;` inside `` ␃code␃ `` | `&amp;ouml;` | `ö` | §2.5 Ex. 35 |
 | `&ouml;` in an info string | decoded (`language-föö`) | literal | §2.5 Ex. 34 |
 | `&ouml;` inside `<a href="…">` | preserved raw | decoded | §2.5 Ex. 31 / §6.6 Ex. 630 |
 | `\&ouml;` | literal `&ouml;` | `&amp;ouml;` | §2.4 Ex. 14 — escape beats entity |
@@ -225,7 +225,7 @@ Consequences if not stripped:
 |------|---------|
 | `# Heading` after BOM | The ATX opener is preceded by U+FEFF, which is neither a space nor a tab ⇒ **not a heading** |
 | `> quote` after BOM | Not a block quote |
-| `` `code` `` after BOM | The backtick string is "preceded by U+FEFF" — U+FEFF is not a backtick, so it still works, but the literal U+FEFF ends up in the output |
+| `` ␃code␃ `` after BOM | The backtick string is "preceded by U+FEFF" — U+FEFF is not a backtick, so it still works, but the literal U+FEFF ends up in the output |
 | Front matter `---` after BOM | **Front-matter detection fails**, because the fence is no longer at byte 0 |
 
 CommonMark §2.1 does not mention a BOM (it is silent about encodings). **This is
@@ -379,11 +379,11 @@ added a mixed-indentation code-block test).
 | `foo␣␣` (alone) | `<p>foo</p>` | `<p>foo<br /></p>` | §6.7 Ex. 645 |
 | `foo␣␣␣␣␣␣␣` / `baz` | `<p>foo<br />\nbaz</p>` | only exactly-2 counted | §6.7 Ex. 635 |
 | `␣␣␣␣foo␣␣` | `<pre><code>foo␣␣` | trailing spaces trimmed | §4.4 Ex. 118 — **trailing spaces are part of code content** |
-| `` `foo␣␣` `` | `<code>foo␣␣</code>` | `foo` | §6.1 — code spans preserve interior spaces |
-| `` `␣␣` `` | `<code>␣␣</code>` | `<code></code>` | §6.1 Ex. 334 — no stripping when content is all spaces |
-| `` `␣foo␣` `` | `<code> foo </code>` | `<code>foo</code>` | §6.1 Ex. 329/330 |
+| `` ␃foo␣␣␃ `` | `<code>foo␣␣</code>` | `foo` | §6.1 — code spans preserve interior spaces |
+| `` ␃␣␣␃ `` | `<code>␣␣</code>` | `<code></code>` | §6.1 Ex. 334 — no stripping when content is all spaces |
+| `` ␃␣foo␣␃ `` | `<code> foo </code>` | `<code>foo</code>` | §6.1 Ex. 329/330 |
 | `␣␣␣␣␣␣␣` (whitespace-only) | **nothing** | a paragraph of spaces | §4.9 — blank lines are ignored |
-| `` (empty string) | **nothing**, exit 0, render an empty container | crash on `lines[0]` | §1.3: *"Any sequence of characters is a valid CommonMark document"* |
+| ␃␃ (empty string) | **nothing**, exit 0, render an empty container | crash on `lines[0]` | §1.3: *"Any sequence of characters is a valid CommonMark document"* |
 | `→` (one tab only) | **nothing** | a code block | blank line definition includes tabs |
 | `␤` (LF only) | **nothing** | empty paragraph | |
 
@@ -398,7 +398,7 @@ added a mixed-indentation code-block test).
 | only `---␣␣␣` | `<hr />` — thematic break, since front matter has no closing fence |
 | `---` / `title: x` / `---` | front matter only, **no visible content** |
 | `[]` / `[]: /uri` | two paragraphs (`§4.7 Ex. 551`) |
-| ```` ``` ```` | `<pre><code></code></pre>` (§4.5 Ex. 130) |
+| ```` ␃␃␃ ```` | `<pre><code></code></pre>` (§4.5 Ex. 130) |
 | `   ` (3 spaces) | nothing |
 
 ---
@@ -552,14 +552,14 @@ as fixtures regardless.
 | 12 | `"[" × 50000 + "a" + "]" × 50000` | nested brackets, 100 KB |
 | 13 | `"> " × 50000 + "a"` | nested block quotes, 100 KB |
 | 14 | nested lists, 1 000 deep | container depth |
-| 15 | `"abc de "` | `U+0000` ⇒ must become `U+FFFD` |
+| 15 | `"abc␀de␀"` | `U+0000` ⇒ must become `U+FFFD` |
 | 16 | `"e" + "`"×1` … `"e" + "`"×4999` | every backtick-run length |
 | 17 | `"[a](<b" × 30000` | unclosed angle-bracket destinations |
 | 18 | `"[a](b" × 30000` | unclosed paren destinations |
 | 19 | `"</" + "<!--" × 300000` | unclosed comment — **markdown-it's worst case** |
 | 20 | `"aaa\rbbb\n-\v\n" × 30000` | CR line endings + form feed inside a table |
 | 21 | 50 000 `[n]: u` definitions + 5 000 uses | reference-map construction; `cmark` allows this one to fail (hash collisions) |
-||||| 22 | AFL corpus `cmark-gfm/test/afl_test_cases/test.md` | one 382-byte hand-built file exercising `>`, `]]`, `\`, `_`, `~~`, GFM autolinks, `\|`, `>` and `<xmp>` together |||||
+| 22 | AFL corpus `cmark-gfm/test/afl_test_cases/test.md` | one 382-byte hand-built file exercising `>`, `]]`, a backslash, `_`, `~~`, GFM autolinks, a table pipe, and `<xmp>` together |
 
 ### 12.6 Our defences
 
@@ -588,7 +588,7 @@ Everything below becomes a fixture. `→` = tab, `␣` = one space.
 
 | # | Input | Correct | Naive | Why it differs |
 |--:|-------|---------|-------|----------------|
-| 1 | `- \`one␤- two\`` | two list items | one item with a code span | CM §3.1 Ex. 42 |
+| 1 | `- \`one␤- two\␃␃ | two list items | one item with a code span | CM §3.1 Ex. 42 |
 | 2 | `Foo␤---␤bar` | `<h2>Foo</h2>` + `<p>bar</p>` | paragraph + `<hr />` | §4.1 Ex. 59 |
 | 3 | `* Foo␤* * *␤* Bar` | list, `<hr />`, list | one list | §4.1 Ex. 60 |
 | 4 | `→→→→foo␤→bar` | one code block, 2 lines | two blocks | §2.2 Ex. 8 |
@@ -598,9 +598,9 @@ Everything below becomes a fixture. `→` = tab, `␣` = one space.
 | 8 | `␣␣␣␣foo␤bar` | code + paragraph | 4-space code + code | §4.8 Ex. 225 |
 | 9 | `aaa␤␤␤␤␤bbb` | `<p>aaa<br />␤bbb</p>` | `<p>aaa   ␤bbb</p>` | §4.8 Ex. 226 |
 | 10 | `␤␣␣␣␣chunk1␤␣␣␣␣␤␣␣␣␣␣␣chunk2` | one code block, trailing spaces kept | trailing spaces trimmed | §4.4 Ex. 112 |
-| 11 | ```` ``` aaa␤    ``` ```` | code block containing the line | closed early | §4.5 Ex. 137 |
-| 12 | ```` ``` ```␤aaa```` | `<p><code> </code>␤aaa</p>` | a fence | §4.5 Ex. 138 |
-| 13 | ````<div></div>␤ ``` c␤int x = 33;␤ ``` ```` | one HTML block | a `<pre>` block | §4.6 Ex. 161 |
+| 11 | ```` ␃␃␃ aaa␤    ␃␃␃ ```` | code block containing the line | closed early | §4.5 Ex. 137 |
+| 12 | ```` ␃␃␃ ␃␃␃␤aaa```` | `<p><code> </code>␤aaa</p>` | a fence | §4.5 Ex. 138 |
+| 13 | ````<div></div>␤ ␃␃␃ c␤int x = 33;␤ ␃␃␃ ```` | one HTML block | a `<pre>` block | §4.6 Ex. 161 |
 | 14 | `<table><tr><td>␤<pre>␤**Hello**,␤␤_world_.␤</pre>␤</td></tr></table>` | `**Hello**,` verbatim; `_world_.` after the blank line is emphasised | all emphasised | §4.6 Ex. 148 |
 | 15 | `Foo␤<a href="bar">␤baz` | one paragraph | paragraph + raw block | §4.6 Ex. 187 |
 | 16 | `[foo]: /url "title" ok` | literal paragraph | a definition | §4.7 Ex. 209 |
@@ -613,9 +613,9 @@ Everything below becomes a fixture. `→` = tab, `␣` = one space.
 | 23 | `foo-_(bar)_` | `<em>(bar)</em>` | literal | §6.2 Ex. 364 (rule 2b) |
 | 24 | `*$*alpha.` | literal | `<em>$</em>` | §6.2 Ex. 354 (`Sc` is punctuation) |
 | 25 | `*␣a␣*` (U+00A0) | literal | `<em>a</em>` | §6.2 Ex. 353 |
-| 26 | `` ` `` `` `` → `` `foo``bar`` `` | `` `foo `` + `<code>bar</code>` | one code span | §6.1 Ex. 349 |
-| 27 | `` `foo\`bar` `` | `<code>foo\</code>bar\`` | `<code>foo\bar</code>` | §6.1 Ex. 338 |
-| 28 | `` `  ``  ` `` | `<code> `` </code>` | `<code>``</code>` | §6.1 Ex. 331 — only one space per side |
+| 26 | `` ␃ `` `` `` → `` ␃foo``bar`` `` | `` ␃foo `` + `<code>bar</code>` | one code span | §6.1 Ex. 349 |
+| 27 | `` ␃foo\␃bar␃ `` | ␃<code>foo\</code>bar\␃␃ | `<code>foo\bar</code>` | §6.1 Ex. 338 |
+| 28 | `` ␃  ``  ␃ ␃␃ | ````<code> ␃␃ </code>```` | ````<code>␃␃</code>```` | §6.1 Ex. 331 — only one space per side |
 | 29 | `[link]("title")` | `href="%22title%22"` | a title | §6.3 Ex. 504 |
 | 30 | `[foo] [bar]` + `[bar]: /url` | `[foo] <a>bar</a>` | one link | §6.3 Ex. 542 |
 | 31 | `[foo][bar](` + `[baz]: /url1` + `[bar]: /url2` | `[foo]`→`/url2`, `bar`→`/url2`, `baz`→`/url1` | different pairing | §6.3 Ex. 570 |
@@ -632,7 +632,7 @@ Everything below becomes a fixture. `→` = tab, `␣` = one space.
 | 42 | `foo␣␣` / `baz` | `<br />` | soft break | §6.7 Ex. 633 |
 | 43 | `foo\` (block end) | `<p>foo\</p>` | `<p>foo<br /></p>` | §6.7 Ex. 644 |
 | 44 | `Multiple␣␣␣␣␣spaces` | preserved | collapsed | §6.9 Ex. 652 |
-| 45 | `` `Foo␤----␤` `` | `<h2>\`Foo</h2>` + `<p>\`</p>` | a code span containing `----` | §4.3 Ex. 91 |
+| 45 | `` ␃Foo␤----␤␃ `` | `<h2>\`Foo</h2>` + `<p>\`</p>` | a code span containing `----` | §4.3 Ex. 91 |
 | 46 | `\## foo` | `<p>## foo</p>` | `<h2></h2>` | §4.2 Ex. 65 |
 | 47 | `#hashtag` | paragraph | `<h1>hashtag</h1>` | §4.2 Ex. 64 |
 | 48 | `####### foo` | paragraph | `<h7>` | §4.2 Ex. 63 |
@@ -680,11 +680,11 @@ explaining which rule it covers.
 | Fullwidth `＃` heading | [§8.3](#83-cjk-and-full-width-characters) |
 | ZWJ family emoji inside emphasis | [§8.2](#82-emoji-zwj-sequences-and-variation-selectors) |
 | 999-character link label (match) and 1 000-character (no match) | [02 §6.4](02-inline-elements.md#64-the-999-character-label-limit) |
-| `$5 and $6` (no math), `$ x $`, `$x $`, `` `$x$` `` | [03 §9.1](03-extensions-and-dialects.md#91-the-delimiter-rule--this-is-the-whole-spec) |
+| `$5 and $6` (no math), `$ x $`, `$x $`, `` ␃$x$␃ `` | [03 §9.1](03-extensions-and-dialects.md#91-the-delimiter-rule--this-is-the-whole-spec) |
 | `[[note\|alias]]` inside a GFM table cell | [03 §15.1](#151-the-mode-model) |
 | `> [!note]` as the first line of a list item | [03 §11](03-extensions-and-dialects.md#11-admonitions-alerts-and-rst-style-callouts--extension) |
 | `%%comment%%` inside a code span | [03 §13](03-extensions-and-dialects.md#13-highlight-superscript-subscript-comment--nonstandard) |
-| `%%{init: …}%%` inside a ```` ```mermaid ```` fence | [03 §10](#10-mermaid-and-other-diagram-fences--extension) |
+| `%%{init: …}%%` inside a ```` ␃␃␃mermaid ```` fence | [03 §10](#10-mermaid-and-other-diagram-fences--extension) |
 | `---` / `title: x` / `---` at byte 0 of a file | [01 §14](01-block-elements.md#14-front-matter-conventions) |
 | `---` alone (no closing fence) | must be a thematic break |
 | `+++` and `{` front matter | [03 §12](#12-front-matter-variants--extension) |

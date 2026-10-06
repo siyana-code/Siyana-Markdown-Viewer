@@ -252,7 +252,7 @@ obsidian files sort=modified limit=5 --copy
 obsidian unresolved                                # unresolved links
 obsidian eval "app.vault.getFiles().length"        # execute JS
 obsidian plugin:reload my-plugin
-```
+```text
 
 Their own framing: "Command your vault. Anything you can do in Obsidian you can
 do from the command line" and "Obsidian CLI is a programmatic playground for

@@ -147,7 +147,7 @@ That is our shape too.
 
 **Tags:**
 
-```
+```text
 h1 h2 h3 h4 h5 h6
 p br hr
 ul ol li
@@ -198,7 +198,7 @@ autofocus      fires handlers without user interaction
 dirname        smuggles form data
 patchsrc       declarative-partial-updates remote fetch
 http-equiv     meta refresh
-```
+```text
 
 **Tags never allowed:** `script`, `style` (element), `iframe`, `frame`,
 `frameset`, `object`, `embed`, `applet`, `base`, `meta`, `link`, `form`, `svg`,
@@ -253,7 +253,7 @@ Representative payloads, kept as regression tests:
 
 ```html
 <svg></p><style><a id="</style><img src=x onerror=alert(1)>"></svg>
-```
+```text
 
 The last is the canonical mutation-XSS shape from Gareth Heyes'
 ["Bypassing DOMPurify again with mutation XSS"](https://portswigger.net/research/bypassing-dompurify-again-with-mutation-xss).
@@ -369,7 +369,7 @@ data:image/svg+xml;base64,… BANNED  ← SVG is a script-bearing document
 data:text/html;base64,…     BANNED
 data:text/javascript;base64,… BANNED
 data:application/*;…        BANNED
-```
+```text
 
 Why `image/svg+xml` is banned even though it "looks like an image": an SVG file
 is a **document**, and it can contain `<script>`, `<foreignObject>`, event
@@ -577,7 +577,7 @@ svgElement.innerHTML = clean;          // SVG/XML context mismatch
 templateEngine.render(clean);          // A second interpreter after HTML
 someLibrary.html(clean);               // The library may mutate or reparse
 wrapper.innerHTML = `<xmp>${clean}</xmp>`;  // rawtext re-contextualization (CVE-2026-65914)
-```
+```text
 
 The HTML spec itself warns that "serialize-then-reparse is not guaranteed to
 round-trip." Our design consequence:
@@ -673,7 +673,7 @@ explains why this is worse).
 
 The DOM sinks to grep for:
 
-```
+```text
 innerHTML  outerHTML  insertAdjacentHTML  document.write  document.writeln
 document.body.innerHTML  element.setAttribute('href'|'src'|'on*'|...)
 Range.createContextualFragment  el.insertAdjacentElement
@@ -749,7 +749,7 @@ if (window.trustedTypes) {
     createHTML: (input) => DOMPurify.sanitize(input, SANITIZE_CONFIG),
   });
 }
-```
+```text
 
 With that, a bare `el.innerHTML = attackerString` **throws** instead of executing.
 Note DOMPurify's constraint: to create the policy, `RETURN_TRUSTED_TYPE: false`
@@ -827,7 +827,7 @@ different controls and neither substitutes for the other.**
 
 ```ts
 DOMPurify.sanitize(dirty, SANITIZE_CONFIG);
-```
+```text
 
 What happens, element by element:
 

@@ -276,7 +276,7 @@ flowchart LR
         B3 --> B4["Author is happy"]
         B4 --> B5["The spec is wrong for being precise"]
     end
-```
+```text
 
 Both are rational. The tension is real and is documented from both sides.
 

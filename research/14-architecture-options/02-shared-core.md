@@ -195,7 +195,7 @@ graph TD
 
 ### The dependency rule, mechanically
 
-```
+```text
 apps/*→  may import packages/* and anything else
 packages/ui   →  may import packages/doc, packages/config
 packages/fs-adapters → may import packages/core, packages/doc, packages/config
@@ -486,7 +486,7 @@ export interface SystemAdapter {
   onPowerChange(cb: (state: 'suspend' | 'resume' | 'battery-low') => void): () => void;
   onCommand(cb: (id: string) => void): () => void;  // protocol handler / deep link
 }
-```
+```text
 
 ### 6.4 `KeyValueStore` (workspace + settings + session persistence)
 
@@ -573,7 +573,7 @@ export interface RenderPipeline {
   /** Same as render() but never throws. Use this in UI. */
   tryRender(req: RenderRequest): RenderResult & { error?: Error };
 }
-```
+```text
 
 Everything else — reading bytes, decoding off-thread, posting to a Worker,
 diffing, DOM patching, scrolling — is in `packages/ui` or the shell. That

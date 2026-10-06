@@ -52,7 +52,7 @@ Full rule and 8 fixtures: [01 §15](01-block-elements.md#15-tables--gfm-extensio
 
 ### 2.2 Task list items (GFM §5.3) — **GFM**
 
-```
+```text
 RULE (GFM §5.3)
 
   A TASK LIST ITEM is a LIST ITEM where the first block in it is a PARAGRAPH
@@ -86,7 +86,7 @@ RULE (GFM §5.3)
 
 ### 2.3 Strikethrough (GFM §6.5) — **GFM**
 
-```
+```text
 RULE (GFM §6.5)
 
   Strikethrough text is any text wrapped in a MATCHING PAIR of ONE OR TWO
@@ -122,7 +122,7 @@ Full rule and 12 fixtures: [02 §8.1](02-inline-elements.md#81-gfm-autolink-lite
 
 ### 2.5 Disallowed raw HTML / `tagfilter` (GFM §6.11) — **GFM**
 
-```
+```text
 RULE (GFM §6.11)
 
   The following HTML tags will be FILTERED when rendering HTML output:
@@ -324,7 +324,7 @@ Header 1            {#header1}
 | CommonMark-valid? | **No** |
 | Coverage in the wild | **Low** as explicit `{...}`, **but its use is high** — heading anchors, `cssclasses`, and table alignment all serve the same purpose |
 | Should a viewer support it? | **Partially.** The *capability* we need is "attach ids/classes to elements"; the *syntax* is one option. Recommendation: support `{...}` because it is cheap and unambiguous, but **sanitise class names and never allow `on*` or `style`** |
-| Footguns | (a) the `{...}` must not be confused with the *inline-attribute* form `key=value` inside the braces (kramdown has both); (b) on a heading, `# Header {#id}` — the trailing `#` closing sequence and the `{#id}` must both be handled, in that order; (c) on a fenced code fence it goes **after the fence**: ` ``` {.html #ex-1} ` |
+| Footguns | (a) the `{...}` must not be confused with the *inline-attribute* form `key=value` inside the braces (kramdown has both); (b) on a heading, `# Header {#id}` — the trailing `#` closing sequence and the `{#id}` must both be handled, in that order; (c) on a fenced code fence it goes **after the fence**: ```` ␃␃␃ {.html #ex-1} ```` |
 
 ### 3.5 Other Markdown Extra deltas worth knowing
 
@@ -360,7 +360,7 @@ What *does* exist and is the closest thing:
 
 The IANA registry currently holds thirteen identifiers:
 
-```
+```text
 Original          Markdown (the original, RFC 7763)
 MultiMarkdown     MultiMarkdown                    [RFC 7764]
 GFM               GitHub Flavored Markdown         [RFC 7764]
@@ -419,7 +419,7 @@ and `--list-extensions`. Relevant input formats: `markdown` (pandoc's own),
 | `multiline_tables` | rows continue with `>` | |
 | `yaml_metadata_block` | `---` … `---` or `...` front matter | Same as Jekyll |
 | `toml_metadata_block` | `+++` … `+++` | |
-| `shortcut_syntax` | `*em*`, `_em_`, `**strong**`, `` `code` `` without a space after the opener | **Directly conflicts with CommonMark §4.2 Ex. 64 (`#hashtag`)** |
+| `shortcut_syntax` | `*em*`, `_em_`, `**strong**`, `` ␃code␃ `` without a space after the opener | **Directly conflicts with CommonMark §4.2 Ex. 64 (`#hashtag`)** |
 | `auto_identifiers` | Heading ids from text | |
 | `implicit_figures` | Standalone image/table becomes a figure | |
 | `link_attributes` | `{...}` after links — same as Extra | |
@@ -551,7 +551,7 @@ outside of Obsidian."*
 
 ### 7.4 Tags
 
-```
+```text
 #meeting
 #inbox/to-read
 #camelCase  #PascalCase  #snake_case  #kebab-case
@@ -600,7 +600,7 @@ has `markdown.supportAlertSyntax` in its core `markdownRenderer.ts`. So
 
 ### 7.6 Comments
 
-```
+```text
 %%This is a comment and will not be rendered.%%
 ```
 
@@ -612,7 +612,7 @@ has `markdown.supportAlertSyntax` in its core `markdownRenderer.ts`. So
 
 ### 7.7 Highlight
 
-```
+```text
 ==highlighted==
 ```
 
@@ -699,7 +699,7 @@ Logseq's documented quirks:
 | Display | `$$…$$` | same |
 | Inline alt | `\(…\)` | pandoc `tex_math_single_backslash`; **Typora added `\(...\)` / `\[…\]`** in a recent stable release |
 | Display alt | `\[…\]` | same |
-| Asciimath | `` `…` `` | Typora's Math page documents an Asciimath-compatible inline form |
+| Asciimath | `` ␃…␃ `` | Typora's Math page documents an Asciimath-compatible inline form |
 
 | Aspect | Value |
 |--------|-------|
@@ -735,7 +735,7 @@ not a backslash"* — much looser, and it mis-parses `$5 and $6`.
 | Engine | **KaTeX** (fast, no layout shift, matches MarkText and VS Code) vs **MathJax** (fuller TeX, matches Obsidian and Typora) |
 | `\href`, `\url`, `\htmlClass`, `\includegraphics` in TeX | **Disable or escape.** KaTeX has a `trust` option and an `htmlExtension` off-switch; MathJax's `Safe` extension does the same. An untrusted `.md` file can otherwise smuggle HTML through TeX |
 | `$$` spanning a paragraph break | Should **not** be treated as display math; Typora's release notes say LaTeX line breaks (`\\`) are now supported by default |
-| Interaction with `$` in shell snippets | Users must write `` `$HOME` `` (code span) — our inline precedence must put code spans above math |
+| Interaction with `$` in shell snippets | Users must write `` ␃$HOME␃ `` (code span) — our inline precedence must put code spans above math |
 
 ---
 
@@ -948,7 +948,7 @@ before shipping.
 Because pandoc extensions *break* CommonMark, extensions must be a **profile**,
 not a pile of booleans:
 
-```
+```text
 Profile "commonmark"      → CORE only.                       For spec work.
 Profile "gfm"       (default) → CORE + GFM + our ON/TOGGLE set.  For users.
 Profile "pandoc"          → GFM + pandoc extension bundle.   Opt-in.
@@ -980,7 +980,7 @@ CORE, and a conflict case.
 | Wikilinks | `[[a\|b]]` | `[[unclosed` | `![[img.png\|100]]` | `\|` inside a table cell |
 | Block refs | `^my-id` | `^` alone | Block id after a list bullet | `^` inside `x^2^` |
 | Callouts | `> [!tip]+ x` | `> [!unknown]` in a non-first line | Nested callouts | `> [!x]` inside a list item |
-| Math | `$x$`, `$$x$$` | `$5 and $6`, `$ x $`, `$x $` | `` `$x$` `` in a code span | `$` in a shell snippet |
+| Math | `$x$`, `$$x$$` | `$5 and $6`, `$ x $`, `$x $` | `` ␃$x$␃ `` in a code span | `$` in a shell snippet |
 | Front matter | YAML / TOML / JSON | `---` with no closing fence | `---` as a thematic break in the body | `+++` as a paragraph |
 | Highlight | `==x==` | `==` | `==` in a setext underline | — |
 | Comments | `%%c%%` | `%%` | `%%` in a code span | `%%{init}%%` in Mermaid |

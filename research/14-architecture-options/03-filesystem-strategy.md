@@ -103,7 +103,7 @@ export interface FileSystemAdapter {
    */
   resolve(h: FileHandle): Promise<FileHandle | null>;
 }
-```
+```text
 
 `relativePath` is the one place a string path is *produced*, and it is produced
 for display and for the search index, never for IO. Path traversal is therefore
@@ -201,7 +201,7 @@ export type WorkspaceHandle =
   | { kind: 'opfs';              id: string; name: string }
   | { kind: 'memory';            id: string; name: string }
   | { kind: 'none' };                     // single-document mode
-```
+```text
 
 A workspace is **not** a search root and **not** a git repo. It is the unit of:
 * tree navigation,
@@ -421,7 +421,7 @@ that treats that as a change will nag users into uninstalling us.
 Three states, and only three. The copy in the dialog is fixed wording, reviewed
 by nobody, and researched in `../12-ux/`.
 
-```
+```text
 The file changed on disk since you opened it.
 
   last-opened: 12:04:31   on-disk: 12:09:12
@@ -601,7 +601,7 @@ interface DocumentState {
   readonly scrollTop: number;
   readonly selection: SelectionRange | null;
 }
-```
+```yaml
 
 Derived: `isDirty = bufferHash !== baseHash`, `needsSave = isDirty || handle === null`.
 `dirty-external` is `isDirty && onDisk === 'modified'` and is the only state that
@@ -795,7 +795,7 @@ export class FsaAdapter implements FileSystemAdapter {
     return (async function* () { /* never yields */ })();
   }
 }
-```
+```text
 
 The directory handle is persisted by structured-cloning it into IndexedDB
 (`idb.put('workspaces', handle)`), which Chromium supports. On restore, check

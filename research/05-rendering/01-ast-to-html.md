@@ -68,7 +68,7 @@ So the following is, per spec, not an error — it is a correctly parsed documen
 
 ````markdown
 <iframe src="https://evil.example/x.html"></iframe>
-````
+````text
 
 The renderer must emit these bytes unchanged and hand them to the sanitizer,
 which will remove them. **A renderer that silently drops raw HTML is not

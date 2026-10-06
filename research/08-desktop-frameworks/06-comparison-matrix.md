@@ -375,7 +375,7 @@ grep -E 'VmRSS|VmHWM' /proc/$(pgrep -f siyana)/status
 
 # Windows: sum across renderer processes
 Get-Process siyana* | Measure-Object -Property WorkingSet64 -Sum
-```
+```text
 
 **Protocol:** open a **100 MB Markdown file**, scroll to 50 %, wait 3 seconds
 for idle, measure. Repeat 5 times, take the median. Also measure at idle with no

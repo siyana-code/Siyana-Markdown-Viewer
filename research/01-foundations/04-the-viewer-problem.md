@@ -14,7 +14,7 @@ A Markdown **renderer library** has exactly one job:
 
 ```text
 markdown string  →  AST  →  HTML string
-```
+```text
 
 Everything else is somebody else's problem. It has no opinion about where the
 file came from, whether it changed while you were reading it, whether

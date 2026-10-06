@@ -38,7 +38,7 @@ backend, no accounts, and no network dependency.
                          opt-in only, per document
                                    ▼
                             The internet
-```
+```text
 
 ## Containers
 
@@ -148,7 +148,7 @@ one place to review rather than several.
 
 The full flow, from a double-click to pixels.
 
-```
+```text
 1. Shell      user double-clicks a .md file
 2. Shell      resolve the path, check it is inside the workspace root
 3. Shell      read the bytes              ── no parse, no DOM yet

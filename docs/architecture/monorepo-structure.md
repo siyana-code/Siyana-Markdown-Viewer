@@ -29,7 +29,7 @@ Siyana-Markdown-Viewer/
 ├── biome.json
 ├── tsconfig.base.json
 └── .markdownlint-cli2.jsonc
-```
+```text
 
 ## The dependency rule
 
@@ -124,7 +124,7 @@ export const DEFAULT_POLICY: SanitizePolicy
 
 export function sanitize(html: string, policy?: SanitizePolicy): SanitizeResult
 export function isSafeUrl(url: string, scheme: ReadonlySet<string>): boolean
-```
+```text
 
 Exported separately so it can be reviewed, tested, and fuzzed on its own, and so
 the security-critical code has one address in the repository.
@@ -223,7 +223,7 @@ license = "MIT"
 [workspace.dependencies]
 serde = { version = "1", features = ["derive"] }
 thiserror = "2"
-```
+```text
 
 Both lockfiles are committed. For an application, a reproducible build is a
 security property.

@@ -77,7 +77,7 @@ engine-strict=true
 ignore-scripts=false          # we review scripts, we do not disable them
 audit=true
 fund=false
-```
+```text
 
 ```yaml
 # .yarnrc.yml (if Yarn is used)
@@ -131,7 +131,7 @@ for (const [name, want] of Object.entries(CRITICAL)) {
                     'This change requires a security review of the release notes.');
   }
 }
-```
+```text
 
 This is a deliberately annoying check. It is annoying in the same way a compiler
 error is annoying: it converts a decision that would otherwise be implicit and
@@ -186,7 +186,7 @@ policy and flag unusual sources; `cargo-audit` checks advisories:
 cargo install cargo-deny cargo-audit
 cargo deny check advisories bans licenses sources
 cargo audit
-```
+```text
 
 ## 4. Automated update management
 
@@ -286,7 +286,7 @@ Tauri requires a signature for updates and it cannot be disabled:
 pnpm tauri signer generate -w ~/.tauri/siyana.key -p ""
 # Produces the key pair; the PUBLIC key goes in tauri.conf.json,
 # the PRIVATE key is a release-only secret.
-```
+```text
 
 ```jsonc
 // src-tauri/tauri.conf.json
@@ -400,7 +400,7 @@ tar xzf dompurify-3.4.16.tgz
 # Diff the allow-lists against the previous version we shipped. A NEW tag or
 # attribute in a patch release is a security event, not a routine update.
 git diff --word-diff v3.4.10/tags.ts v3.4.16/tags.ts
-```
+```text
 
 Note the framework of the project itself: `src/tags.ts` has `svgDisallowed` and
 `mathMlDisallowed` lists, and the arrays are `freeze()`d at module load "to
@@ -579,7 +579,7 @@ available answer to "was this build compromised?".
 [toolchain]
 channel = "1.90.0"
 components = ["rustfmt", "clippy", "llvm-tools-preview"]
-```
+```text
 
 Because full byte-reproducibility for an Electron app is unlikely, the Electron
 path substitutes **verifiability**: publish the SBOM, publish checksums, and
@@ -652,7 +652,7 @@ jobs:
       id-token: none
     steps:
       - run: [ build, sign ]      # secret only read inside this environment
-```
+```text
 
 ## 12. Build-time vs runtime dependency split
 

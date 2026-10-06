@@ -10,7 +10,7 @@ edited.
 docs/adr/
   README.md                      # this file
   NNNN-short-kebab-title.md      # one decision per file
-```
+```text
 
 Template:
 

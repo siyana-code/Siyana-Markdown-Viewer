@@ -157,7 +157,7 @@ gantt
     v0.4 SmartScreen mature                 :milestone, m6, 2027-10-15, 0d
     Phase 2 web kickoff                     :milestone, m7, 2027-07-01, 0d
     Phase 3 mobile kickoff                  :milestone, m8, 2028-01-15, 0d
-```
+```text
 
 `crit` marks decisions on the critical path. Everything else can slip a month
 without harm — the gates cannot.

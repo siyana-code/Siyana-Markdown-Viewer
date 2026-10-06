@@ -259,7 +259,7 @@ Safari majors within a release or two, so 2.48/2.49 is the likely boundary —
 @supports not (content-visibility: auto) {
   .md-block[data-virtualised] { display: none; }
 }
-```
+```text
 
 ```ts
 export const hasContentVisibility =
@@ -353,7 +353,7 @@ el.getBoundingClientRect(); el.getClientRects();  // layout
 el.scrollHeight; el.scrollTop = n;                // layout + paint
 window.getComputedStyle(el);                     // style recalc
 el.focus();                                      // may force scroll-into-view
-```
+```text
 
 🔧 **RECOMMENDED**, three rules:
 
@@ -496,7 +496,7 @@ async function openDocument(doc: Doc) {
   scheduleRest(article, spans, first);
   performance.mark('doc:open:done');
 }
-```
+```text
 
 `scheduleRest` uses **`scheduler.yield()` when available** and falls back to a
 `MessageChannel`/`setTimeout(0)` shim otherwise. Both yield to input and paint;
@@ -704,7 +704,7 @@ proves the `@supports` fallback works.
   "scroll": { "fpsP50": 58, "fpsP1": 44, "longTasksDuringScroll": 3 },
   "findP95Ms": 41
 }
-```
+```text
 
 **The three questions the experiment must answer, before we commit:**
 

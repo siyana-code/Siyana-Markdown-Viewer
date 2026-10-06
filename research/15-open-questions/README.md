@@ -61,7 +61,7 @@ PR (docs/pr/00NN-<slug>.md)        ← the evidence and the reasoning
 ADR (docs/adr/00NN-<slug>.md)      ← the decision, status: Accepted / Superseded
    ↓  question entry updated: status: decided, link: ADR path
 roadmap + risk register updated
-```
+```text
 
 The `docs/pr/` step is not bureaucracy. An ADR without attached evidence is a
 decision nobody can audit in six months, and in a small project the reasoning is

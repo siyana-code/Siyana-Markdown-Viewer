@@ -35,7 +35,7 @@ develop    ──●───●───●───●───●───●
               \   /     \     \    \   /
 feature/      \ /       \     \    \ /
 phase/         ●         ●     ●    ●
-```
+```text
 
 ## Branch prefixes
 
@@ -102,7 +102,7 @@ body become the commit message, and they follow
 git checkout develop
 git pull --ff-only
 git checkout -b release/0.3.0
-```
+```text
 
 On `release/*`:
 
@@ -192,7 +192,7 @@ MAJOR.MINOR.PATCH
   │     │   └── Patch: bug fix only. No user-visible behaviour change.
   │     └────── Minor: new backwards-compatible feature.
   └──────────── Major: breaking change (schema, config, or CLI shape).
-```
+```text
 
 Pre-release identifiers during stabilisation:
 
@@ -218,7 +218,7 @@ must be called out explicitly in `CHANGELOG.md` under `BREAKING`.
 [optional body]
 
 [optional footer: Closes #42, BREAKING CHANGE: ...]
-```
+```text
 
 Allowed types: `feat`, `fix`, `docs`, `research`, `refactor`, `perf`, `test`,
 `build`, `ci`, `chore`, `style`, `revert`, `security`, `release`.

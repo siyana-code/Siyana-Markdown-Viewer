@@ -69,7 +69,7 @@ more actionable than a single number. All 652 entries have all six keys.
 …
 </table>
 ````````````````````````````````
-```
+```markdown
 
 The content before the `.` line is Markdown; after it is HTML. **Two gotchas:**
 
@@ -215,7 +215,7 @@ packages/test-fixtures/
    ├─ gfm/
    │  └─ tables__pipe-in-wikilink.html
    └─ …
-```
+```text
 
 ### 3.1 The fixture record format
 
@@ -433,7 +433,7 @@ Measured consequences:
 The 61-example gap for markdown-it's `default` preset is **entirely**
 serialisation. Verified by diffing:
 
-```
+```text
 Example 43   expected "<hr />\n<hr />\n<hr />\n"   actual "<hr>\n<hr>\n<hr>\n"
 Example 633  expected "<p>foo<br />\nbaz</p>\n"     actual "<p>foo<br>\nbaz</p>\n"
 Example 572  expected "...title=\"title\" />"      actual "...title=\"title\">"
@@ -443,7 +443,7 @@ Example 11   expected "<hr />\n"                   actual "<hr>\n"
 And the **3** examples markdown-it's `commonmark` preset "fails" at the exact
 tier are also pure serialisation:
 
-```
+```text
 Example 218  "<blockquote>\n</blockquote>"  vs  "<blockquote></blockquote>"
 Example 239  "<blockquote>\n</blockquote>"  vs  "<blockquote></blockquote>"
 Example 240  "<blockquote>\n</blockquote>"  vs  "<blockquote></blockquote>"
@@ -822,7 +822,7 @@ jobs:
 
 ### 11.3 The report we want on every run
 
-```
+```text
 CommonMark 0.31.2 · profile=gfm · Node 24.14.1 · 2026-10-06
 
   semantic    652/652  (100.00%)  ✓ PASS

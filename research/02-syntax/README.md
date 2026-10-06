@@ -51,7 +51,7 @@ Read it as:
 For constructs where a table cannot hold the rule (emphasis, HTML blocks,
 fenced-code indentation removal), the doc uses this shape instead:
 
-```
+```text
 SOURCE      the literal input, in a fenced block, tabs rendered as →
 HTML        the expected HTML, in a fenced block
 RULE        the rule, in prose, quoting or closely paraphrasing the spec
@@ -151,7 +151,7 @@ because "latest" is not citable.
 
 Use these to pin fixtures in CI and to detect upstream tampering.
 
-```
+```text
 d431b29d97b6f73e69d547109cf5081578fac931e72afe95639ebe766c1b2a20  spec.json         (CM 0.31.2, 652 examples)
 7d8e5814befec287ac116786d81ff14e0adc9b13295b4494649e995408fd871c  gfm-spec.txt      (GFM 0.29-gfm, 672 examples)
 ```
@@ -189,7 +189,7 @@ measurement or a spec citation in the linked doc.
 CommonMark §3.1: *"Indicators of block structure always take precedence over
 indicators of inline structure."*
 
-```
+```diff
 - `one
 - two`
 ```
@@ -307,7 +307,7 @@ Honesty register. These are *not* covered and should not be assumed:
 | MyST / Quarto / kramdown-rfc2629 / Fountain | Registered in IANA's *Markdown Variants* registry; only named, not analysed. | `03-specifications/` |
 | GitLab Flavored Markdown (GLFM) | Mentioned only via the IANA registry; it is CommonMark + GFM + its own cruft. | `03-specifications/` |
 | `text/markdown` media type + `variant=` parameter | RFC 7763/7764 exist and are directly relevant to how we should *tag* files we render. Only summarised. | `05-rendering/` |
-| Mermaid grammar itself | We treat ` ```mermaid ` as "opaque fenced block handed to Mermaid.js"; the diagram DSL is out of scope. | `13-competitors/` |
+| Mermaid grammar itself | We treat ```` ␃␃␃mermaid ```` as "opaque fenced block handed to Mermaid.js"; the diagram DSL is out of scope. | `13-competitors/` |
 | KaTeX / MathJax rendering of math | This folder covers `$…$` *recognition*, not TeX typesetting. | `05-rendering/` |
 | GitHub's HTML sanitiser (`github/markup`) | Only the GFM `tagfilter` extension is in scope; GitHub's real sanitiser is a separate allow-list. | `11-security/` |
 | An actual WHATWG Markdown standard | **Does not exist.** See [03 §6](03-extensions-and-dialects.md#6-whatwg--there-is-no-whatwg-markdown). | n/a |

@@ -47,7 +47,7 @@ such in [02-sanitization.md](./02-sanitization.md) and the entire
 This is the single most important architectural decision in rendering, so it
 gets its own section.
 
-```
+```text
         ┌──────────────────────────────────────────┐
         │  bytes → decode → parse → AST → transform │   ← shared, untrusted input side
         └───────────────────┬──────────────────────┘

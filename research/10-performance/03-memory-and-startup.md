@@ -211,7 +211,7 @@ with a Cargo feature"* ([Tauri — Debug](https://v2.tauri.app/develop/debug/)).
 
 ```bash
 npm run tauri build -- --debug     # release-shaped, but with the dev console
-```
+```text
 
 ✅ **VERIFIED** — programmatic control:
 
@@ -286,7 +286,7 @@ flowchart TD
     Q1 -->|"which Rust function?"| MALLOC["heaptrack (Linux) /<br/>WPA (Windows) /<br/>leaks (macOS)"]
     Q1 -->|"is it mapped, not heap?"| VM["VMMap / vmmap"]
     style OS fill:#eef
-```
+```text
 
 🔴 **Order of operations when a user reports "it uses 3 GB":**
 1. Process-tree total (is it real?).
@@ -387,7 +387,7 @@ tauri::async_runtime::spawn(async move {
     unlisten_fs.unlisten().ok();
     unlisten_win.unlisten().ok();
 });
-```
+```text
 
 🔧 **RECOMMENDED**: a `Subscriptions` registry per window/document, with a
 `dispose()` that walks it. Every `listen()` in the codebase goes through it. The
@@ -535,7 +535,7 @@ page cache. Warm measurement is more reproducible."*
 ```bash
 # 🔧 Linux cold-cache, test machine only.
 sync; echo 3 | sudo tee /proc/sys/vm/drop_caches
-```
+```text
 
 ⚠️ ✅ **VERIFIED** — *"Since this command affects the entire system, use it only
 on a test machine."*

@@ -144,7 +144,7 @@ requestAnimationFrame(() => requestAnimationFrame(() => {
   performance.mark('doc:painted');             // two rAFs = the frame is on screen
   performance.measure('doc:open', 'doc:open:start', 'doc:painted');
 }));
-```
+```text
 
 🔧 The **double-`rAF`** is not cargo cult: a single `rAF` runs *before* paint, so
 one `rAF` measures "scheduled", not "visible". Two is the cheapest correct

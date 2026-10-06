@@ -31,7 +31,7 @@
 
 ## 1. What "inline" means (§6)
 
-```
+```text
 RULE (CM §6)
 
   Inlines are parsed SEQUENTIALLY from the beginning of the character stream
@@ -40,13 +40,13 @@ RULE (CM §6)
 
 | Syntax | Verdict | Notes |
 |--------|---------|-------|
-| `` `hi`lo` `` → `<p><code>hi</code>lo\`</p>` | **Valid**, §6 Ex. 327 | `hi` is parsed as code; the trailing backtick is literal. No backtracking to a longer code span |
+| `` ␃hi␃lo␃ `` → `<p><code>hi</code>lo\`</p>␃ | **Valid**, §6 Ex. 327 | `hi` is parsed as code; the trailing backtick is literal. No backtracking to a longer code span |
 
 The word **sequential** is the whole implementation strategy. Combined with
 CM §3.1 (block structure first, then per-block inline parsing) and Appendix A,
 the algorithm is:
 
-```
+```text
 Phase 2 (Appendix A, "Phase 2: inline structure")
   walk the block tree
   for each paragraph / heading / table cell:
@@ -75,12 +75,12 @@ first"* (§6.1 examples 343–346). Ranks 3–5 beat 6, which beats 7:
 
 | Syntax | Verdict | Note |
 |--------|---------|------|
-| `` *foo`*` `` → `<p>*foo<code>*</code></p>` | **Valid**, §6.1 Ex. 341 | The second `*` is inside a code span, so it cannot close emphasis |
+| `` *foo␃*␃ `` → `<p>*foo<code>*</code></p>` | **Valid**, §6.1 Ex. 341 | The second `*` is inside a code span, so it cannot close emphasis |
 | `[not a \`link](/foo\`)` → `<p>[not a <code>link](/foo</code>)</p>` | **Valid**, §6.1 Ex. 342 | Code beats link |
-| `` `<a href="`">` `` → `<p><code>&lt;a href=&quot;</code>&quot;&gt;\`</p>` | **Valid**, §6.1 Ex. 343 | First-one-wins ⇒ code |
+| `` ␃<a href="␃">␃ `` → `<p><code>&lt;a href=&quot;</code>&quot;&gt;\`</p>␃ | **Valid**, §6.1 Ex. 343 | First-one-wins ⇒ code |
 | `<a href="\`">` → `<p><a href="\`"></p>` | **Valid**, §6.1 Ex. 344 | First-one-wins ⇒ HTML tag |
-| `` `<https://foo.bar.\`baz>` `` → code | **Valid**, §6.1 Ex. 345 | |
-| `<https://foo.bar.\`baz>` → autolink | **Valid**, §6.1 Ex. 346 | |
+| `` ␃<https://foo.bar.\␃baz>␃ `` → code | **Valid**, §6.1 Ex. 345 | |
+| `<https://foo.bar.\`baz>␃ → autolink | **Valid**, §6.1 Ex. 346 | |
 | `*[foo*](/uri)` → `<p>*<a href="/uri">foo*</a></p>` | **Valid**, §6.3 Ex. 521 | **Links beat emphasis.** CommonMark §6.2 rule 17 |
 | `[foo *bar](baz*)` → `<p><a href="baz*">foo *bar</a></p>` | **Valid**, §6.3 Ex. 522 | |
 
@@ -88,7 +88,7 @@ first"* (§6.1 examples 343–346). Ranks 3–5 beat 6, which beats 7:
 
 ## 2. Backslash escapes (CM §2.4, Examples 12–24)
 
-```
+```text
 RULE (CM §2.4)
 
   Any ASCII PUNCTUATION character may be backslash-escaped.
@@ -96,7 +96,7 @@ RULE (CM §2.4)
 
 ### 2.1 The complete escapable set — ASCII punctuation, verbatim from §2.1
 
-```
+```text
    !  "  #  $  %  &  '  (  )        U+0021 – U+002F
    :  ;  <  =  >  ?  @               U+003A – U+0040
    [  \  ]  ^  _  `                  U+005B – U+0060
@@ -114,19 +114,19 @@ every non-ASCII character — including `«`, `φ`, and `→`.
 | `\&ouml; not a character entity` → literal `&ouml;` | **Valid**, §2.4 Ex. 14 | Escape beats entity decoding |
 | `\\*emphasis*` → `<p>\<em>emphasis</em></p>` | **Valid**, §2.4 Ex. 15 | An escaped backslash is literal, so the `*` still opens emphasis |
 | `foo\` / `bar` → `<p>foo<br />\nbar</p>` | **Valid**, §2.4 Ex. 16 | A backslash at end of line is a **hard break** (§6.7), not an escape |
-| ` `` \[\` `` ` → `<p><code>\[\`</code></p>` | **Valid**, §2.4 Ex. 17 | **Escapes do not work in code spans** |
+| ` ␃␃ \[\` ␃␃ ` → `<p><code>\[\`</code></p>` | **Valid**, §2.4 Ex. 17 | **Escapes do not work in code spans** |
 | `    \[\]` (indented) / `~~~\n\[\]\n~~~` → literal | **Valid**, §2.4 Ex. 18–19 | Nor in code blocks |
 | `<https://example.com?find=\*>` → `%5C*` | **Valid**, §2.4 Ex. 20 | Nor in autolinks |
 | `<a href="/bar\/)">` → passed through raw | **Valid**, §2.4 Ex. 21 | Nor in raw HTML |
 | `[foo](/bar\* "ti\*tle")` → `<a href="/bar*" title="ti*tle">foo</a>` | **Valid**, §2.4 Ex. 22 | **But** they *do* work in link destinations and titles |
 | `[foo]: /bar\* "ti\*tle"` | **Valid**, §2.4 Ex. 23 | …and in reference definitions |
-| ` ``` foo\+bar ` → `class="language-foo+bar"` | **Valid**, §2.4 Ex. 24 | …and in fenced code info strings |
+| ```` ␃␃␃ foo\+bar ```` → `class="language-foo+bar"` | **Valid**, §2.4 Ex. 24 | …and in fenced code info strings |
 
 ### 2.2 The three places that break naive escape handling
 
 | Trap | Input | Correct | Naive |
 |------|-------|---------|-------|
-| Escape inside code | `` `\*` `` | `<code>*</code>` | `<code>\*</code>` |
+| Escape inside code | `` ␃\*␃ `` | `<code>*</code>` | `<code>\*</code>` |
 | Escape inside raw HTML | `<a href="\*">` | raw `<a href="\*">` | `href="*"` |
 | `\` before a non-punctuation char | `\A` | `\A` | `A` |
 | `\\` before a punctuation char | `\\*` | `\` then `*` opens emphasis | `\` escapes the `\` so `*emphasis*` matches — **wrong** |
@@ -136,7 +136,7 @@ every non-ASCII character — including `«`, `φ`, and `→`.
 
 ## 3. Entity and numeric character references (CM §2.5, Examples 25–41)
 
-```
+```text
 RULE (CM §2.5)
 
   Valid HTML entity references and numeric character references may be used in
@@ -172,8 +172,8 @@ unicode code points"*), re-tested in 0.30 (*"Test new entity length constraints"
 | `&MadeUpEntity;` → literal | **Invalid**, §2.5 Ex. 30 | |
 | `<a href="&ouml;&ouml;.html">` → raw, entities preserved | **Valid**, §2.5 Ex. 31 | Entities are **not** decoded inside raw HTML |
 | `[foo](/f&ouml;&ouml; "f&ouml;&ouml;")` → `href="/f%C3%B6%C3%B6"` | **Valid**, §2.5 Ex. 32 | Decoded in destinations; percent-encoding policy not mandated |
-| ` ``` f&ouml;&ouml; ` → `class="language-föö"` | **Valid**, §2.5 Ex. 34 | Decoded in info strings |
-| `` `f&ouml;&ouml;` `` → `<code>f&amp;ouml;&amp;ouml;</code>` | **Valid**, §2.5 Ex. 35 | Literal in code spans |
+| ```` ␃␃␃ f&ouml;&ouml; ```` → `class="language-föö"` | **Valid**, §2.5 Ex. 34 | Decoded in info strings |
+| `` ␃f&ouml;&ouml;␃ `` → `<code>f&amp;ouml;&amp;ouml;</code>` | **Valid**, §2.5 Ex. 35 | Literal in code spans |
 | `    f&ouml;f&ouml;` → literal in code block | **Valid**, §2.5 Ex. 36 | |
 | `&#42;foo&#42;` / `*foo*` → `<p>*foo*\n<em>foo</em></p>` | **Valid**, §2.5 Ex. 37 | **Entities cannot create structure.** `&#42;` is a literal `*`, not a delimiter |
 | `&#42; foo` / `* foo` → `<p>* foo</p><ul><li>foo</li></ul>` | **Valid**, §2.5 Ex. 38 | Same rule for bullet markers |
@@ -199,7 +199,7 @@ Everything below is required reading for whoever implements it.
 
 ### 4.1 The definitions, verbatim in structure
 
-```
+```text
 DEFINITION (CM §6.2)
 
   A DELIMITER RUN is either
@@ -279,7 +279,7 @@ implementation is a transcription of this list.
 
 ### 4.4 The rule of three — the single most-missed rule
 
-```
+```text
 RULE (CM §6.2, emphasis)
 
   Emphasis begins with a delimiter that can open emphasis and ends with a
@@ -332,7 +332,7 @@ for `_`/`__`.
 
 ### 4.5 Rule 14 — nesting resolution
 
-```
+```text
 RULE (CM §6.2, rule 14)
 
   1. The number of nestings should be MINIMIZED. An interpretation
@@ -362,7 +362,7 @@ RULE (CM §6.2, rule 14)
 
 ### 4.6 Rules 15 and 16 — overlap resolution
 
-```
+```text
 RULE (CM §6.2, rule 15)
 
   When two potential emphasis spans OVERLAP, so that the second begins before
@@ -457,7 +457,7 @@ the first 20 of your emphasis regression suite.
 CM Appendix A gives the reference algorithm. Reproduced because the rules alone
 are not enough to guarantee linearity.
 
-```
+```text
 PROCEDURE process emphasis (parameter: stack_bottom)
 
   Let current_position point to the element on the delimiter stack just above
@@ -497,7 +497,7 @@ PROCEDURE process emphasis (parameter: stack_bottom)
   Afterwards, remove all delimiters above stack_bottom from the stack.
 ```
 
-```
+```text
 PROCEDURE look for link or image  (Appendix A)
 
   On hitting a ] character:
@@ -531,7 +531,7 @@ this index wrong is exactly how an implementation becomes quadratic.
 
 ## 5. Code spans (CM §6.1, Examples 328–349)
 
-```
+```text
 RULE (CM §6.1)
 
   A BACKTICK STRING is a string of one or more backtick characters (`) that is
@@ -549,21 +549,21 @@ RULE (CM §6.1)
 
 | Syntax | Verdict | Notes |
 |--------|---------|-------|
-| `` `foo` `` → `<p><code>foo</code></p>` | **Valid**, §6.1 Ex. 328 | |
-| ` `` foo \` bar `` ` → `<p><code>foo \` bar</code></p>` | **Valid**, §6.1 Ex. 329 | Two backticks because the content contains one; also demonstrates one-space stripping |
-| `` ` `` ` `` ` `` → `<p><code>``</code></p>` | **Valid**, §6.1 Ex. 330 | **The motivation for stripping** — lets you put a backtick at the edge |
-| `` `  ``  ` `` → `<p><code> `` </code></p>` | **Valid**, §6.1 Ex. 331 | **Only ONE space per side is stripped** |
-| `` ` a` `` → `<p><code> a</code></p>` | **Valid**, §6.1 Ex. 332 | Stripping requires BOTH sides |
-| `` `␣b␣` `` (U+00A0) → spaces preserved | **Valid**, §6.1 Ex. 333 | **Only U+0020 is stripped, not Unicode whitespace** |
-| `` `␣` `` and `` `␣␣` `` (only spaces) → preserved | **Valid**, §6.1 Ex. 334 | Changelog 0.29: *"Don't strip spaces in code span containing only spaces … allows one to include a code span with just spaces"* |
-| ` ``\nfoo\nbar  \nbaz\n`` ` → `<p><code>foo bar   baz</code></p>` | **Valid**, §6.1 Ex. 335 | Line endings → spaces; interior runs of spaces preserved |
-| `` `foo   bar \nbaz` `` → `<p><code>foo   bar  baz</code></p>` | **Valid**, §6.1 Ex. 337 | **Interior spaces are NOT collapsed** (0.29: *"Code spans: don't collapse interior space"*) |
-| `` `foo\`bar` `` → `<p><code>foo\</code>bar\`</p>` | **Valid**, §6.1 Ex. 338 | **Backslash escapes do not work**; the `\` is literal, so the backtick string closes early |
-| ` ``foo`bar`` ` → `<p><code>foo\`bar</code></p>` | **Valid**, §6.1 Ex. 339 | "Backslash escapes are never needed, because one can always choose a string of n backticks" |
-| `` ` `` ` `` bar ` `` → `<p><code>foo `` bar</code></p>` | **Valid**, §6.1 Ex. 340 | |
-| ` ```foo`` ` → `<p>```foo``</p>` | **Valid**, §6.1 Ex. 347 | **Unclosed backtick string ⇒ literal backticks** |
-| `` `foo `` → `<p>`foo</p>` | **Valid**, §6.1 Ex. 348 | |
-| `` `foo``bar`` `` → `<p>`foo<code>bar</code></p>` | **Valid**, §6.1 Ex. 349 | **Opening and closing runs must be EQUAL length.** Here the ` `` ` after `foo` does not match the opening ` ` ` |
+| `` ␃foo␃ `` → `<p><code>foo</code></p>` | **Valid**, §6.1 Ex. 328 | |
+| ` ␃␃ foo \` bar ␃␃ ` → `<p><code>foo \` bar</code></p>` | **Valid**, §6.1 Ex. 329 | Two backticks because the content contains one; also demonstrates one-space stripping |
+| `` ␃ `` ```` ␃␃ ```` `` → ␃<p><code>``</code></p>␃ | **Valid**, §6.1 Ex. 330 | **The motivation for stripping** — lets you put a backtick at the edge |
+| `` ␃  ``  ```` ␃␃ → ````<p><code> ␃␃ </code></p>␃ | **Valid**, §6.1 Ex. 331 | **Only ONE space per side is stripped** |
+| `` ␃ a␃ `` → `<p><code> a</code></p>` | **Valid**, §6.1 Ex. 332 | Stripping requires BOTH sides |
+| `` ␃␣b␣␃ `` (U+00A0) → spaces preserved | **Valid**, §6.1 Ex. 333 | **Only U+0020 is stripped, not Unicode whitespace** |
+| `` ␃␣␃ `` and `` ␃␣␣␃ `` (only spaces) → preserved | **Valid**, §6.1 Ex. 334 | Changelog 0.29: *"Don't strip spaces in code span containing only spaces … allows one to include a code span with just spaces"* |
+| ```` ␃␃\nfoo\nbar  \nbaz\n␃␃ ```` → `<p><code>foo bar   baz</code></p>` | **Valid**, §6.1 Ex. 335 | Line endings → spaces; interior runs of spaces preserved |
+| `` ␃foo   bar \nbaz␃ `` → `<p><code>foo   bar  baz</code></p>` | **Valid**, §6.1 Ex. 337 | **Interior spaces are NOT collapsed** (0.29: *"Code spans: don't collapse interior space"*) |
+| `` ␃foo\␃bar␃ `` → `<p><code>foo\</code>bar\`</p>␃ | **Valid**, §6.1 Ex. 338 | **Backslash escapes do not work**; the `\` is literal, so the backtick string closes early |
+| ` ␃␃foo`bar␃␃ ` → `<p><code>foo\`bar</code></p>` | **Valid**, §6.1 Ex. 339 | "Backslash escapes are never needed, because one can always choose a string of n backticks" |
+| `` ␃ `` ```` ␃␃ bar ```` `` → ␃<p><code>foo `` bar</code></p>␃ | **Valid**, §6.1 Ex. 340 | |
+| ```` ␃␃␃foo␃␃ ```` → ````<p>␃␃␃foo␃␃</p>```` | **Valid**, §6.1 Ex. 347 | **Unclosed backtick string ⇒ literal backticks** |
+| `` ␃foo `` → `<p>`foo</p>␃ | **Valid**, §6.1 Ex. 348 | |
+| `` ␃foo``bar`` `` → `<p>`foo<code>bar</code></p>␃ | **Valid**, §6.1 Ex. 349 | **Opening and closing runs must be EQUAL length.** Here the ```` ␃␃ ```` after `foo` does not match the opening ` ` ␃ |
 
 ### 5.1 The CSS requirement
 
@@ -582,7 +582,7 @@ browser. This is one of the very few places the spec states a CSS requirement.
 
 ### 6.1 Link anatomy
 
-```
+```markdown
 RULE (CM §6.3)
 
   A link contains link text, a link destination (the URI), and optionally a
@@ -667,12 +667,12 @@ RULE (CM §6.3)
 | `[foo *bar](baz*)` → `<a href="baz*">foo *bar</a>` | **Valid**, §6.3 Ex. 522 | |
 | `*foo [bar* baz]` → `<p><em>foo [bar</em> baz]</p>` | **Valid**, §6.3 Ex. 523 | **Brackets that are NOT part of a link do not take precedence** |
 | `[foo <bar attr="](baz)">` → literal | **Valid**, §6.3 Ex. 524 | Raw HTML binds more tightly |
-| `[foo\`](/uri)\`` → literal | **Valid**, §6.3 Ex. 525 | Code span binds more tightly |
+| `[foo\`](/uri)\␃␃ → literal | **Valid**, §6.3 Ex. 525 | Code span binds more tightly |
 | `[foo<https://example.com/?search=](uri)>` → autolink | **Valid**, §6.3 Ex. 526 | |
 
 ### 6.3 The three reference-link forms
 
-```
+```text
 RULE (CM §6.3)
 
   FULL REFERENCE LINK      [text][label]     label matches a definition
@@ -690,7 +690,7 @@ RULE (CM §6.3)
 
 **Label normalization** (this is what "matches" means):
 
-```
+```text
 RULE (CM §6.3)
 
   To normalize a label:
@@ -744,7 +744,7 @@ label-scanning loop. → [04 §8](04-edge-cases-and-traps.md#8-link-label-nestin
 
 ## 7. Images (CM §6.4, Examples 572–593)
 
-```
+```text
 RULE (CM §6.4)
 
   Syntax for images is like the syntax for links, with ONE difference: instead
@@ -780,7 +780,7 @@ title **is** entity-escaped in the attribute.
 
 ## 8. Autolinks (CM §6.5, Examples 594–612)
 
-```
+```markdown
 RULE (CM §6.5)
 
   Autolinks are ABSOLUTE URIs and EMAIL ADDRESSES inside < and >. They are
@@ -822,7 +822,7 @@ RULE (CM §6.5)
 
 ### 8.1 GFM autolink literals (GFM §6.9, Examples 622–633)
 
-```
+```text
 RULE (GFM §6.9)
 
   Autolinks can be constructed WITHOUT < and >, but under a smaller set of
@@ -886,7 +886,7 @@ our own rule engine matching GFM §6.9 exactly, with fixtures from GFM Examples
 
 ## 9. Raw inline HTML (CM §6.6, Examples 613–632)
 
-```
+```text
 RULE (CM §6.6)
 
   Text between < and > that looks like an HTML tag is parsed as a raw HTML tag
@@ -903,7 +903,7 @@ Grammar, transcribed from §6.6:
 | **attribute** | Spaces, tabs, and up to one line ending; an attribute name; an optional attribute value specification |
 | **attribute name** | An ASCII letter, `_`, or `:`, followed by zero or more ASCII letters, digits, `_`, `.`, `:`, or `-`. (XML restricted to ASCII; HTML5 is laxer) |
 | **attribute value specification** | Optional spaces/tabs and up to one line ending, `=`, optional spaces/tabs and up to one line ending, and a value |
-| **unquoted value** | A nonempty string of characters **not** including spaces, tabs, line endings, `"`, `'`, `=`, `<`, `>`, or `` ` `` |
+| **unquoted value** | A nonempty string of characters **not** including spaces, tabs, line endings, `"`, `'`, `=`, `<`, `>`, or `` ␃ `` |
 | **single-quoted value** | `'`, zero or more characters not including `'`, and a final `'` |
 | **double-quoted value** | `"`, zero or more characters not including `"`, and a final `"` |
 | **open tag** | `<`, tag name, zero or more attributes, optional spaces/tabs and up to one line ending, an optional `/`, and `>` |
@@ -959,7 +959,7 @@ inside a `<p>` we generated, and because attribute values can carry
 
 ## 10. Hard line breaks (CM §6.7, Examples 633–647)
 
-```
+```text
 RULE (CM §6.7)
 
   A line ending — NOT in a code span or HTML tag — that is PRECEDED BY TWO OR
@@ -977,8 +977,8 @@ There is a second, more visible syntax: a **backslash before the line ending**
 | `foo␣␣␣␣␣␣␣` / `baz` → `<br />` | **Valid**, §6.7 Ex. 635 | **More than two is fine** |
 | `foo␣␣` / `     bar` → `<br />` then `bar` | **Valid**, §6.7 Ex. 636 | **Leading spaces on the next line are ignored** |
 | `*foo␣␣` / `bar*` → `<em>foo<br />\nbar</em>` | **Valid**, §6.7 Ex. 638 | Breaks work inside emphasis |
-| `` `code␣␣ `` / `span` `` → `<code>code   span</code>` | **Valid**, §6.7 Ex. 640 | **No break inside a code span** — the 2 spaces survive as code |
-| `` `code\` `` / `span` `` → `<code>code\ span</code>` | **Valid**, §6.7 Ex. 641 | Nor with a backslash |
+| `` ␃code␣␣ `` / `span` ␃␃ → `<code>code   span</code>` | **Valid**, §6.7 Ex. 640 | **No break inside a code span** — the 2 spaces survive as code |
+| `` ␃code\␃ `` / `span` ␃␃ → `<code>code\ span</code>` | **Valid**, §6.7 Ex. 641 | Nor with a backslash |
 | `<a href="foo␣␣` / `bar">` → raw, spaces preserved | **Valid**, §6.7 Ex. 642 | **No break inside an HTML tag** |
 | `<a href="foo\` / `bar">` → raw | **Valid**, §6.7 Ex. 643 | |
 | `foo\` alone → `<p>foo\</p>` | **Invalid**, §6.7 Ex. 644 | **Neither syntax works at the end of a block** |
@@ -1010,7 +1010,7 @@ We should offer the same toggle, defaulting to **CM behaviour**.
 
 ## 11. Soft line breaks (CM §6.8, Examples 648–649)
 
-```
+```text
 RULE (CM §6.8)
 
   A regular line ending — not in a code span or HTML tag — that is not
@@ -1036,7 +1036,7 @@ toggle then rewrites softbreaks to `<br />` at render time.
 
 ## 12. Textual content (CM §6.9, Examples 650–652)
 
-```
+```text
 RULE (CM §6.9)
 
   Any characters not given an interpretation by the above rules will be parsed

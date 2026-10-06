@@ -224,7 +224,7 @@ app.whenReady().then(() => {
     return net.fetch(pathToFileURL(target).toString());
   });
 });
-```
+```text
 
 Then a **second, scoped protocol for user images** referenced by Markdown —
 this is the equivalent of Tauri's asset protocol, and it is more work:
@@ -343,7 +343,7 @@ parentPort.on('message', async ({ id, path, bytes }) => {
     parentPort.postMessage({ id, ok: false, error: String(err) });
   }
 });
-```
+```text
 
 ```js
 // src/main/main.js
@@ -738,7 +738,7 @@ publish:
   provider: github
   owner: siyana
   repo: markdown-viewer
-```
+```text
 
 **Note on `npmRebuild: false`:** if we ever add a native module, setting this
 false stops electron-builder from silently rebuilding it against the wrong
