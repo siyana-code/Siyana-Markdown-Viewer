@@ -89,15 +89,21 @@ jobs:
       - name: Verify research folder completeness
         run: |
           set -euo pipefail
-          # Every research folder must have an index, and every index must be
-          # linked from research/README.md.
+          # Every research folder must have an index, and research/README.md must
+          # link to it. Match on the folder name alone: the index uses
+          # relative links like "(00-method/)", not "research/00-method/".
+          count=0
           for dir in research/*/; do
+            name="${dir#research/}"
+            name="${name%/}"
             [ -f "${dir}README.md" ] || { echo "::error::missing ${dir}README.md"; exit 1; }
-            grep -qF "${dir%/}" research/README.md || {
-              echo "::error::${dir} is not linked from research/README.md"; exit 1;
+            grep -qF "(${name}/)" research/README.md || {
+              echo "::error::research/${name}/ is not linked from research/README.md"
+              exit 1
             }
+            count=$((count + 1))
           done
-          echo "All $(ls -d research/*/ | wc -l) research folders have an index and are linked."
+          echo "All ${count} research folders have an index and are linked."
 
       # Structural checks that markdownlint cannot do.
       #
