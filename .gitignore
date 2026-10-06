@@ -125,3 +125,6 @@ release/
 *.exe.blockmap
 latest*.yml
 artifacts/
+# Python bytecode from scripts/
+__pycache__/
+*.py[cod]
