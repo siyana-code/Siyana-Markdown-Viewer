@@ -111,6 +111,7 @@ jobs:
     steps:
       - name: Detect what exists yet
         id: probe
+          shell: bash
         run: |
           [ -f pnpm-lock.yaml ] && echo "js=true" >> "$GITHUB_OUTPUT" || echo "js=false" >> "$GITHUB_OUTPUT"
           [ -f Cargo.toml ]       && echo "rs=true" >> "$GITHUB_OUTPUT" || echo "rs=false" >> "$GITHUB_OUTPUT"
@@ -164,6 +165,7 @@ jobs:
     steps:
       - name: Detect what exists yet
         id: probe
+          shell: bash
         run: |
           [ -f pnpm-lock.yaml ] && echo "js=true" >> "$GITHUB_OUTPUT" || echo "js=false" >> "$GITHUB_OUTPUT"
           [ -f Cargo.toml ]       && echo "rs=true" >> "$GITHUB_OUTPUT" || echo "rs=false" >> "$GITHUB_OUTPUT"
@@ -207,6 +209,7 @@ jobs:
     steps:
       - name: Detect what exists yet
         id: probe
+          shell: bash
         run: |
           [ -f pnpm-lock.yaml ] && echo "js=true" >> "$GITHUB_OUTPUT" || echo "js=false" >> "$GITHUB_OUTPUT"
           [ -f Cargo.toml ]       && echo "rs=true" >> "$GITHUB_OUTPUT" || echo "rs=false" >> "$GITHUB_OUTPUT"
@@ -255,6 +258,7 @@ jobs:
     steps:
       - name: Detect the JavaScript workspace
         id: probe
+          shell: bash
         run: |
           [ -f pnpm-lock.yaml ] && echo "js=true" >> "$GITHUB_OUTPUT" || echo "js=false" >> "$GITHUB_OUTPUT"
 
@@ -379,8 +383,12 @@ jobs:
       matrix:
         os: [windows-latest, ubuntu-22.04, macos-latest]
     steps:
+      # `shell: bash` is required: the default shell on Windows runners is cmd.exe,
+      # which cannot run these POSIX conditionals. Bash is present on every
+      # GitHub-hosted runner regardless of platform.
       - name: Check whether the desktop app exists yet
         id: probe
+        shell: bash
         run: |
           if [ -f apps/desktop/package.json ]; then
             echo "exists=true" >> "$GITHUB_OUTPUT"
