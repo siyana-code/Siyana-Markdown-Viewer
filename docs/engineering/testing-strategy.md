@@ -15,7 +15,7 @@ Test effort follows that order, not the order that is easiest to write.
 
 ## Layers
 
-```
+```text
                     ┌─────────────────────────────┐
  1  E2E / manual    │ Open a file, read it.      │  Few, slow, human-checked
                     └──────────────┬──────────────┘

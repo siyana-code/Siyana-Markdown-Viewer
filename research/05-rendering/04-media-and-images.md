@@ -200,7 +200,7 @@ prefix check on the *unresolved* string is a check on attacker-controlled text.
 
 Full path-traversal treatment, including NTFS alternate data streams, device
 paths, and Windows 8.3 short names, is in
-[11-security/03-filesystem-safety.md §2](../11-security/03-filesystem-safety.md#2-path-traversal-the-windows-special-cases).
+[11-security/03-filesystem-safety.md §2](../11-security/03-filesystem-safety.md#2-path-traversal-and-the-windows-special-cases).
 
 ---
 
@@ -480,7 +480,7 @@ keeps the full URL in a `data-` attribute we read — and it must not be an `<im
 at all, because an `<img>` with a `srcset` or a `src` we later "restore" is a
 fetch we said we would not do.
 
-```
+```text
 ┌────────────────────────────────────────────────────────────┐
 │  ⛔  Remote image not loaded                                │
 │      evil.example/track.gif                                 │

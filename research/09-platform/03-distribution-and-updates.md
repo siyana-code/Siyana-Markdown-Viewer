@@ -363,7 +363,7 @@ Notarization requires the `--options runtime` (hardened runtime) signature. Sign
 without notarizing, or notarizing without stapling, both produce Gatekeeper
 prompts. Do not add macOS to the matrix halfway.
 
-### 2.3 Linux — see [02-linux.md §4](02-linux.md#4-code-signing-on-linux--the-honest-version)
+### 2.3 Linux — see [02-linux.md §4](02-linux.md#4-code-signing-on-linux-the-honest-version)
 
 Summary: sign the AppImage with GPG, publish the fingerprint over HTTPS, tell
 users the verification is manual, and add a GPG-signed PPA when we have one.
@@ -742,7 +742,7 @@ the one procedure that cannot be improvised.
 | Data-loss bug (file watcher wrote a truncated cache over a good one) | Yank the release, publish a "do not upgrade" notice in the README, push a hotfix | hours |
 | Render regression (blank pages on WebKitGTK 2.36) | Cut a new patch release with the fix; do **not** roll back (rollback reintroduces the bug for new users) | hours |
 | The updater itself is broken | Serve the **previous version's** manifest from the dynamic endpoint. Clients on the broken version compare `<` and stay put. ✅ **VERIFIED** — possible via the dynamic endpoint. | minutes |
-| Signing key compromised | 🔧 **This is the disaster scenario.** Distribute a release signed by the new key immediately via every channel; rotate per §5.2. Because the pubkey is compiled in, a client that only trusts the old key will refuse the fix. 🔧 This is why key rotation (§5.2) must support `[old, new]` overlap **before** the key is ever needed for an emergency. |
+| Signing key compromised | 🔧 **This is the disaster scenario.** Distribute a release signed by the new key immediately via every channel; rotate per §5.2. Because the pubkey is compiled in, a client that only trusts the old key will refuse the fix. 🔧 This is why key rotation (§5.2) must support `[old, new]` overlap **before** the key is ever needed for an emergency. | days |
 
 🔧 **RECOMMENDED** — publish an `app-releases` channel in the repo and a
 `RELEASES.md` that records, for every version: what broke, who reported it, and

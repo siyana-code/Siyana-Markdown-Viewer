@@ -1180,7 +1180,7 @@ project that has none by default. Build it in v1.
 **CSP for the app itself**, which is a Tauri configuration concern but belongs
 in this list because it is the backstop:
 
-```
+```text
 default-src 'self';
 img-src 'self' https: data:;      # tighten per policy; 'self' covers local files via the custom protocol
 style-src 'self' 'unsafe-inline';  # 'unsafe-inline' needed for theme tokens; scripts are not

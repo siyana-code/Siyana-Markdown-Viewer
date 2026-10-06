@@ -8,9 +8,37 @@ Research date: **6 October 2026**.
 
 ---
 
+## 0. Relationship to other documents — read this first
+
+| Document | Scope | Authority |
+|---|---|---|
+| [`05-rendering/03-styling-and-themes.md`](../05-rendering/03-styling-and-themes.md) | The **mechanism**: CSS layer order, reset strategy, token *naming*, syntax-highlighter comparison, print stylesheet mechanics, the CI contrast script | **Mechanism authority.** If the two disagree about how to do it, that document wins |
+| **This document** | The **decision**: light/dark/auto mechanics, theme-as-data schema, the org palette audit, dark-mode counterparts, font pairing, syntax-theme pairing, the curated starter set | **Decision authority** on the palette and the schema shape |
+| `siyana-code/brand` (external repo) | The canonical design tokens for the whole org | Upstream authority on values |
+
+> ⚠️ **Known conflict, deliberately left unresolved here.** `05-rendering/03`
+> proposes token names `--bg`, `--fg`, `--fg-muted`, `--bg-subtle`,
+> `--bg-inset`, `--measure`. This document proposes `--color-bg`,
+> `--color-text`, `--color-text-muted`, `--color-surface`, `--measure`.
+> **They are not the same names and they must be reconciled before any CSS is
+> written.** Reconciling them is an ADR, not a research note, and it belongs in
+> `docs/adr/`. Flagged in
+> [15-open-questions](../15-open-questions/).
+>
+> Also note that `05-rendering/03` uses a **GitHub-like neutral palette**
+> (`#ffffff` / `#1f2328` / `#59636e`) as its worked example, and states
+> "**comments in code are never de-emphasised below body-text contrast**". §8
+> below audits a **different palette** — the org's warm-minimalist one — and
+> finds it *fails* on muted and accent. Both positions are compatible: the rule
+> is right, and the org palette does not currently satisfy it. **That is the
+> finding**, and it is why §8 proposes role-split tokens rather than accepting
+> the palette as-is.
+
+---
+
 ## Table of contents
 
-1. [Light / dark / auto](#1-light--dark--auto)
+1. [Light / dark / auto](#1-light-dark-auto)
 2. [Following the OS accent](#2-following-the-os-accent)
 3. [Theme switching without a flash](#3-theme-switching-without-a-flash)
 4. [Themes as data, not code](#4-themes-as-data-not-code)
@@ -295,7 +323,7 @@ Dark mode breaks images in three specific ways. Each needs its own answer.
 | `figure` / `figcaption` | Use real `<figure>` and `<figcaption>`. A caption in a `<p>` with a class is not a caption to a screen reader |
 | Caption styling | `--fs-caption`, `--color-text-muted`, centred, `margin-block-start: .5rem` |
 | Figure alignment | Left by default, `text-align: center` on the figure and `margin-inline: auto` on the image. Centring images in a long measure is a classic readability mistake — but a *figure* is an object, and centring objects is conventional |
-| `figure` full-bleed | Offer `figure.full-bleed { width: 100vw; margin-inline: calc(50% - 50vw) }` guarded by `overflow-x: clip` on an ancestor. Full-bleed images and code blocks are the one place a reader wants the full width — see [01 §3](01-reading-ux.md#1-reading-modes) |
+| `figure` full-bleed | Offer `figure.full-bleed { width: 100vw; margin-inline: calc(50% - 50vw) }` guarded by `overflow-x: clip` on an ancestor. Full-bleed images and code blocks are the one place a reader wants the full width — see [01 §3](01-reading-ux.md#3-reading-modes) |
 | Print | Figures never break across a page; captions stay with their figure (`break-inside: avoid` on the `figure`, not just the image) |
 
 ---
@@ -416,10 +444,11 @@ can override it without touching our code.
 
 ### The palette under audit
 
-The organisation's warm-minimalist palette (referred to as the org's BRAND.md
-palette; **note:** no `BRAND.md` file currently exists in this repository — the
-values below were supplied in the project brief and are treated as
-authoritative):
+The organisation's warm-minimalist palette, maintained in the separate
+[`siyana-code/brand`](https://github.com/siyana-code/brand) repository
+(referenced from the root `README.md`; **note:** there is no `BRAND.md` file in
+*this* repository, and the values below are treated as authoritative per the
+project brief):
 
 | Token | Hex | Role |
 |---|---|---|
@@ -435,7 +464,7 @@ authoritative):
 
 WCAG relative luminance per channel:
 
-```
+```text
 c_lin = c/12.92                if c <= 0.03928
 c_lin = ((c+0.055)/1.055)^2.4  otherwise
 L     = 0.2126*R_lin + 0.7152*G_lin + 0.0722*B_lin
@@ -609,3 +638,23 @@ Acceptance rules for a bundled theme:
 | T13 | `<figure>`/`<figcaption>` styling applies to real figure elements, not to `<div>`s with a class | P1 |
 | T14 | Seven bundled starter themes, all passing T7 | P2 |
 | T15 | A "system fonts only" setting exists and disables all bundled font loading | P1 |
+
+## Sources
+
+- MDN, `prefers-color-scheme` — Baseline *Widely available*, "It's been available across browsers since January 2020" — <https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme>
+- MDN, `light-dark()` — Baseline *Newly available*, "Since May 2024"; accepts two `<color>` values or two images, and works with `var()` — <https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark>
+- CSS Color Adjustment Module Level 1, `color-scheme` — <https://www.w3.org/TR/css-color-adjust-1/#color-scheme-prop>
+- MDN, `color-mix()` — <https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/color-mix>
+- MDN, `text-wrap` — Baseline *Widely available* "since March 2024", with uneven support for `balance` and `pretty` — <https://developer.mozilla.org/en-US/docs/Web/CSS/text-wrap>
+- MDN, `forced-colors` — <https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors>
+- Electron, `nativeTheme` module — <https://www.electronjs.org/docs/latest/api/native-theme>
+- Tauri v2, `@tauri-apps/api/window` (which includes `ColorPanel`) and `tauri::window::Window::theme()` — <https://v2.tauri.app/reference/javascript/api/namespacewindow/> . **UNVERIFIED** whether Tauri v2 exposes the *system accent colour* specifically.
+- Monotype, "Licensing" — "A production font is a font that is utilized for a purpose described by a license that you hold for the font", with desktop / web / within-application as distinct uses — <https://support.monotype.com/en/articles/7872341-licensing>
+- Monotype, "Font licenses for Monotype Fonts" — <https://support.monotype.com/en/articles/9956482-font-licensing-monotype-fonts>
+- Shiki — MIT, TextMate-grammar based; branch table showing `v4.x` on `main` with `v3`/`v2`/`v1`/`v0` maintenance branches — <https://github.com/shikijs/shiki>
+- highlight.js — BSD-3-Clause — <https://github.com/highlightjs/highlight.js>
+- KaTeX — MIT — <https://github.com/KaTeX/KaTeX>
+- W3C, SC 1.4.3 Contrast (Minimum) — <https://www.w3.org/TR/WCAG22/#contrast-minimum>
+- W3C, SC 1.4.11 Non-text Contrast — <https://www.w3.org/TR/WCAG22/#non-text-contrast>
+- W3C, the relative-luminance definition from which every ratio in §8 was computed — <https://www.w3.org/TR/WCAG22/#dfn-relative-luminance>
+- `siyana-code/brand` — the org design-token repository referenced from the root `README.md` — <https://github.com/siyana-code/brand>

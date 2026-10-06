@@ -84,7 +84,7 @@ code font is too small, the heading rhythm is wrong. See
 Every permanently visible panel is subtracted from the reading column. Focus
 mode, a full-width toggle, and collapsible panels are not "nice extras" — they
 are the difference between a tool you tolerate and a tool you keep open.
-See [01 § Reading modes](01-reading-ux.md#1-reading-modes).
+See [01 § Reading modes](01-reading-ux.md#3-reading-modes).
 
 ### Principle 3 — Nothing is mouse-only
 
@@ -115,9 +115,9 @@ See [04](04-accessibility.md).
 | Claim | Status | Where to look |
 |---|---|---|
 | WCAG 2.2 is the current W3C Recommendation (published 5 Oct 2023); WCAG 3 is still a draft | **Verified** — W3C WAI, *What's New in WCAG 2.2* | [04 §1](04-accessibility.md#1-which-standard-and-when-was-it-published) |
-| 2.5.8 Target Size (Minimum) is 24×24 CSS px, Level AA, new in WCAG 2.2 | **Verified** — w3.org/WAI/WCAG22/Understanding/target-size-minimum.html | [04 §7](04-accessibility.md#7-target-size-25-8) |
+| 2.5.8 Target Size (Minimum) is 24×24 CSS px, Level AA, new in WCAG 2.2 | **Verified** — w3.org/WAI/WCAG22/Understanding/target-size-minimum.html | [04 §7](04-accessibility.md#7-target-size) |
 | `prefers-color-scheme` is Baseline *Widely available* (since Jan 2020) | **Verified** — MDN | [03 §1](03-theming.md#1-light-dark-auto) |
-| `prefers-reduced-motion` is Baseline *Widely available* (since Jan 2020) | **Verified** — MDN | [04 §6](04-accessibility.md#6-reduced-motion-24) |
+| `prefers-reduced-motion` is Baseline *Widely available* (since Jan 2020) | **Verified** — MDN | [04 §6](04-accessibility.md#6-reduced-motion) |
 | `light-dark()` is Baseline *Newly available* (since May 2024) | **Verified** — MDN | [03 §1](03-theming.md#1-light-dark-auto) |
 | Electron enables a11y automatically when AT is detected; `app.setAccessibilitySupportEnabled()` is the manual override | **Verified** — Electron docs, `docs/tutorial/accessibility.md` | [04 §9](04-accessibility.md#9-the-webview-accessibility-tree-risk) |
 | `Menu.setApplicationMenu(null)` suppresses Electron's default menu | **Verified** — Electron `docs/api/menu.md` | [02 §7](02-navigation-and-find.md#7-electron-and-tauri-the-shortcuts-we-have-to-take-back) |
@@ -150,3 +150,40 @@ directly gate implementation.
    in CSS, and it changes the framework recommendation in
    [08-desktop-frameworks](../08-desktop-frameworks/). This must be spiked
    before the desktop framework decision is locked.
+
+---
+
+## Overlap with existing research — read before writing CSS
+
+Three documents already cover parts of this folder in more mechanical detail.
+**This folder is the UX and requirements authority and deliberately does not
+duplicate them:**
+
+| Existing document | Owns | This folder adds |
+|---|---|---|
+| [`05-rendering/03-styling-and-themes.md`](../05-rendering/03-styling-and-themes.md) | CSS layer order, reset, token naming, syntax-highlighter comparison, print CSS mechanics, the CI contrast script | [03](03-theming.md) owns the **palette audit**, the **theme JSON schema**, light/dark/auto mechanics, and the **dark-mode counterpart**, which that file does not have |
+| [`05-rendering/05-export-and-print.md`](../05-rendering/05-export-and-print.md) | `@page`, break control, print CSS mechanics | [01 §12](01-reading-ux.md#12-print-and-pdf-as-a-first-class-output) owns the **product decision** and the three export paths |
+| [`05-rendering/04-media-and-images.md`](../05-rendering/04-media-and-images.md) | Image resolution, `srcset`, broken images, the media scheme | [01 §8](01-reading-ux.md#8-images) owns the **reading UX** of images |
+| [`14-architecture-options/05-search-architecture.md`](../14-architecture-options/05-search-architecture.md) | Search tiers, engine choice, indexing pipeline, persistence, benchmark gate | [02 §4](02-navigation-and-find.md#4-search) owns the **UX** and restates the same engine conclusion |
+
+> ⚠️ **One known unresolved conflict.** `05-rendering/03` proposes token names
+> `--bg` / `--fg` / `--fg-muted` / `--bg-subtle`; [03](03-theming.md) proposes
+> `--color-bg` / `--color-text` / `--color-text-muted` / `--color-surface`.
+> **These are not the same names and they must be reconciled in an ADR before
+> any CSS is written.** Flagged in [15-open-questions](../15-open-questions/).
+
+---
+
+## Sources for the verification table
+
+- W3C WAI, "What's New in WCAG 2.2" — <https://www.w3.org/WAI/standards-guidelines/wcag/new-in-22/>
+- W3C, `WCAG 2.2` (W3C Recommendation) — <https://www.w3.org/TR/WCAG22/>
+- W3C WAI, "Understanding SC 2.5.8: Target Size (Minimum)" — <https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html>
+- MDN, `prefers-color-scheme` — <https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme>
+- MDN, `prefers-reduced-motion` — <https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion>
+- MDN, `light-dark()` — <https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark>
+- Electron, "Accessibility" tutorial — <https://github.com/electron/electron/blob/main/docs/tutorial/accessibility.md>
+- Electron, `Menu` API — <https://github.com/electron/electron/blob/main/docs/api/menu.md>
+- Tauri v2, "Window Menu" — <https://v2.tauri.app/learn/window-menu/>
+- Monotype, font licensing — <https://support.monotype.com/en/articles/7872341-licensing>
+- WCAG 2.2 relative-luminance and contrast-ratio formula — <https://www.w3.org/TR/WCAG22/#dfn-contrast-ratio>

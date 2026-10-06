@@ -55,7 +55,7 @@ render it beautifully, instantly, and safely. Nothing else is required.
 
 ## Repository map
 
-```
+```text
 docs/       Decisions and reference docs for THIS project (ADRs, roadmap, standards)
 research/   The deep study: Markdown, parsers, shells, security, platform reality
 apps/       desktop/ (Phase 1), web/ (Phase 2), mobile/ (Phase 3)
@@ -72,7 +72,7 @@ packages/   core/, ui/, fs-adapters/, test-fixtures/
 `main` is for production releases only. `develop` is the default branch and the
 integration branch for all work.
 
-```
+```text
 main      ──●──────────────●──────────────►   production releases (tagged)
            ↑              ↑
            │   (release)  │

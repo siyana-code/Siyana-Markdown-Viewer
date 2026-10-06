@@ -17,7 +17,7 @@ collaborator. The desktop shell embeds a browser engine with filesystem access.
 
 The escalation path is short and well-trodden:
 
-```
+```text
 Markdown file
   → parser (raw HTML passthrough)
     → sanitizer (if present, or missing)
@@ -69,8 +69,39 @@ bug.
 - **`<svg>`, `<math>`, `<foreignObject>`, `<style>`, `<script>`, `<iframe>`,
   `<object>`, `<embed>`, `<form>` and every `on*` handler** are removed. These
   are the classic bypass vectors.
+- **`<svg>`, `<math>`, `<foreignObject>`, `<style>`, `<script>`, `<iframe>`,
+  `<object>`, `<embed>`, `<form>` and every `on*` handler** are removed. These
+  are the classic bypass vectors.
 - **`data:` URLs** are permitted only for images, only for a safe MIME allowlist,
   and only below a size cap.
+
+### Sanitizer version floor
+
+`DOMPurify` **MUST** be at least **3.4.16**. The default configuration was
+bypassable in 3.0.1 through 3.3.3 via prototype pollution
+([CVE-2026-41238](https://nvd.nist.gov/vuln/detail/CVE-2026-41238)), fixed in
+3.4.0 — but a further cluster of 2026 advisories, including
+`GHSA-6688-9rhm-gjv2` (October 2026, `IN_PLACE` mode, affects ≤ 3.4.15), needs
+3.4.16. We do not use `IN_PLACE`, but pinning to the newest patched release
+means one floor rather than a per-CVE allowlist. Three other advisories are
+relevant to how we use it:
+
+- [CVE-2026-65914](https://nvd.nist.gov/vuln/detail/CVE-2026-65914) (mXSS via
+  re-contextualization) — sanitized output that is inserted into a *second,
+  different* parsing context (`<xmp>`, `<script>`, `<noscript>`, …) can be
+  mutated back into executable markup. Our single insertion point, into a
+  detached `<div>`, avoids this. The constraint is now explicit: **sanitized
+  HTML is never re-contextualized.**
+- [CVE-2026-47423](https://nvd.nist.gov/vuln/detail/CVE-2026-47423) —
+  `<selectedcontent>` causes the browser to re-clone content *after* the
+  sanitizer has walked it. `<selectedcontent>` is not on our allowlist.
+- [CVE-2026-0540](https://nvd.nist.gov/vuln/detail/CVE-2026-0540) — an earlier
+  bypass in the same period.
+
+The lesson these carry together: **a sanitizer is a filter, and filters are
+defeated by using their output somewhere other than where they expect it.** That
+is why Layer 1 exists. See
+[`research/11-security/04-dependency-and-supply-chain.md`](../../research/11-security/04-dependency-and-supply-chain.md).
 
 ### Layer 3 — Renderer: no ambient capability
 

@@ -1,208 +1,269 @@
-# ADR-0003: Desktop framework — Tauri, Electron, or Flutter
+# ADR-0003: Desktop framework — defer the choice, build the renderer first
 
-- **Status:** Proposed
+- **Status:** Accepted (strategy) / Proposed (shell choice, deliberately deferred)
 - **Date:** 2026-10-06
-- **Deciders:** Pending — needs a maintainer decision and a 2-day prototype
+- **Deciders:** Siyana Markdown Viewer maintainers
 - **Consulted:**
   - [`research/08-desktop-frameworks/`](../../research/08-desktop-frameworks/README.md)
   - [`research/08-desktop-frameworks/06-comparison-matrix.md`](../../research/08-desktop-frameworks/06-comparison-matrix.md)
   - [`research/08-desktop-frameworks/07-hybrid-architectures.md`](../../research/08-desktop-frameworks/07-hybrid-architectures.md)
-  - [`research/09-platform/](../../research/09-platform/README.md)
+  - [`research/09-platform/02-linux.md`](../../research/09-platform/02-linux.md)
   - [`research/10-performance/03-memory-and-startup.md`](../../research/10-performance/03-memory-and-startup.md)
 
 ## Context
 
 Phase 1 is a desktop app for **Windows and Linux**. Phases 6 and 7 add web and
 mobile. We want maximum code reuse across all three, a small install footprint,
-and a security model strong enough to render untrusted files safely.
+a fast start, and a security model strong enough to render untrusted files.
 
-The candidate frameworks, with versions verified at the time of writing
-(October 2026):
+We went into this ADR expecting to pick between Tauri, Electron, and Flutter.
+Two of the findings below overturned the assumptions that framing rested on, so
+this ADR now records a different decision: **structure the codebase so the shell
+is a replaceable detail, and defer the choice until we can measure it.**
 
-| Framework | Current | Runtime |
-|---|---|---|
-| **Tauri 2** | 2.11.x stable (3.0.0 in alpha) | System webview (WebView2 on Windows, WebKitGTK on Linux) + Rust |
-| **Electron** | 44.x stable (Chromium 152, Node 24.x) | Bundled Chromium + Node |
-| **Flutter** | 3.x stable | Own Skia/Impeller renderer, no system webview |
-| Wails 2 | current | System webview + Go |
-| Native (egui, iced, Qt, GTK) | various | Own widgets, or webview, or none |
+## What the research changed
 
-The full comparison lives in
-[`research/08-desktop-frameworks/06-comparison-matrix.md`](../../research/08-desktop-frameworks/06-comparison-matrix.md).
-This ADR records the decision criteria and the decision we intend to make.
+### Finding 1 — Tauri's Linux cold start is ~3× Electron's
 
-## Decision criteria
+A dated, reproducible benchmark (2026-09-24, Ubuntu 24.04 container, 2 vCPU,
+no GPU, Xvfb, warm starts, n=10, alternating runs, Electron 44.4.5 /
+Tauri 2.11.6 / WebKitGTK 2.52.6) measured **process exec → first page loaded**:
 
-Weighted for this project's priorities, not for "desktop apps in general":
+| Configuration | n | External median | Range |
+|---|---|---|---|
+| Electron 44.4.5, default | 10 | **260 ms** | 243–291 |
+| Tauri 2.11.6, default | 10 | **798.5 ms** | 772–853 |
+| Tauri, `WEBKIT_DISABLE_COMPOSITING_MODE=1` | 5 | 735–776 | |
+| Electron, `--disable-gpu` | 5 | 234–253 | |
 
-| Criterion | Weight | Why it matters here |
-|---|---|---|
-| Security model strength | 25% | We render untrusted files. A compromised renderer must not reach the filesystem. |
-| Code reuse across desktop/web/mobile | 20% | Three targets, one team. Reuse is the whole reason the roadmap works. |
-| Install size and memory | 15% | A viewer gets installed by many people; a 200 MB download and 300 MB RSS is a real cost. |
-| Startup time | 10% | It is a viewer. It must feel instant. |
-| Linux support quality | 10% | We ship Linux. WebKitGTK packaging and Wayland are the known pain points. |
-| HTML/CSS leverage | 10% | Markdown rendering, theming, and layout are web problems. We get them free in a webview. |
-| Distribution, signing, auto-update | 5% | Solved by each framework's tooling, but not equally well. |
-| Team capability and learning curve | 5% | Real cost. A Rust core is a commitment. |
+Tauri's `setup()` closure is reached at only 130–175 ms — roughly **two thirds
+of its startup is webview process spawn we do not control.**
 
-## Candidate summary
+Source: [urhoba — Startup time comparison, 2026-09-24](https://www.urhoba.net/en/post/startup-time-comparison)
+(series: *Electron or Tauri*, part 3 of 10).
 
-### Tauri 2
+Caveats we take seriously: this is Linux + WebKitGTK + software rendering in a
+container, not real desktop hardware. The author did not measure Windows
+(WebView2) or macOS (WKWebView), notes that WebView2 is shared between Windows
+applications and may already be resident, and explicitly says the result does
+**not** mean "Tauri is slow" and that you should measure on your own platform.
 
-**For:** ~10 MB installers versus Electron's ~150 MB+; RSS measured in tens of
-MB; a capability/permission model that makes the IPC surface explicit and
-reviewable, which is exactly the security posture we need; update signing via
-minisign; one Rust codebase could serve desktop, web (WASM), and mobile.
+What it does mean: **"Tauri is fast" is not a free assumption, and on our
+weakest platform it may be the opposite.** Our published budget is 700 ms to
+first render (`R-P3-30`). On this measurement, a Tauri shell has almost no
+headroom against it before rendering a single document.
 
-**Against:** Linux depends on the host's `libwebkit2gtk`, and version
-fragmentation across distributions is the single most common way a Tauri app
-fails to launch — see
-[`research/09-platform/02-linux.md`](../../research/09-platform/02-linux.md).
-We would be writing and maintaining Rust. Rendering is the system webview, so
-CSS and JS behaviour differ between Windows and Linux. Mobile support is
-younger than Electron's.
+### Finding 2 — The Linux webview floor is a hard gate, and it is old
 
-### Electron 2
+Tauri requires `libwebkit2gtk-4.1`, which **is not available on Debian 11 or
+Ubuntu 20.04, and does not work on RHEL 8/9** (which ship the ABI 4.0 webkit).
+Ubuntu 22.04 ships **WebKitGTK 2.36.0** (January 2023).
 
-**For:** identical Chromium everywhere, so CSS and JS behave the same on both
-targets. Best debugging story. `contextIsolation` + `sandbox` +
-`nodeIntegration: false` is a well-documented, well-trodden security model. The
-largest ecosystem, so the auto-updater, the packaging tooling, and every
-Stack Overflow answer exist. No Rust requirement.
+That last detail is consequential: `content-visibility: auto` with
+`contain-intrinsic-size` is the single most valuable CSS technique for our
+long-document performance strategy, and it may not exist on our oldest
+supported Linux. Feature detection via `@supports` becomes mandatory, and our
+performance design must have a fallback that is not "hope for a newer distro".
 
-**Against:** the install is roughly 150 MB and idle memory is high. Every user
-downloads a browser they almost certainly already have. The Chromium upgrade
-triage is relentless — a new major every ~8 weeks, each with breaking changes.
-Electron dropped 32-bit builds from v44 onwards.
+Electron has the opposite property: it bundles its own Chromium, so one binary
+runs identically on every distribution, old or new, with no webview dependency.
 
-### Flutter
+### Finding 3 — Every memory and startup number in the framework comparison is inference
 
-**For:** one codebase covering desktop, web, and mobile — the best answer to the
-reuse criterion. Perfectly consistent rendering across platforms, no webview
-inconsistency. Excellent touch support for Phase 7. Fast startup and low memory
-for what it delivers.
+There is no reproducible third-party benchmark of any of these frameworks on a
+Markdown-viewer workload. The only measured sizes are Electron's binaries:
+**150.7 MB** win-x64, **117.2 MB** linux-x64, 128.0 MB darwin-x64.
 
-**Against:** **this is the disqualifying problem.** We cannot use HTML or CSS, so
-we cannot reuse any Markdown-to-HTML renderer, any existing sanitization
-approach, any web-based syntax highlighter integration, any web UI kit, or any
-of the accessibility semantics we get from real HTML elements. We would have to
-write a widget-based Markdown renderer, a widget-based code highlighter, and a
-custom focus/semantics layer for screen readers. That is a second application,
-not a shell. The team would need Dart fluency.
+The scoring exercise scored Electron 4.17 against Tauri 3.74. That 0.43 gap is
+within the noise of its own scoring — four plausible weight changes flip it:
+
+| Weight change | Winner |
+|---|---|
+| Raise code reuse to 20% | Electron, by more |
+| Raise packaging/update to 15% | **Tauri** |
+| Raise security to 20% | **Tauri** |
+| Raise Linux support to 15% | Electron |
+
+A 0.43 gap that four argument moves reverse is not a decision. It is a
+preference, and we should not encode a preference as an architecture decision.
+
+### Finding 4 — The framework governs a small fraction of the code
+
+From [`07-hybrid-architectures.md`](../../research/08-desktop-frameworks/07-hybrid-architectures.md):
+the renderer — parser, sanitizer, AST, virtual scroller, themes, find-in-page,
+tests — is **70–75% of the work** and is byte-identical HTML/CSS/JS under every
+candidate shell. The framework governs roughly 5%.
 
 ## Decision
 
-**Proposed: Tauri 2.**
+### 1. Build the renderer first, as a plain web application
 
-The reasoning, in short:
+`packages/core`, `packages/sanitize`, `packages/ui`, and `packages/search` are
+plain TypeScript. They run in a browser with no framework dependency, no host
+API, and no shell. This is Phase 1 work and it is not contingent on ADR-0003
+resolving.
 
-1. **Security decides it.** The capability model in Tauri v2 is an allowlist by
-   default and the IPC surface is enumerable. For an app whose entire input is
-   attacker-controlled, "what can the renderer reach?" must have a
-   one-glance answer. We can put that answer in a reviewed file.
-2. **Footprint matters for a viewer.** A reader app is not a CAD app. Shipping
-   tens of megabytes rather than hundreds is the difference between "installed
-   it" and "did not bother."
-3. **The renderer is still HTML.** Our whole `packages/core` and `packages/ui`
-   are HTML/CSS/TypeScript. Flutter would force us to rewrite both for widget
-   trees, and would make Phase 6 (web) a third rewrite rather than a
-   repackaging.
-4. **Rust is a net cost we accept deliberately.** It buys the Tauri shell and
-   the option of a Rust parsing core compiled to WASM for the web target. The
-   alternative — JavaScript-only with Electron — is simpler but commits us to
-   shipping a browser inside the app.
+### 2. Define `PlatformAdapter` as a real interface and enforce it
 
-### What we will not do
+```ts
+export interface PlatformAdapter {
+  readonly kind: 'desktop' | 'web' | 'mobile'
 
-- We will not render raw HTML unsanitized, in any shell. See
-  [ADR-0005](0005-security-baseline-xss-sanitization.md).
-- We will not use `dangerousDisableAssetCspModification` or any equivalent
-  escape hatch to make image loading "just work".
-- We will not add a Tauri capability in the same PR that uses it. Capabilities
-  are reviewed as security changes.
+  fs: {
+    openDocument(target: DocumentTarget): Promise<RawFile>
+    listDirectory(target: DocumentTarget): Promise<Entry[]>
+    writeDocument(target: DocumentTarget, bytes: Uint8Array): Promise<void>
+    watch(target: DocumentTarget, onChange: ChangeListener): Promise<WatchHandle>
+    capabilities: { canWrite: boolean; canWatch: boolean; hasRealPaths: boolean }
+  }
+
+  resolveAsset(basePath: PathRef, relative: string): Promise<AssetRef | null>
+  shell: { openExternal(url: string): Promise<void>; onExternalRequest(cb: (u: string) => void): VoidHandle }
+  window: { setTitle(t: string): void; getState(): WindowState; setState(s: WindowState): void }
+  theme: { current(): ThemeName; subscribe(cb: (t: ThemeName) => void): VoidHandle }
+  notifications: { notify(n: Notification): Promise<void> }
+}
+```
+
+**The lint rule is the actual decision.** Without a rule preventing
+`packages/core` and `packages/ui` from importing a host API, this architecture
+silently degrades into "Electron everywhere" with extra steps, and the shell
+stops being replaceable. The rule is enforced in CI from the first commit.
+
+This is already the structure in
+[ADR-0002](0002-monorepo-with-workspaces.md) and
+[`docs/architecture/monorepo-structure.md`](../architecture/monorepo-structure.md).
+This ADR makes the boundary load-bearing rather than aspirational.
+
+### 3. Defer the shell decision to the Phase 2 prototype gate
+
+Two candidates, decided by measurement on real hardware:
+
+| | Tauri 2 | Electron 44 |
+|---|---|---|
+| Install size | ~3–10 MB | ~90–115 MB installer (150.7 MB runtime, measured) |
+| Memory | Lower | Higher |
+| Linux distro support | Requires `webkit2gtk-4.1`; excludes RHEL 8/9 | Bundled Chromium; every distro |
+| Rendering consistency | Differs by OS webview | Identical Chromium everywhere |
+| Mobile | Supported, still maturing | Supported via Capacitor |
+| Auto-update | Built in, all platforms, mandatory signature verification | Windows/macOS only; Linux is DIY |
+| Build/debug | Rust; DevTools and Rust inspector are separate | Best-in-industry |
+| E2E testing | `tauri-driver` (WebDriver, a generation behind) | Playwright `_electron`, first-class |
+| Language count | TypeScript + Rust | TypeScript only |
+| Release cadence | ~1 feature release/quarter | 6–7 majors/year, 3-majors EOL |
+
+Flutter, NW.js, Neutralino, Qt, JavaFX, Ultralight, and Sciter are **out** — not
+on score alone but on structural grounds recorded in
+[`06-comparison-matrix.md` §Decisive](../../research/08-desktop-frameworks/06-comparison-matrix.md).
+The two worth restating: Flutter scores 1/5 on HTML/CSS leverage, which would
+mean rebuilding tables, find-in-page, print, and selection — an estimated 4–7
+months before a shippable viewer, and permanent ownership. Sciter and
+Ultralight are proprietary and cannot be used by an MIT open-source project.
+
+### 4. Phase 1 ships a shell, but treats it as provisional
+
+Phase 1 needs a window to exist. We will pick whichever shell reaches the
+Phase 2 measurement gate fastest — which on the evidence is **Electron**: it is
+faster to build, its E2E story is first-class, it keeps the stack to one
+language, and it is the only candidate with zero webview dependency risk on
+Linux. If the Phase 2 measurements then show Tauri wins on the things that
+matter to our users, **swapping the shell is a change confined to the adapter
+layer and touches zero renderer lines.**
+
+This is deliberately a provisional choice made for delivery speed, recorded
+here so it is not mistaken for the architectural decision.
 
 ## Alternatives considered
 
-**Electron.** The strongest alternative and a completely defensible choice. We
-would pick it if the team had no appetite for Rust, if Linux webview
-fragmentation proved unworkable in the prototype, or if we needed a feature that
-only exists in the Electron ecosystem. The cost is install size, memory, and the
-Chromium triage treadmill.
+**Commit to Tauri now.** This was the recommendation before the research
+landed. Rejected because it rested on two claims that measurement undermines:
+that Tauri is fast (Finding 1 contradicts it on Linux), and that the shell
+choice is architecturally decisive (Finding 4 contradicts it — it is ~5% of the
+code). Tauri's genuine advantages — size, memory, and being the only candidate
+with a signed all-platform updater — are real, and the updater in particular is
+worth real engineering time. They are not worth pre-empting a measurement over.
 
-**Flutter.** Rejected for the reuse problem described above. Reconsider only if
-the project were dropped to a single target and dropped the HTML renderer
-entirely — which contradicts the roadmap.
+**Commit to Electron now.** Equally premature, in the other direction. 150 MB
+measured, a Chromium upgrade every ~8 weeks, 3-majors EOL, and a 150 MB download
+for users who almost certainly already have a Chromium. Also, Electron's own
+documentation says the framework "is not intended to handle" displaying
+arbitrary content from untrusted sources, and every real compromise of a
+Markdown editor has gone through that gap. Both shells require our
+[ADR-0005](0005-security-baseline-xss-sanitization.md) four-layer model
+regardless; the question is which one makes that model easiest to enforce well.
 
-**Wails 2.** Genuinely smaller and simpler than Tauri, and Go is easier to pick
-up than Rust. Rejected because its ecosystem, plugin set, and mobile story are
-materially thinner, and we would be trading away Tauri maturity for a modest
-simplification. See
-[`research/08-desktop-frameworks/04-wails-and-neutralino.md`](../../research/08-desktop-frameworks/04-wails-and-neutralino.md).
+**Build two shells and compare.** Rejected as an expensive way to answer a
+question two prototypes answer in two days.
 
-**Native Rust UI (egui / iced).** Rejected. A Markdown document is a rich
-typographic layout problem with nested block structure, tables, and code blocks.
-Building that with immediate-mode widgets is a large amount of work with no
-dependency payoff, and it would forgo the HTML ecosystem entirely.
-
-**Hybrid: Electron for desktop, plain web for browser, Capacitor for mobile.**
-This maximises renderer reuse and minimises Rust exposure, and it is the option
-we would choose if Rust capability in the team were a real risk. It is second
-place, and the deciding factor between first and second is team composition.
+**Use the Rust core for the shell and WASM for everything else.** Attractive if
+the team is strong in Rust. It is a bet on team composition, not on the
+evidence, and it splits the renderer across two languages before we know we
+need it.
 
 ## Consequences
 
 ### Good
 
-- Install and memory in the range of a native utility rather than a browser.
-- IPC surface is small, declared, and reviewable.
-- One Rust codebase is available for a WASM parsing core in Phase 6 if we
-  benchmark JS parsing as insufficient.
-- The frontend is plain web technology, so `packages/ui` and `packages/core` are
-  reusable as-is for the web build.
+- **The most valuable 75% of the work starts immediately** and is not blocked on
+  a framework decision.
+- The shell becomes a genuinely reversible choice, not a bet.
+- We get real measurements on real hardware before committing, rather than
+  inheriting someone else's inference.
+- Phase 6 (web) is a repackaging of code that already exists, not a new build.
+- The renderer stays testable in a browser, with fast tests and no native build
+  step in the inner loop.
 
 ### Bad / accepted costs
 
-- **We take on Rust.** Build times, compile-error cycles, and a learning curve
-  for anyone joining.
-- **Linux WebKitGTK fragmentation.** Our oldest and most likely-to-break
-  platform. We must test on a clean Ubuntu LTS, a current Fedora, and a
-  non-Debian distribution (Arch or openSUSE) before every release, and we must
-  be honest in the README about which distros are verified.
-- **Windows/Linux rendering differences.** CSS support differs between WebView2
-  (Chromium) and WebKitGTK. We will keep our CSS conservative and test on both.
-- **Mobile is younger on Tauri than on Electron.** Phase 7 may be re-planned.
-- **Two toolchains in one repo** (see [ADR-0002](0002-monorepo-with-workspaces.md)).
+- **We take on Electron's costs first**: 150 MB, the Chromium treadmill, and
+  Linux auto-update being our problem. Accepted as the provisional state with a
+  documented exit.
+- **A second prototype later.** If Tauri wins the Phase 2 gate, we build a
+  Tauri shell after building an Electron one. That is a few days, and it is
+  cheaper than choosing wrong for a year.
+- **The adapter boundary is a discipline we must enforce**, or the whole
+  strategy collapses. The lint rule is the mechanism; without it maintained,
+  option (d) degrades silently.
+- **`PlatformAdapter` can over-abstract.** We must keep it small and let it grow
+  only from demonstrated need. An adapter with fifteen methods and one
+  implementation is worse than direct calls behind a lint rule.
+- **Enterprise-Linux users are unknown.** If our audience turns out to include
+  RHEL 8/9, Tauri is out entirely and this is settled without a prototype.
 
 ### Follow-up work
 
-- [ ] **Prototype before committing.** Two days: open a file, render HTML, use
-      the official sanitizer, read a local image, on Windows and on Ubuntu
-      22.04 and 24.04. Measure install size and idle RSS.
-- [ ] Verify screen-reader accessibility in a webview on Windows (NVDA) and
-      Linux (Orca). If the accessibility tree is not exposed, this decision is
-      wrong regardless of everything else — see
-      [`research/12-ux/04-accessibility.md`](../../research/12-ux/04-accessibility.md).
-- [ ] Measure parser performance in the WebKitGTK JS engine versus Chromium.
-      If WebKitGTK is materially worse, that pushes toward a Rust parser.
-- [ ] Decide Turborepo vs Nx vs plain workspaces for the JS side.
-- [ ] Confirm the minimum supported Linux distribution and its `libwebkit2gtk`
-      version, and document it.
+- [ ] Record the user-base question about enterprise Linux before the Phase 2
+      gate — it is the single highest-value unknown
+      ([`research/15-open-questions/`](../../research/15-open-questions/README.md)).
+- [ ] Enforce the `PlatformAdapter` boundary with a lint rule before the first
+      app code lands.
+- [ ] Phase 2 gate: same document, same machine, sum the whole process tree, and
+      **report RSS and PSS** — the two metrics disagree by enough to change the
+      conclusion. Protocol:
+      [`06-comparison-matrix.md` §Measuring](../../research/08-desktop-frameworks/06-comparison-matrix.md).
+- [ ] Decide our minimum Linux version, and whether `content-visibility`
+      availability (Finding 2) forces it higher than 22.04.
+- [ ] Prototype on **real hardware**, not in CI containers. The benchmark above
+      is explicitly container-bound and its author says so.
 
 ## Validation
 
-We will revisit this decision if **any** of the following is true:
+This ADR's strategy — build the renderer, defer the shell — is validated by the
+question being answerable rather than assumed. The shell choice itself is
+validated by measurement at the Phase 2 gate:
 
-1. The prototype cannot launch on a supported Ubuntu LTS.
-2. The webview does not expose a usable accessibility tree to the OS screen
-   reader.
-3. Idle RSS or startup time exceeds our published budget
-   ([`research/10-performance/03-memory-and-startup.md`](../../research/10-performance/03-memory-and-startup.md))
-   by a wide margin.
-4. The team's Rust capability turns out to be a delivery risk rather than an
-   investment.
+| Measurement | Favours | Our budget |
+|---|---|---|
+| Cold start → first render, real hardware | — | ≤ 700 ms (`R-P3-30`) |
+| Install size | Tauri decisively | ≤ 50 MB (`R-P3-31`) |
+| Idle RSS, process tree summed, RSS **and** PSS | Tauri | ≤ 200 MB |
+| Open a 5 MB document | — | ≤ 2 s (`R-P3-32`) |
+| Launch on Ubuntu 22.04, 24.04, Fedora, Arch | Electron | hard gate |
+| Launch on RHEL 8/9 | Electron only | hard gate |
+| NVDA reads the document structure correctly | — | hard gate (`R-P3-45`) |
 
-If (2) turns out to be true for both webviews, we should switch to Flutter for
-its first-party accessibility semantics and accept the renderer rewrite — a
-viewer that cannot be used with a screen reader fails a hard requirement, and
-no amount of bundle size compensates.
+**Hard gates, not scores.** A shell that fails any hard gate is out regardless
+of its other numbers. A shell that passes every hard gate and wins on size and
+memory is Tauri. If it passes everything and is within budget, we keep Electron
+and stop optimising, because the remaining difference is not worth a second
+shell.

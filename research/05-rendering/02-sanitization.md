@@ -69,7 +69,7 @@ Before the how, the *cannot*:
   says so in its non-goals: it "will **NOT** reliably stop HTML that requests
   external resources (tracking pixels, prefetch, etc.). There are too many ways
   to do it." We handle that separately — see
-  [04-media-and-images.md §6](./04-media-and-images.md#6-remote-images-should-we-load-them).
+  [04-media-and-images.md §6](./04-media-and-images.md#6-remote-images-should-we-load-them-by-default).
 - It cannot protect our *export* output, which will be opened by an unknown
   future renderer. See [05-export-and-print.md §5](./05-export-and-print.md#5-how-to-make-an-exported-html-file-safe).
 
@@ -147,7 +147,7 @@ That is our shape too.
 
 **Tags:**
 
-```
+```text
 h1 h2 h3 h4 h5 h6
 p br hr
 ul ol li
@@ -184,7 +184,7 @@ denied.
 
 **Attributes never allowed, in any configuration, ever:**
 
-```
+```text
 on*            all event handlers
 style          CSS injection / exfiltration; DOMPurify is NOT a CSS sanitizer
 srcdoc         a whole nested document, not recursed into
@@ -286,7 +286,7 @@ Our stance:
 2. **Enable `SANITIZE_DOM`.**
 3. **Prefix our generated ids** (`h-`, `fn-`, `fnref-`) so document content
    cannot produce `id="main"` or `id="content"` — see
-   [01-ast-to-html.md §2.5](./01-ast-to-html.md#25-escaping-the-slug).
+   [01-ast-to-html.md §2.5](./01-ast-to-html.md#23-escaping-the-slug).
 4. `SANITIZE_NAMED_PROPS` is **not** enabled, because it would rewrite our own
    heading ids and break the TOC. Instead we achieve the same property by not
    allowing `name` at all (§2.2) and by prefixing ids.
@@ -359,7 +359,7 @@ because embedded images in Markdown are a real feature (`<img src="data:image/pn
 works in GitHub). We allow it **only** for `img[src]`, **only** for these media
 types, and **only** under a size cap:
 
-```
+```text
 data:image/png;base64,…     allowed
 data:image/jpeg;base64,…    allowed
 data:image/gif;base64,…     allowed
@@ -549,7 +549,7 @@ Two of those are worth studying as *classes*:
   sanitized output" is a hard rule and not a style preference.**
 
 Our lockfile pins an exact DOMPurify version and Dependabot is configured to
-open security PRs ([04-dependency-and-supply-chain.md §3](../11-security/04-dependency-and-supply-chain.md#3-monitoring)).
+open security PRs ([04-dependency-and-supply-chain.md §3](../11-security/04-dependency-and-supply-chain.md#3-integrity-verification)).
 
 ---
 
@@ -655,7 +655,7 @@ and it is a permanent maintenance burden. Prefer to never need it.
 
 ### 8.1 Order of operations
 
-```
+```text
 bytes
   → decode
   → parse (raw HTML preserved as AST nodes)
@@ -673,7 +673,7 @@ explains why this is worse).
 
 The DOM sinks to grep for:
 
-```
+```text
 innerHTML  outerHTML  insertAdjacentHTML  document.write  document.writeln
 document.body.innerHTML  element.setAttribute('href'|'src'|'on*'|...)
 Range.createContextualFragment  el.insertAdjacentElement

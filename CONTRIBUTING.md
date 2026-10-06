@@ -8,11 +8,11 @@ in.
 
 1. **Branch from `develop`, PR into `develop`.** Never target `main`.
 2. **Read the relevant research first.** If you are changing parsing, rendering,
-   or security, the corresponding folder in [`research/`](../research/README.md)
+   or security, the corresponding folder in [`research/`](research/README.md)
    explains the constraints. Please do not fight them without an ADR.
 3. **Security is not negotiable.** This app renders untrusted files. If your
    change touches HTML output, link resolution, file paths, or IPC, read
-   [`research/11-security/`](../research/11-security/) first and say so in the PR.
+   [`research/11-security/`](research/11-security/) first and say so in the PR.
 4. **CI must be green.** All of it.
 5. **Conventional Commits for PR titles**, because we squash-merge.
 
@@ -45,7 +45,7 @@ sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file \
                  libxdo-dev libssl-dev librsvg2-dev patchelf
 ```
 
-(Verify against [`research/09-platform/02-linux.md`](../research/09-platform/02-linux.md)
+(Verify against [`research/09-platform/02-linux.md`](research/09-platform/02-linux.md)
 — this is the single most common way a Linux dev setup fails.)
 
 ## Branching
@@ -133,15 +133,15 @@ Open an issue with:
 - Any console output
 
 Security issues: **do not open a public issue.** See
-[`SECURITY.md`](../SECURITY.md).
+[`SECURITY.md`](SECURITY.md).
 
 ## Code of conduct
 
-[`CODE_OF_CONDUCT.md`](../CODE_OF_CONDUCT.md) applies in all project spaces.
+[`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) applies in all project spaces.
 
 ## License
 
-Contributions are accepted under the [MIT License](../LICENSE).
+Contributions are accepted under the [MIT License](LICENSE).
 
 ## Scopes
 

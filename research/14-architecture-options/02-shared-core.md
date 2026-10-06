@@ -195,8 +195,8 @@ graph TD
 
 ### The dependency rule, mechanically
 
-```
-apps/*        →  may import packages/* and anything else
+```text
+apps/*→  may import packages/* and anything else
 packages/ui   →  may import packages/doc, packages/config
 packages/fs-adapters → may import packages/core, packages/doc, packages/config
 packages/core →  may import packages/doc, packages/config   ← nothing else, ever
@@ -245,7 +245,7 @@ for a workload that is already inside budget.
 
 ## 5. Enumerating the split
 
-### `core/` — pure logic. No host. No clock. No randomness. No `window`.
+### `core/` — pure logic. No host. No clock. No randomness. No `window`
 
 | Module | Input | Output | Why it is core |
 |--------|-------|--------|----------------|

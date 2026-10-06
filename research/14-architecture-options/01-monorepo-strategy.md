@@ -214,7 +214,7 @@ and it is the only crate the desktop shell depends on. `crates/smv-core` compile
 to `wasm32-unknown-unknown` with zero changes, which is what makes doc 02's
 recommendation possible.
 
-### 3.8 Do we need Nx *and* Turborepo? No.
+### 3.8 Do we need Nx *and* Turborepo? No
 
 They overlap heavily and running both means two graphs to reason about and two
 places for a cache to go stale. Pick one. We pick Turborepo.
@@ -363,7 +363,7 @@ Every package repeating "extends `@tsconfig/strictest`" plus an identical
 The standard fix is a `@siyana/config` package that exports configs rather than
 duplicates them.
 
-```
+```text
 packages/config/
 ├── package.json
 ├── tsconfig.base.json        # strict, ESNext, bundler resolution
@@ -550,7 +550,8 @@ graph TD
     RWASM --> RCORE
     RIDX --> RCORE
 
-    CORE -. "wasm build (optional, see 02" -. RWASM
+    CORE -.-> RWASM
+    CORE ==>|"wasm build (optional)"| RWASM
 ```
 
 Note the deliberate **absence of arrows between the two graphs**. The TS tree
@@ -562,7 +563,7 @@ we keep it out of the baseline.
 
 ### Concrete tree
 
-```
+```text
 siyana-markdown-viewer/
 ├─ package.json                    # private root, scripts only
 ├─ pnpm-workspace.yaml

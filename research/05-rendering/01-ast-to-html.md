@@ -207,7 +207,7 @@ Security notes:
 
 - **`disabled` is mandatory.** Without it, a checked checkbox in a hostile
   document is a one-click script gadget (see DOMPurify's `autofocus` guidance in
-  [02-sanitization.md §5](./02-sanitization.md#5-dom-purifys-threat-model)).
+  [02-sanitization.md §5](./02-sanitization.md#5-dompurifys-threat-model)).
 - **`checked` is the only author-controlled bit** and it is a boolean with only
   two legal serializations. The renderer must never emit `checked="<anything
   from the document>"`.
@@ -434,7 +434,7 @@ parser will mangle.
 Note the subtle behaviour in the source: the counter is keyed on
 `originalSlug`, and it is only consulted while the candidate is already taken:
 
-```
+```text
 "intro"        -> occurrences["intro"] = 0        -> id="h-intro"
 "intro"        -> "h-intro" taken; occurrences["intro"]=1; candidate "intro-1"
                   occurrences["intro-1"]=0         -> id="h-intro-1"
@@ -474,7 +474,7 @@ A heading of only punctuation — `# !!!` or `# ---` — slugs to the empty stri
 
 Rule: if the slug is empty after stripping, fall back to a positional id:
 
-```
+```markdown
 `h-${blockIndex}`
 ```
 
@@ -722,7 +722,7 @@ bug. This list is a subset of the sanitizer's tag allowlist
 ([02-sanitization.md §2](./02-sanitization.md#2-the-tag-and-attribute-allowlist)),
 deliberately.
 
-```
+```text
 h1 h2 h3 h4 h5 h6
 p br hr
 ul ol li
@@ -737,7 +737,7 @@ section sup ol li
 
 **Attributes the renderer may emit:**
 
-```
+```text
 id            class
 href          title         (a, img)
 src           alt           (img)
@@ -754,7 +754,7 @@ role                       (footnote accessibility)
 
 **Attributes the renderer may never emit, even synthesized:**
 
-```
+```text
 style          ← never. Alignment is classes (§1.6).
 on*            ← never, for any reason.
 name           ← never. Use id (§1.7).
@@ -767,7 +767,7 @@ argument for each will be "it's just one attribute, and it's really useful."
 The answer is the same each time: **the renderer output is attacker-controlled
 input to the sanitizer, and every tag we add is a permanent expansion of the
 attack surface we have to keep patched forever.** See
-[11-security/01-threat-model.md §11](../11-security/01-threat-model.md#11-what-we-are-not-defending-against)
+[11-security/01-threat-model.md §11](../11-security/01-threat-model.md#9-what-we-are-not-defending-against-in-one-list)
 for the residual-risk accounting.
 
 ---

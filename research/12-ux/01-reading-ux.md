@@ -8,13 +8,26 @@ written.** Our user did not author the words in front of them. They are a
 consumer. Every requirement below is written from the consumer's side of the
 glass.
 
+> ### Authority note
+>
+> Four existing documents already cover parts of this territory in more
+> mechanical detail. This document is the **UX and requirements** authority and
+> deliberately does not duplicate them:
+>
+> | Document | Owns | Read it for |
+> |---|---|---|
+> | [`05-rendering/04-media-and-images.md`](../05-rendering/04-media-and-images.md) | Image resolution, `srcset`, broken images, the media scheme | §8 below is the *UX decision*; that file is the *implementation* |
+> | [`05-rendering/05-export-and-print.md`](../05-rendering/05-export-and-print.md) | `@page`, break control, print CSS mechanics | §12 below is the *product decision*; that file is the *stylesheet* |
+> | [`05-rendering/03-styling-and-themes.md`](../05-rendering/03-styling-and-themes.md) | Tokens, reset, measure, line-height, code-wrap CSS | §2, §4, §6 below state the *numbers and rationale*; that file implements them |
+> | [`11-security/`](../11-security/) | Why `style`, `javascript:`, and `form` are denied | Referenced from §8, §10, §12 |
+
 ---
 
 ## Table of contents
 
 1. [Jobs-to-be-done](#1-jobs-to-be-done)
 2. [Typography: the product](#2-typography-the-product)
-3. [Reading modes](#1-reading-modes)
+3. [Reading modes](#3-reading-modes)
 4. [Line-height and measure, with justification](#4-line-height-and-measure-with-justification)
 5. [Spacing rhythm](#5-spacing-rhythm)
 6. [Code blocks for reading](#6-code-blocks-for-reading)
@@ -243,7 +256,7 @@ Implementation notes:
   chrome state exactly on exit. Losing your sidebar widths on exit is the
   classic bug.
 - The `Full width` mode must not remove the gutter entirely — a minimum of
-  `1.5rem` of page margin is required for [reflow](04-accessibility.md#8-reflow-at-320-css-px-1410) and for comfortable reading at the window edges.
+  `1.5rem` of page margin is required for [reflow](04-accessibility.md#8-reflow-at-320-css-px) and for comfortable reading at the window edges.
 - **Paged mode is a deliberate differentiator.** Continuous scroll is a
   web-page habit; paged reading is a *book* habit. Almost no Markdown viewer
   offers it and it is the single most book-like thing we could ship. It is also
@@ -648,3 +661,16 @@ Acceptance criteria for the reading UX, in priority order. Each is testable.
 | R15 | Paged reading mode | P3 |
 | R16 | Split-view document comparison | P2 |
 | R17 | Inline editing (tier 1) | P2 |
+
+## Sources
+
+- MDN, `text-wrap` (Baseline *Widely available*, since March 2024) — <https://developer.mozilla.org/en-US/docs/Web/CSS/text-wrap>
+- MDN, `scrollbar-gutter` (Baseline 2024) — <https://developer.mozilla.org/en-US/docs/Web/CSS/scrollbar-gutter>
+- MDN, `content-visibility` — <https://developer.mozilla.org/en-US/docs/Web/CSS/content-visibility>
+- W3C WAI, "Understanding SC 1.4.10: Reflow" — the 320 CSS px requirement and the exception for "content that requires two-dimensional layout for usage or meaning" — <https://www.w3.org/WAI/WCAG21/Understanding/reflow.html>
+- WAI-ARIA 1.2, document-content roles `doc-noteref`, `doc-endnote`, `doc-footnote` — <https://www.w3.org/TR/wai-aria-1.2/#document_concept>
+- Typora feature list — footnote-on-hover, focus mode, typewriter mode, PDF export with bookmarks, export to docx/ODT/LaTeX/MediaWiki/Epub, word count including reading minutes — <https://typora.io/>
+- KaTeX — "Print quality: KaTeX's layout is based on Donald Knuth's TeX"; synchronous layout and server-side rendering — <https://github.com/KaTeX/KaTeX>
+- Mermaid — <https://github.com/mermaid-js/mermaid>
+- Measure in `ch` vs `em`: this document's `68ch` default is compatible with the per-language override in `05-rendering/03-styling-and-themes.md` §4.1, which sets `--measure: 40em` for `:lang(zh)`/`:lang(ja)`/`:lang(ko)`. That file owns the mechanism; this one owns the default value and the rationale.
+- Reuse of existing decisions: `05-rendering/04-media-and-images.md`, `05-rendering/05-export-and-print.md`, `10-performance/`, `11-security/`

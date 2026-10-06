@@ -72,8 +72,8 @@ be linked to. Obsidian/LogText convention.
 Markdown. It executes code from the document. This project does not support it,
 deliberately.
 
-**CommonMark Profile** (our term) — See
-[Siyana Markdown Profile](#siyana-markdown-profile).
+**CommonMark Profile** (our term) - See
+[Siyana Markdown Profile](#siyana-markdown-profile), below.
 
 ---
 
@@ -220,9 +220,12 @@ request access to files outside their sandbox.
 
 ## Our project terms
 
-**Siyana Markdown Profile** — Our versioned, published declaration of which
+### Siyana Markdown Profile
+
+Our versioned, published declaration of which
 Markdown extensions are supported, and how. REQUIRED / OPTIONAL / UNSUPPORTED
 per extension. It exists because no post-CommonMark standard does.
+See [`research/03-specifications/03-extension-standards.md`](../research/03-specifications/03-extension-standards.md).
 
 **Siyana Markdown Viewer** — This project.
 
