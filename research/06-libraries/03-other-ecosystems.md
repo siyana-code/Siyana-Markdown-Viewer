@@ -11,7 +11,8 @@ Verified 2026-10-06. Python versions from `pypi.org/pypi/<pkg>/json`
 (`info.version` + `releases[version][0].upload_time_iso_8601`). Go from
 `proxy.golang.org`. Dart from `pub.dev/api`. Java from
 `repo1.maven.org/maven2/<path>/maven-metadata.xml` (`<latest>`, `<lastUpdated>`).
-Ruby from rubygems.org. GitHub stars scraped from repository pages.
+C from GitHub releases. GitHub stars scraped from repository pages on the day.
+Where a claim is inference rather than a citation, it says so inline.
 
 ---
 
@@ -44,7 +45,7 @@ Three concrete reasons, in order of how often they will bite us:
 | `Markdown` (Python-Markdown) | **3.11** | 2026-09-25 | BSD-3-Clause | The original Python port, by the man who wrote Markdown.pl's descendant. `requires_python >= 3.11`. Extension-by-design: every syntax feature is a `Extension` class you register. |
 | `markdown-it-py` | **4.2.0** | 2026-05-07 | MIT | A faithful **port of markdown-it** to Python, by the ExecutableBook project. `requires_python >= 3.10`. Its value to us is as an **executable spec** of markdown-it behaviour. |
 | `mistune` | **3.3.4** | 2026-07-22 | BSD-3-Clause | Very fast, AST-based (`mistune.create_markdown(renderer='ast')`), plugin API. `requires_python >= 3.8`. Popular in Python web stacks. |
-| `commonmark` (PyPI) | **0.9.2** | 2026-05-28 | BSD-3-Clause | The spec's own Python binding, wrapping the reference `cmark` C library via ctypes. Staleness: it still tracks CommonMark 0.29-era behaviour. |
+| `commonmark` (PyPI) | **0.9.2** | 2026-05-28 | BSD-3-Clause | The spec authors' Python binding, wrapping the reference `cmark` C library via ctypes. It is *published recently* but it is **not** a spec-tracking binding: 0.9.2 corresponds to CommonMark **0.29** (2019), not 0.31.2. Treat it as a "reads 0.29-era cmark" reference, not as current. |
 | `cmarkgfm` | 2025.10.22 | 2025-10-22 | BSD-2-Clause | ctypes bindings to `cmark-gfm`. This is **GitHub's own parser** as used by GitHub's rendering services. |
 | `pymdown-extensions` | **12.1** | 2026-09-23 | MIT | The richest Markdown extension set in any language: 40+ extensions including `arithmatex`, `pymdownx.tasklist`, `superfences`, `critic`, `details`, `emoji`, `tabbed`, `inlinehilite`, `snippets`, `pathconverter`. |
 | `Pygments` | **2.21.0** | 2026-08-17 | BSD-2-Clause | The Python highlighter. Relevant as a *comparison* for our highlighting choice. |
@@ -137,8 +138,9 @@ that of cmark, the CommonMark reference implementation written in C."* We
 found **no independent benchmark** confirming this. It is a plausible claim
 about a plausible design; we note it as an unverified claim.
 
-**gomarkdown/markdown** matters as the successor to `blackfriday`, which
-goldmark's README singles out for exactly the failure mode we care about:
+**gomarkdown/markdown** matters as the successor to `blackfriday` — whose
+last tagged release is **v2.1.0, 2020-11-07**, and whose issues goldmark's
+README singles out for exactly the failure mode we care about:
 
 > This behavior sometimes causes problems. If you migrate your Markdown text
 > from GitHub to blackfriday-based wikis, many lists will immediately be
@@ -175,9 +177,9 @@ These are the **definition**, not the alternatives.
 
 | Library | Latest release | Released | Licence | Used by |
 |---|---|---|---|---|
-| `cmark` | **0.31.2** | **2026-02-14** | BSD-2-Clause | The CommonMark reference implementation, by the spec authors. The npm `commonmark` package wraps a JS port of it. |
+| `cmark` | **0.31.2** | **2026-02-14** | BSD-2-Clause | The CommonMark reference implementation, by the spec authors. The npm `commonmark` package wraps a JS port of it. Note the release cadence: 0.31.1 → 2024-08-03, 0.31.2 → 2026-02-14 — a spec patch version taking 18 months is itself informative about how stable CommonMark is. |
 | `cmark-gfm` | **0.29.0.gfm.13** | **2023-07-21** | BSD-2-Clause | GitHub's fork. **Last release 2023-07-21 — three years stale.** comrak's GFM badge pins `cmark-gfm` commit `2f13eee` for exactly this reason. |
-| `md4c` | rolling `master` | active | MIT | "**MD4C is maintained as independent open-source software.**" Passes CommonMark 0.31.2. Used by **Blender, LibreOffice, ONLYOFFICE, Qt, Stellarium**. In OSS-Fuzz. |
+| `md4c` | rolling `master` (**no GitHub Releases** — tag-per-release) | active | MIT | "**MD4C is maintained as independent open-source software.**" Passes CommonMark 0.31.2 per its README. Used by **Blender, LibreOffice, ONLYOFFICE, Qt, Stellarium**. In OSS-Fuzz. |
 
 ### 4.1 `md4c` deserves attention
 
