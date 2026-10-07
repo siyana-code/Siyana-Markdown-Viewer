@@ -138,14 +138,24 @@ jobs:
     name: Lint and format
     runs-on: ubuntu-latest
     steps:
+      # checkout FIRST, probe second.
+      #
+      # The probe was originally the first step, before checkout. At that point
+      # the working directory contains nothing but the runner's own files, so
+      # `[ -f pnpm-lock.yaml ]` was always false, every `if:` below was skipped,
+      # and the job exited 0. That is the actual cause of the "11 of 13 green
+      # jobs were green by skipping" observation in the Phase 0 wrap-up — not the
+      # absence of a lockfile, which is what it was assumed to be.
+      #
+      # A file-existence probe must always follow the checkout it is probing.
+      - uses: actions/checkout@v4
+
       - name: Detect what exists yet
         id: probe
         shell: bash
         run: |
           [ -f pnpm-lock.yaml ] && echo "js=true" >> "$GITHUB_OUTPUT" || echo "js=false" >> "$GITHUB_OUTPUT"
           [ -f Cargo.toml ]       && echo "rs=true" >> "$GITHUB_OUTPUT" || echo "rs=false" >> "$GITHUB_OUTPUT"
-
-      - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         if: steps.probe.outputs.js == 'true'
@@ -203,14 +213,16 @@ jobs:
     name: Typecheck
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
+      # See the note in the lint job: the probe has to follow checkout or it
+      # always reports nothing present.
       - name: Detect what exists yet
         id: probe
         shell: bash
         run: |
           [ -f pnpm-lock.yaml ] && echo "js=true" >> "$GITHUB_OUTPUT" || echo "js=false" >> "$GITHUB_OUTPUT"
           [ -f Cargo.toml ]       && echo "rs=true" >> "$GITHUB_OUTPUT" || echo "rs=false" >> "$GITHUB_OUTPUT"
-
-      - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         if: steps.probe.outputs.js == 'true'
@@ -256,14 +268,16 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
+      - uses: actions/checkout@v4
+
+      # See the note in the lint job: the probe has to follow checkout or it
+      # always reports nothing present.
       - name: Detect what exists yet
         id: probe
         shell: bash
         run: |
           [ -f pnpm-lock.yaml ] && echo "js=true" >> "$GITHUB_OUTPUT" || echo "js=false" >> "$GITHUB_OUTPUT"
           [ -f Cargo.toml ]       && echo "rs=true" >> "$GITHUB_OUTPUT" || echo "rs=false" >> "$GITHUB_OUTPUT"
-
-      - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         if: steps.probe.outputs.js == 'true'
@@ -330,13 +344,16 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
+      - uses: actions/checkout@v4
+
+      # See the note in the lint job: the probe has to follow checkout or it
+      # always reports nothing present. This job was "passing" for exactly that
+      # reason before the fix — it skipped the suite and exited 0.
       - name: Detect the JavaScript workspace
         id: probe
         shell: bash
         run: |
           [ -f pnpm-lock.yaml ] && echo "js=true" >> "$GITHUB_OUTPUT" || echo "js=false" >> "$GITHUB_OUTPUT"
-
-      - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         if: steps.probe.outputs.js == 'true'
@@ -388,9 +405,10 @@ jobs:
   # one redundant analysis per language per job. A single job that analyses both
   # is faster and uploads one set of alerts.
   #
-  # CodeQL is skipped while no source exists (Phase 0 is docs and research
-  # only). "CodeQL could not process any code" is a hard failure, not a warning,
-  # so the probe is required rather than decorative.
+  # CodeQL is skipped while no source exists. "CodeQL could not process any code"
+  # is a hard failure, not a warning, so the probe is required rather than
+  # decorative — and it must follow checkout, or it finds nothing in an empty
+  # working tree and skips a codebase full of TypeScript.
   # ---------------------------------------------------------------------------
   codeql:
     name: CodeQL
@@ -399,6 +417,8 @@ jobs:
       contents: read
       security-events: write
     steps:
+      - uses: actions/checkout@v4
+
       - name: Detect analysable source
         id: probe
         shell: bash
@@ -420,8 +440,6 @@ jobs:
           else
             echo "Analysing: $langs"
           fi
-
-      - uses: actions/checkout@v4
 
       - uses: github/codeql-action/init@v3
         if: steps.probe.outputs.langs != ''
@@ -485,14 +503,12 @@ jobs:
 
   # ---------------------------------------------------------------------------
   # Desktop build smoke test. Verifies the app packages on each OS.
-  # Skipped until apps/desktop has a manifest.
-  # ---------------------------------------------------------------------------
-  # ---------------------------------------------------------------------------
-  # Desktop build smoke test. Verifies the app packages on each OS.
   #
-  # Note: `hashFiles` is only available in a step's `if`, not a job's, so the
-  # "does apps/desktop exist yet" check has to be the first step. Until the
-  # desktop app is scaffolded this job exits 0 without doing anything.
+  # Skips cleanly until apps/desktop has a manifest, because `apps/*` is not in
+  # the workspace glob yet. Unlike the other jobs this one is *expected* to skip,
+  # so it has no "refuse to pass vacuously" step: an absent shell is a known
+  # state recorded in ADR-0003, not a silent failure. The moment the shell is
+  # scaffolded, this job starts building and the skip goes away on its own.
   # ---------------------------------------------------------------------------
   build-desktop:
     name: Desktop build (${{ matrix.os }})
@@ -502,6 +518,12 @@ jobs:
       matrix:
         os: [windows-latest, ubuntu-22.04, macos-latest]
     steps:
+      # checkout BEFORE the existence probe. The probe was the first step for the
+      # life of this job, so `[ -f apps/desktop/package.json ]` was always false
+      # and three operating systems reported green without building anything.
+      # Same defect as the probe steps elsewhere in this file, same fix.
+      - uses: actions/checkout@v4
+
       # `shell: bash` is required: the default shell on Windows runners is cmd.exe,
       # which cannot run these POSIX conditionals. Bash is present on every
       # GitHub-hosted runner regardless of platform.
@@ -515,8 +537,6 @@ jobs:
             echo "exists=false" >> "$GITHUB_OUTPUT"
             echo "apps/desktop not scaffolded yet; skipping."
           fi
-
-      - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         if: steps.probe.outputs.exists == 'true'
