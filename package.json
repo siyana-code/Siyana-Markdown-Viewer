@@ -1,0 +1,35 @@
+{
+  "name": "siyana-markdown-viewer",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A fast, safe, local-first Markdown viewer for Windows, Linux, web, and mobile.",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@11.9.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "pnpm -r --filter \"./packages/**\" build",
+    "dev": "pnpm --filter @siyana/core dev",
+    "test": "pnpm -r --filter \"./packages/**\" test",
+    "typecheck": "pnpm -r --filter \"./packages/**\" typecheck",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+
+    "test:conformance": "pnpm --filter @siyana/conformance test",
+    "conformance:measure": "pnpm --filter @siyana/conformance measure",
+    "conformance:classify": "pnpm --filter @siyana/conformance classify",
+    "conformance:extensions": "pnpm --filter @siyana/conformance verify-extensions",
+
+    "verify": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm build && pnpm test && pnpm test:conformance && pnpm conformance:extensions"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.3.4",
+    "@types/node": "22.18.9",
+    "typescript": "5.9.3",
+    "vitest": "3.2.4"
+  }
+}

@@ -56,6 +56,12 @@ logs/
 *.log
 .eslintcache
 stylelintcache
+*.tsbuildinfo
+
+# pnpm-lock.yaml is intentionally NOT ignored. It pins every transitive
+# resolution, and CI installs with --frozen-lockfile, so committing it is what
+# makes a CI run comparable to a local one. Several jobs here probe for its
+# presence and refuse to pass vacuously when it is absent.
 
 # Build output
 dist/

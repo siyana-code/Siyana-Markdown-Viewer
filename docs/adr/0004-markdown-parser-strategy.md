@@ -1,14 +1,47 @@
 # ADR-0004: Markdown parser strategy
 
-- **Status:** Proposed
+- **Status:** Accepted — implemented in Phase 1, with the corrections recorded
+  immediately below
 - **Date:** 2026-10-06
-- **Deciders:** Pending — depends on ADR-0003 and on measured benchmarks
+- **Deciders:** project maintainers
+- **Amends:** none. [ADR-0006](0006-core-module-boundaries.md) records the
+  module-boundary consequences of this decision.
 - **Consulted:**
   - [`research/06-libraries/README.md`](../../research/06-libraries/README.md)
   - [`research/06-libraries/01-js-parsers.md`](../../research/06-libraries/01-js-parsers.md)
   - [`research/06-libraries/02-rust-parsers.md`](../../research/06-libraries/02-rust-parsers.md)
   - [`research/06-libraries/07-evaluation-framework.md`](../../research/06-libraries/07-evaluation-framework.md)
   - [`research/04-parsing-internals/`](../../research/04-parsing-internals/README.md)
+
+## Implementation notes
+
+Phase 1 built `packages/core` against this decision. Three things differ from a
+literal reading of the document below, and each is recorded here because a
+decision that is not what was built is worse than no decision at all.
+
+1. **The parser is pinned to `markdown-it@15.0.2`**, above the `≥ 14.2.0` floor
+   set from CVE-2026-48988. 15.0.2 is current and is the version every research
+   measurement was taken against, so conformance figures are comparable. 15.x
+   also ships its own TypeScript declarations, so `@types/markdown-it` is
+   deliberately absent — installing both resolves `Renderer` to the older, wrong
+   signature and produces a cascade of type errors that look like our bugs.
+
+2. **`xhtmlOut: true`**, which this document never mentions. The first
+   implementation set it `false`, on the reasoning that HTML5 does not want a
+   self-closing slash on a void element. Measured, that cost **58 of 652**
+   CommonMark examples, and the normalised score was identical either way — which
+   is the proof that the change was pure serialisation with no semantic effect.
+
+3. **Two of the four extensions are third-party plugins.** `footnote` and
+   `tasklists` come from `markdown-it-footnote` and `markdown-it-task-lists`;
+   `table` and `strikethrough` are built-in rules that arrive with the `default`
+   preset. Neither plugin ships types, so
+   [`packages/core/src/vendor.d.ts`](../../packages/core/src/vendor.d.ts)
+   declares the two function signatures we use, rather than taking an unpinned
+   `@types/*` dependency to describe an API called once.
+
+The conformance numbers, and the measured cost of ADR-0005's `html: false`, are
+in [`packages/conformance/README.md`](../../packages/conformance/README.md).
 
 ## Context
 

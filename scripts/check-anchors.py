@@ -119,7 +119,13 @@ def main():
         return anchor_cache[rel]
 
     failures = []
-    checked = 0
+    # Counts *resolved* anchor links. The original script incremented only on
+    # failure, so `anchor links checked: 0` was printed both when nothing was
+    # broken and when the link-finding regex had stopped matching anything at
+    # all. Those are indistinguishable from the output alone, which is exactly
+    # the failure mode of a checker that can pass vacuously.
+    resolved = 0
+    skipped_missing_file = 0
 
     for rel, lines in files.items():
         for i, in_fence in in_fence_flags(lines):
@@ -150,14 +156,17 @@ def main():
                 )
                 anchors = anchors_of(target)
                 if anchors is None:
+                    skipped_missing_file += 1
                     continue  # missing file: the relative-link check reports it
                 if frag in anchors:
+                    resolved += 1
                     continue
 
-                checked += 1
                 failures.append((rel, i + 1, frag, line.strip()[:90]))
 
-    print("anchor links checked: %d" % checked)
+    print("anchor links resolved: %d" % resolved)
+    if skipped_missing_file:
+        print("anchor links skipped, target file absent: %d" % skipped_missing_file)
     if failures:
         print("unresolved: %d" % len(failures))
         shown = failures if verbose else failures[:25]

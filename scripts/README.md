@@ -43,6 +43,22 @@ Disabling a rule leaves anchors unverified, which is worse than a noisy check: a
 broken anchor in a reference corpus sends the reader to the top of the page. So
 this reimplements GitHub's slug algorithm and verifies against it.
 
+It reports the number of links **resolved**, not the number of checks performed.
+The first version incremented only on failure, so it printed
+`anchor links checked: 0` — identically for "everything is fine" and "the regex
+stopped matching anything", which are indistinguishable from the output. A checker
+that can pass vacuously is not a checker. The current output is:
+
+```text
+anchor links resolved: 515
+anchor links skipped, target file absent: 1
+All anchor links resolve.
+```
+
+The skipped count is printed rather than swallowed for the same reason: a missing
+target file means this check did nothing about that link, and someone else
+reporting it is a dependency on another script.
+
 **`check-placeholders.py`** — Guards against shipping unfinished text. A `grep`
 over raw Markdown cannot do this: the corpus legitimately contains the words it
 looks for. `> [!todo]` is an admonition-syntax example, `Lorem ipsum` is quoted

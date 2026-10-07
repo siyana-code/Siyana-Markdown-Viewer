@@ -1,0 +1,21 @@
+{
+  "name": "@siyana/conformance",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Runs the vendored CommonMark spec examples against @siyana/core and asserts a recorded baseline.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-strip-types src/run.ts",
+    "measure": "node --experimental-strip-types src/measure.ts",
+    "classify": "node --experimental-strip-types src/classify.ts",
+    "verify-extensions": "node --experimental-strip-types src/verify-extensions.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@siyana/core": "workspace:*"
+  },
+  "devDependencies": {
+    "markdown-it": "^15.0.2"
+  }
+}

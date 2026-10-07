@@ -62,14 +62,22 @@ authority rather than our own assumptions.
 | GFM | GFM spec, sections we declare support for | ~600 | Every PR |
 | Profile | Our declared extensions | growing | Every PR |
 
+> **Implemented, with two changes from the sketch below.** The suite exists as
+> `packages/conformance`, not `packages/test-fixtures`, and it is a standalone
+> Node script rather than a vitest file. Both changes are recorded in
+> [`packages/conformance/README.md`](../../packages/conformance/README.md); the
+> substantive one is that the baseline asserts a **cause count** per failure, not
+> just a total, so the failure set cannot silently change composition while the
+> headline number holds.
+
 ```ts
-import { spec } from '@siyana/test-fixtures/commonmark'
+import { spec } from '@siyana/conformance/fixtures'
 
 describe('CommonMark conformance', () => {
   it('passes every example in the pinned spec version', async () => {
     const results = await runConformance(render, spec)
-    // Baseline is recorded in conformance-baseline.json. A drop is a failure,
-    // even if the absolute rate is above target.
+    // Baseline is recorded in baseline.ts. A drop is a failure, even if the
+    // absolute rate is above target.
     expect(results.passed).toBeGreaterThanOrEqual(baseline.commonmark.passed)
     expect(results.failed).toEqual(baseline.commonmark.failedIds)
   })
@@ -82,8 +90,9 @@ that is a regression and CI goes red. Fixing it or documenting it is a separate,
 deliberate act.
 
 **Vendoring.** The suites are vendored into
-`packages/test-fixtures/specs/commonmark/<version>/` with the version in the
-path. Upgrading is a deliberate PR that shows the diff in pass rate.
+`packages/conformance/fixtures/spec-<version>.json` with the version in the
+filename, and the SHA-256 is asserted in-process before any comparison runs.
+Upgrading is a deliberate PR that shows the diff in pass rate.
 
 **Own regression fixtures** live in
 `packages/test-fixtures/regression/<issue-number>/` with the issue in the path,
@@ -229,21 +238,43 @@ A change is done when:
 - [ ] Tests exist for new behaviour, and they would fail without the change
 - [ ] Every bug fix has a regression test referencing its issue
 - [ ] Parser changes do not reduce conformance
+- [ ] Every conformance failure is still attributable to a named decision — the
+      runner fails on an unattributed one, so this is enforced, not checked
 - [ ] Security-boundary changes include a hostile-input test
 - [ ] New limits are tested at the boundary value and one past it
-- [ ] `pnpm lint typecheck test test:conformance` is green
+- [ ] A changed baseline carries the new attribution and its reasoning, in prose
+- [ ] `pnpm verify` is green
 - [ ] Performance-relevant changes include a before/after measurement
 
 ## Commands
 
 ```bash
-pnpm test                     # everything
-pnpm test -- core             # one package
-pnpm test:conformance         # CommonMark + GFM + profile
-pnpm test:conformance -- --update-baseline   # deliberate, reviewed in the PR diff
-pnpm test:fuzz                # quick fuzz, CI budget
+pnpm verify                   # what CI runs. Use this.
+pnpm test                     # unit tests, every package
+pnpm test -- --filter @siyana/core            # one package
+pnpm test:conformance         # CommonMark spec suite + recorded baseline
+pnpm conformance:measure      # re-derive the configuration decomposition
+pnpm conformance:classify     # re-derive the failure attribution
+pnpm conformance:extensions   # prove each declared extension changes output
+pnpm lint:fix                  # format + autofix
+```
+
+`pnpm verify` is format, lint, typecheck, build, tests, conformance, and the
+extension check, in that order. It is the single command that means "is this
+tree shippable".
+
+There is no `--update-baseline` flag. The baseline is a checked-in TypeScript
+file with the numbers and the reasoning in prose, and changing it is a code
+review rather than a command. A `--update-baseline` flag would make it a
+two-character diff in a PR that nobody reads properly, which is the opposite of
+what a tripwire is for.
+
+The fuzz and bench commands below are planned, not implemented:
+
+```bash
+pnpm test:fuzz                # planned
 pnpm test:fuzz -- --iterations 1000000        # deep, nightly
-pnpm bench                    # performance baselines
+pnpm bench                    # planned
 pnpm bench -- --compare       # regression report
 ```
 

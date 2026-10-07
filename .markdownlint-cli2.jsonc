@@ -122,7 +122,12 @@
     "**/*.md"
   ],
   "ignores": [
-    "node_modules/**",
+    // `**/node_modules/**` rather than `node_modules/**`. The bare pattern
+    // matches only at the repository root; with pnpm's symlinked layout the real
+    // Markdown lives at packages/*/node_modules/, so the narrower pattern let
+    // 13 lint errors through from dependency READMEs. It only started mattering
+    // once Phase 1 made packages/* exist.
+    "**/node_modules/**",
     "**/target/**",
     "**/dist/**",
     "**/.next/**",

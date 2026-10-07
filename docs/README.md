@@ -3,8 +3,11 @@
 A fast, safe, local-first Markdown viewer for Windows and Linux, with web and
 mobile targets planned.
 
-**We are in the research phase.** No application code has been written yet. What
-exists here is the study and the decisions that study produced.
+**The research phase is complete.** 88 documents, ~430 000 words, across
+[`../research/`](../research/). Phase 1 has begun at the bottom of the stack:
+[`../packages/core/`](../packages/core/) is the rendering engine and
+[`../packages/conformance/`](../packages/conformance/) is the CommonMark spec
+suite that verifies it.
 
 ## Start here
 
@@ -16,6 +19,12 @@ exists here is the study and the decisions that study produced.
 | Understand how code moves | [Branching strategy](branching-strategy.md) |
 | See the technical shape of the app | [Architecture overview](architecture/overview.md) |
 | Know what has been decided | [ADRs](adr/README.md) |
+| See the rendering engine's source | [`packages/core`](../packages/core/src/) |
+| Know how well the parser conforms | [Conformance suite](../packages/conformance/README.md) |
+| Know how the code is arranged | [Monorepo structure](architecture/monorepo-structure.md) |
+| Know the lint and format rules | [Biome configuration](engineering/biome-configuration.md) |
+| Know the coding conventions | [Coding standards](engineering/coding-standards.md) |
+| Know how we test | [Testing strategy](engineering/testing-strategy.md) |
 | Learn Markdown from scratch | [Research: foundations](../research/01-foundations/) |
 | Learn how Markdown parsers work | [Research: parsing internals](../research/04-parsing-internals/) |
 | Compare the desktop frameworks | [Research: desktop frameworks](../research/08-desktop-frameworks/) |
@@ -45,11 +54,13 @@ Research feeds decisions. Decisions land in ADRs. ADRs constrain code.
 | [0001](adr/0001-use-gitflow-branches.md) | GitFlow-lite: `main` for releases, `develop` as default | Accepted |
 | [0002](adr/0002-monorepo-with-workspaces.md) | Monorepo with pnpm and Cargo workspaces | Accepted |
 | [0003](adr/0003-desktop-framework-tauri-vs-electron-vs-flutter.md) | Tauri vs Electron vs Flutter | **Proposed** — needs a prototype |
-| [0004](adr/0004-markdown-parser-strategy.md) | Markdown parser selection | **Proposed** — needs benchmarks |
+| [0004](adr/0004-markdown-parser-strategy.md) | Markdown parser selection (`markdown-it`) | Accepted — implemented, [ADR-0006](adr/0006-core-module-boundaries.md) records the corrections |
 | [0005](adr/0005-security-baseline-xss-sanitization.md) | Four-layer security baseline | Accepted |
+| [0006](adr/0006-core-module-boundaries.md) | `packages/core` module boundaries; `transform` deferred | Accepted |
 
-Two decisions are open, and both need a two-day prototype plus measurements
-before they are binding. See the validation section of each.
+[ADR-0003](adr/0003-desktop-framework-tauri-vs-electron-vs-flutter.md), the
+desktop shell, remains open. It needs a prototype and measurements before it is
+binding — see its validation section.
 
 ## Principles
 

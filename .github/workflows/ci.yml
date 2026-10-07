@@ -169,6 +169,17 @@ jobs:
         if: steps.probe.outputs.js == 'true'
         run: pnpm install --frozen-lockfile
 
+      # The probe above skips this job when no lockfile exists. Now that one does
+      # exist, add the missing assertion: a job that skips everything exits 0 and
+      # looks identical to a job that passed. Before this was added, 11 of 13 jobs
+      # were green by skipping.
+      - name: Refuse to pass vacuously
+        if: steps.probe.outputs.js != 'true'
+        shell: bash
+        run: |
+          echo "::error::no pnpm-lock.yaml, so lint and format checked nothing and this job still passed"
+          exit 1
+
       - name: Format check (JS/TS)
         if: steps.probe.outputs.js == 'true'
         run: pnpm format:check
@@ -218,7 +229,16 @@ jobs:
       - run: pnpm install --frozen-lockfile
         if: steps.probe.outputs.js == 'true'
 
-      - run: pnpm typecheck:ts
+      # See the note in the lint job. A typecheck job that skipped its only real
+      # step reported success, which is the same false signal.
+      - name: Refuse to pass vacuously
+        if: steps.probe.outputs.js != 'true'
+        shell: bash
+        run: |
+          echo "::error::no pnpm-lock.yaml, so typecheck inspected nothing and this job still passed"
+          exit 1
+
+      - run: pnpm typecheck
         if: steps.probe.outputs.js == 'true'
 
       - name: Rust typecheck
@@ -270,6 +290,19 @@ jobs:
       - run: pnpm install --frozen-lockfile
         if: steps.probe.outputs.js == 'true'
 
+      # See the note in the lint job. A matrix of three operating systems that
+      # all skipped was reporting three green checks for zero tests run.
+      - name: Refuse to pass vacuously
+        if: steps.probe.outputs.js != 'true'
+        shell: bash
+        run: |
+          echo "::error::no pnpm-lock.yaml, so no tests ran on ${{ matrix.os }} and this job still passed"
+          exit 1
+
+      - name: Build the workspace
+        if: steps.probe.outputs.js == 'true'
+        run: pnpm build
+
       - name: Rust tests
         if: steps.probe.outputs.rs == 'true'
         run: cargo test --workspace --all-features
@@ -280,10 +313,22 @@ jobs:
 
   # ---------------------------------------------------------------------------
   # Markdown conformance. A regression here is a correctness regression.
+  #
+  # Runs on all three operating systems rather than one, because the runner is
+  # plain Node with no DOM and no native code, so the only thing that *could*
+  # differ is text handling — line endings above all. The vendored spec fixture is
+  # LF, GitHub's `actions/checkout` on Windows may check it out with CRLF, and a
+  # conformance runner that normalises CRLF differently per platform produces a
+  # number that is a property of the runner rather than of the parser. Running it
+  # on three platforms is how that would be discovered instead of shipped.
   # ---------------------------------------------------------------------------
   conformance:
-    name: CommonMark / GFM conformance
-    runs-on: ubuntu-latest
+    name: Conformance (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - name: Detect the JavaScript workspace
         id: probe
@@ -304,20 +349,36 @@ jobs:
       - run: pnpm install --frozen-lockfile
         if: steps.probe.outputs.js == 'true'
 
-      - name: Run CommonMark and GFM spec suites
+      # `@siyana/core` resolves `@siyana/core` -> `dist/index.js`, so the package
+      # must be built before the runner can import it. There is no `prepare`
+      # script on purpose: pnpm runs `prepare` on install, and a build that runs
+      # inside an install makes a typecheck error look like a network failure.
+      - name: Build the workspace
+        if: steps.probe.outputs.js == 'true'
+        run: pnpm build
+
+      - name: Run the CommonMark spec suite
         if: steps.probe.outputs.js == 'true'
         run: pnpm test:conformance
 
-      - name: Conformance report
-        if: always() && steps.probe.outputs.js == 'true'
-        run: pnpm conformance:report || true
-
-      - uses: actions/upload-artifact@v4
-        if: always() && steps.probe.outputs.js == 'true'
-        with:
-          name: conformance-report
-          path: conformance-report.*
-          if-no-files-found: ignore
+      # A conformance run that silently stops testing is worse than one that
+      # fails. The probe above skips the whole job when there is no lockfile, so
+      # this asserts the runner actually compared something.
+      - name: Confirm the suite really ran
+        if: steps.probe.outputs.js == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          output="$(pnpm test:conformance 2>&1)"
+          echo "$output"
+          grep -q 'CONFORMANCE: success' <<<"$output" || {
+            echo "::error::the conformance runner did not report success"
+            exit 1
+          }
+          grep -q '652 examples' <<<"$output" || {
+            echo "::error::the conformance runner did not load all 652 spec examples"
+            exit 1
+          }
 
   # ---------------------------------------------------------------------------
   # Security scanning.

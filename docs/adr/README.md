@@ -59,7 +59,13 @@ How we will know this decision was right, and when we revisit it.
 | [0002](0002-monorepo-with-workspaces.md) | Use a monorepo with JS and Cargo workspaces | Accepted | 2026-10-06 |
 | [0003](0003-desktop-framework-tauri-vs-electron-vs-flutter.md) | Desktop framework: Tauri, Electron, or Flutter | Proposed | 2026-10-06 |
 | [0004](0004-markdown-parser-strategy.md) | Markdown parser selection | Proposed | 2026-10-06 |
-| [0005](0005-security-baseline-xss-sanitization.md) | Security baseline: sanitization and XSS defence | Proposed | 2026-10-06 |
+| [0005](0005-security-baseline-xss-sanitization.md) | Security baseline: sanitization and XSS defence | Accepted | 2026-10-06 |
+| [0006](0006-core-module-boundaries.md) | `packages/core` module boundaries and the deferred transform stage | Accepted | 2026-10-07 |
+
+Status changes since the index was written: ADR-0004 and ADR-0005 were both
+implemented in Phase 1, which forced three of their framings to be corrected by
+[ADR-0006](0006-core-module-boundaries.md). Read 0006 alongside 0004 rather than
+instead of it.
 
 ## Status meanings
 
@@ -89,5 +95,6 @@ If you are new, read these in order:
 2. [0002](0002-monorepo-with-workspaces.md) — how code is arranged
 3. [0005](0005-security-baseline-xss-sanitization.md) — the constraint that
    limits every other decision
-4. [0003](0003-desktop-framework-tauri-vs-electron-vs-flutter.md) — the shell
-5. [0004](0004-markdown-parser-strategy.md) — the heart of the app
+4. [0004](0004-markdown-parser-strategy.md) — the heart of the app
+5. [0006](0006-core-module-boundaries.md) — how 0004 and 0005 actually landed in code
+6. [0003](0003-desktop-framework-tauri-vs-electron-vs-flutter.md) — the shell
