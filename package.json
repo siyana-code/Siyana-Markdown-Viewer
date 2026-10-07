@@ -13,7 +13,7 @@
     "build": "pnpm -r --filter \"./packages/**\" build",
     "dev": "pnpm --filter @siyana/core dev",
     "test": "pnpm -r --filter \"./packages/**\" test",
-    "typecheck": "pnpm -r --filter \"./packages/**\" typecheck",
+    "typecheck": "pnpm build && pnpm -r --filter \"./packages/**\" typecheck",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
@@ -30,6 +30,6 @@
     "@biomejs/biome": "2.3.4",
     "@types/node": "22.18.9",
     "typescript": "5.9.3",
-    "vitest": "3.2.4"
+    "vitest": "5.0.3"
   }
 }

@@ -250,6 +250,10 @@ jobs:
           echo "::error::no pnpm-lock.yaml, so typecheck inspected nothing and this job still passed"
           exit 1
 
+      # `pnpm typecheck` builds first, itself: `packages/conformance` resolves
+      # `@siyana/core` to `dist/index.d.ts`, and `tsc --noEmit` does not produce
+      # it, so on a fresh checkout every import of core fails with TS2307.
+      # `tsc --build` is incremental, so the second run is a no-op.
       - run: pnpm typecheck
         if: steps.probe.outputs.js == 'true'
 
