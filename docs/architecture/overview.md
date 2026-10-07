@@ -6,7 +6,7 @@ Siyana Markdown Viewer is a local-first Markdown reader. It runs as a desktop
 application on Windows and Linux, with web and mobile targets planned. It has no
 backend, no accounts, and no network dependency.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────┐
 │                          The user's machine                        │
 │                                                                     │
@@ -46,7 +46,7 @@ backend, no accounts, and no network dependency.
 
 Pure, synchronous, no I/O, no UI, no platform APIs.
 
-```
+```text
 markdown bytes
    │
    ▼
@@ -148,7 +148,7 @@ one place to review rather than several.
 
 The full flow, from a double-click to pixels.
 
-```
+```text
 1. Shell      user double-clicks a .md file
 2. Shell      resolve the path, check it is inside the workspace root
 3. Shell      read the bytes              ── no parse, no DOM yet

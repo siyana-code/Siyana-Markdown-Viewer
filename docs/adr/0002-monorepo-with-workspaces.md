@@ -35,7 +35,7 @@ We use a **monorepo** with two workspace roots that coexist:
 
 Layout:
 
-```
+```text
 apps/
   desktop/           # desktop shell (first)
   web/               # browser build
@@ -65,6 +65,14 @@ Rules:
 5. **A package cannot depend on an app.**
 6. **CI uses a dependency graph** (`turbo` or `nx` — decided with
    ADR-0003) so a docs-only change does not run the whole matrix.
+
+### Versioning
+
+Fixed (locked-step), as rule 3 above states in full: every published-internal
+package carries the workspace version, and all are released together. A version
+skew between `core` and `ui` is a bug, not a feature. Independent versioning via
+changesets is rejected — see
+[Alternatives considered](#alternatives-considered).
 
 ## Alternatives considered
 

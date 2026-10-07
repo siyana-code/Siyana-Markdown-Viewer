@@ -15,7 +15,7 @@ document is the implementation spec.
 
 The shell reads the file. Nothing is parsed yet.
 
-```
+```text
 resolve path
   → check inside an approved root       (RootScope)
   → follow symlinks, re-check root      (symlink escape is the attack)
@@ -35,7 +35,7 @@ path and the OS error. Nothing else happens.
 
 ## Stage 1 — Decode (core, main thread)
 
-```
+```text
 bytes
   → detect encoding (UTF-8, UTF-8+BOM, UTF-16 LE/BE, Latin-1 fallback)
   → strip BOM
@@ -223,7 +223,7 @@ What the user sees. Two things happen immediately after insertion:
 
 Typing must not re-parse and re-insert the whole document. The strategy:
 
-```
+```text
 keystroke
   → update the source buffer
   → mark dirty byte ranges
@@ -280,7 +280,7 @@ Every stage reports duration and output size to a debug panel behind a
 developer shortcut. The numbers are used by the CI benchmark harness, so the
 budgets above are measured rather than believed.
 
-```
+```json
 [render] read 84ms  decode 31ms  parse 612ms  transform 18ms
          serialize 96ms  sanitize 142ms  insert 88ms  paint 74ms
          → 214 blocks, 5.2 MB source, 1.9 MB DOM

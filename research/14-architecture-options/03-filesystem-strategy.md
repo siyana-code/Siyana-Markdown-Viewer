@@ -421,7 +421,7 @@ that treats that as a change will nag users into uninstalling us.
 Three states, and only three. The copy in the dialog is fixed wording, reviewed
 by nobody, and researched in `../12-ux/`.
 
-```
+```text
 The file changed on disk since you opened it.
 
   last-opened: 12:04:31   on-disk: 12:09:12

@@ -17,7 +17,7 @@
 
 Identical shape to Tauri: **Go backend + web frontend + system webview**.
 
-```
+```text
 Go (main, compiled static binary)
   → wails runtime (github.com/wailsapp/wails/v2/pkg/runtime)
   → binds Go methods to the frontend

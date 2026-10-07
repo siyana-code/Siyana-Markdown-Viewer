@@ -1,14 +1,47 @@
 # ADR-0004: Markdown parser strategy
 
-- **Status:** Proposed
+- **Status:** Accepted — implemented in Phase 1, with the corrections recorded
+  immediately below
 - **Date:** 2026-10-06
-- **Deciders:** Pending — depends on ADR-0003 and on measured benchmarks
+- **Deciders:** project maintainers
+- **Amends:** none. [ADR-0006](0006-core-module-boundaries.md) records the
+  module-boundary consequences of this decision.
 - **Consulted:**
   - [`research/06-libraries/README.md`](../../research/06-libraries/README.md)
   - [`research/06-libraries/01-js-parsers.md`](../../research/06-libraries/01-js-parsers.md)
   - [`research/06-libraries/02-rust-parsers.md`](../../research/06-libraries/02-rust-parsers.md)
   - [`research/06-libraries/07-evaluation-framework.md`](../../research/06-libraries/07-evaluation-framework.md)
   - [`research/04-parsing-internals/`](../../research/04-parsing-internals/README.md)
+
+## Implementation notes
+
+Phase 1 built `packages/core` against this decision. Three things differ from a
+literal reading of the document below, and each is recorded here because a
+decision that is not what was built is worse than no decision at all.
+
+1. **The parser is pinned to `markdown-it@15.0.2`**, above the `≥ 14.2.0` floor
+   set from CVE-2026-48988. 15.0.2 is current and is the version every research
+   measurement was taken against, so conformance figures are comparable. 15.x
+   also ships its own TypeScript declarations, so `@types/markdown-it` is
+   deliberately absent — installing both resolves `Renderer` to the older, wrong
+   signature and produces a cascade of type errors that look like our bugs.
+
+2. **`xhtmlOut: true`**, which this document never mentions. The first
+   implementation set it `false`, on the reasoning that HTML5 does not want a
+   self-closing slash on a void element. Measured, that cost **58 of 652**
+   CommonMark examples, and the normalised score was identical either way — which
+   is the proof that the change was pure serialisation with no semantic effect.
+
+3. **Two of the four extensions are third-party plugins.** `footnote` and
+   `tasklists` come from `markdown-it-footnote` and `markdown-it-task-lists`;
+   `table` and `strikethrough` are built-in rules that arrive with the `default`
+   preset. Neither plugin ships types, so
+   [`packages/core/src/vendor.d.ts`](../../packages/core/src/vendor.d.ts)
+   declares the two function signatures we use, rather than taking an unpinned
+   `@types/*` dependency to describe an API called once.
+
+The conformance numbers, and the measured cost of ADR-0005's `html: false`, are
+in [`packages/conformance/README.md`](../../packages/conformance/README.md).
 
 ## Context
 
@@ -64,9 +97,9 @@ and [`research/06-libraries/02-rust-parsers.md`](../../research/06-libraries/02-
 
 ## Decision
 
-**Proposed: `markdown-it` in TypeScript for the renderer, with `DOMPurify` for
-sanitization, plus `ammonia` available on the Rust side if ADR-0003 selects
-Tauri and a Rust parser is later justified.**
+**Proposed: `markdown-it` (≥ 14.2.0, `typographer` off) in TypeScript for the
+renderer, with `DOMPurify` (≥ 3.4.16) for sanitization, plus `ammonia` available
+on the Rust side if ADR-0003 selects Tauri and a Rust parser is later justified.**
 
 Reasoning:
 
@@ -89,7 +122,11 @@ Reasoning:
 ### Deliberately rejected
 
 **`marked` as the default.** Faster, and GFM by default, but its extension model
-is thinner and its history with untrusted input has been less careful. We may
+is thinner and its advisory history is worse: published XSS and ReDoS issues
+including [CVE-2017-1000427](https://nvd.nist.gov/vuln/detail/CVE-2017-1000427),
+[CVE-2017-17461](https://github.com/advisories/GHSA-p9wx-2529-fp83),
+[CVE-2022-21680](https://nvd.nist.gov/vuln/detail/CVE-2022-21680), and
+[CVE-2022-21681](https://nvd.nist.gov/vuln/detail/CVE-2022-21681). We may
 revisit for a performance-critical path; we will not make it the default.
 
 **`micromark`/`remark`/`unified`.** The best standards story and the best
@@ -115,6 +152,35 @@ will contribute to an existing project instead.
 
 **MDX.** Excluded permanently. MDX executes JavaScript from the document. That
 is incompatible with the safety principle in [ADR-0005](0005-security-baseline-xss-sanitization.md).
+
+## Minimum versions (verified 2026-10-06)
+
+Version floors are part of this decision, not an implementation detail. Each of
+these has a published advisory, and each is a reminder that a parser dependency
+is a security dependency.
+
+| Dependency | Floor | Why |
+|---|---|---|
+| `markdown-it` | **≥ 14.2.0** | [CVE-2026-48988](https://nvd.nist.gov/vuln/detail/CVE-2026-48988) — quadratic O(n²) DoS in the smartquotes rule when `typographer: true`. 160 KB of quote characters caused ~21 s of CPU in the published PoC. Also [CVE-2022-21670](https://nvd.nist.gov/vuln/detail/CVE-2022-21670) (ReDoS) and [CVE-2025-7969](https://nvd.nist.gov/vuln/detail/CVE-2025-7969) (XSS in the fence renderer, disputed by the vendor but the bug class is real). Current release at the time of writing: 15.0.2. |
+| `DOMPurify` | **≥ 3.4.16** | [CVE-2026-41238](https://nvd.nist.gov/vuln/detail/CVE-2026-41238) — prototype-pollution XSS bypass affecting 3.0.1–3.3.3 in the default configuration. Then a further cluster in 2026, including [CVE-2026-65914](https://nvd.nist.gov/vuln/detail/CVE-2026-65914) (mXSS via re-contextualization), [CVE-2026-47423](https://nvd.nist.gov/vuln/detail/CVE-2026-47423) (`<selectedcontent>` re-clone bypass), and `GHSA-6688-9rhm-gjv2` (Oct 2026, IN_PLACE mode, affects ≤ 3.4.15). 3.4.0 was the floor for the *first* of these; the rest of the cluster needs 3.4.16. Full analysis: [`research/06-libraries/05-sanitizer-libraries.md`](../../research/06-libraries/05-sanitizer-libraries.md). |
+
+**Operational consequences of these findings:**
+
+1. `typographer: true` **MUST** stay off in v1. It is the option that turns
+   CVE-2026-48988 from unreachable into reachable, and its benefit (curly
+   quotes) is cosmetic.
+2. DOMPurify **MUST** be pinned to a floor, not floating, and Dependabot must
+   treat it as a security-critical dependency — see
+   [`11-security/04-dependency-and-supply-chain.md`](../../research/11-security/04-dependency-and-supply-chain.md).
+3. The mXSS class in CVE-2026-65914 is a direct argument for
+   [ADR-0005](0005-security-baseline-xss-sanitization.md): sanitized output must
+   never be re-inserted into a different parsing context. Our single insertion
+   point, into a detached `<div>`, avoids it. That constraint is now explicit in
+   the baseline.
+4. `marked` is disqualified as the default on this evidence alone, independent of
+   its features: it carries a longer chain of published XSS and ReDoS advisories.
+
+Full catalogue: [`research/11-security/04-dependency-and-supply-chain.md`](../../research/11-security/04-dependency-and-supply-chain.md).
 
 ## Consequences
 

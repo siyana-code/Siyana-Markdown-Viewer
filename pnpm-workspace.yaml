@@ -1,0 +1,61 @@
+packages:
+  - 'packages/*'
+  # apps/* is added as each target is scaffolded. ADR-0003 defers the desktop
+  # shell choice, and Phase 1 is core work with no shell at all.
+  #
+  # Only `packages/*`, never `apps/*` yet, and the reason is that a glob matching
+  # nothing is not an error. An `apps/*` entry added before the first app exists
+  # would silently match zero directories and read as a correct configuration.
+
+  # pnpm 11 reads its settings from this file rather than from `.npmrc`, which it
+  # still accepts but only for registry and auth keys.
+  #
+  # `fetchTimeout` is raised because of one specific package: Biome's Windows
+  # binary, `@biomejs/cli-win32-x64`, is 16.7 MB. On a slow link pnpm's default
+  # 120-second timeout aborts mid-transfer, and pnpm retries the whole 16.7 MB
+  # rather than resuming it, so the install fails after several minutes having
+  # downloaded almost nothing. Ten minutes is enough for that tarball on a
+  # connection that is merely slow, and it does not change the timeout for anything
+  # smaller.
+  #
+  # `fetchRetries` is raised for the same reason: the registry intermittently
+  # resets the connection on large responses. Observed here as ECONNRESET and
+  # `(23)` on both `markdown-it` and the Biome binary, on three separate
+  # installs.
+fetchTimeout: 600000
+fetchRetries: 5
+fetchRetryMintimeout: 10000
+fetchRetryMaxtimeout: 120000
+
+# pnpm 11 defaults to a strict, isolated node_modules layout, and this states it
+# explicitly because ADR-0002's package-boundary enforcement depends on it:
+# `@siyana/core` physically cannot import a package it does not declare, because
+# that package is not on its resolution path. Hoisting would silently defeat the
+# boundary and the dependency would work in development and fail in a published
+# package.
+nodeLinker: isolated
+
+# A workspace package that fails to build should fail the install, rather than
+# leave a partially-linked tree that typechecks for an hour and then reports
+# nonsense.
+strictPeerDependencies: true
+
+# pnpm 11 blocks dependency lifecycle scripts by default and exits non-zero with
+# ERR_PNPM_IGNORED_BUILDS when it ignores one. That default is correct and stays.
+#
+# esbuild is the single package that legitimately needs its install script: it
+# resolves a platform-specific binary at install time and nothing works without
+# it. It arrives transitively via vite, which vitest pulls in, so the test suite
+# cannot run without it.
+#
+# This is a map rather than the older `onlyBuiltDependencies` list, because pnpm
+# 11 writes `allowBuilds` itself: `pnpm approve-builds esbuild` appends to this
+# file. Configuring it by hand in the old shape and approving interactively gives
+# you both keys, and only one of them does anything.
+#
+# The point of an explicit allowlist is that a new dependency with a build script
+# is a deliberate, reviewable act. A package cannot execute code during install
+# without appearing here first. That is the supply-chain property ADR-0005 asks
+# for, and it is why this file is worth the extra dependency pnpm warns about.
+allowBuilds:
+  esbuild: true

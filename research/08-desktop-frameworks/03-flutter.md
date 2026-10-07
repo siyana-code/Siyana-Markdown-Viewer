@@ -18,7 +18,7 @@ This is the whole story, and everything else follows from it.
 not embed a browser. There is no DOM, no CSS, no HTML parser, no
 `document.createElement`. Instead:
 
-```
+```text
 Dart code
   → widget tree (retained-mode, declarative)
   → Flutter's own layout engine
@@ -83,7 +83,7 @@ Markdown renderer in Dart.** Not wrap one — write one.
 
 ## 2. The Markdown-rendering cost, itemised
 
-### The parser exists. The renderer does not.
+### The parser exists. The renderer does not
 
 The Dart `markdown` package (pub.dev, **7.3.1**, 18 Mar 2026 — fetched today)
 provides a CommonMark+GFM-ish parser producing `md.Document` — a tree of

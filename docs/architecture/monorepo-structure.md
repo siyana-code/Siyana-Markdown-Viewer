@@ -2,7 +2,7 @@
 
 ## Layout
 
-```
+```text
 Siyana-Markdown-Viewer/
 │
 ├── apps/
@@ -11,7 +11,8 @@ Siyana-Markdown-Viewer/
 │   └── mobile/                     Phase 7  — mobile build
 │
 ├── packages/
-│   ├── core/                       the rendering engine. pure.
+│   ├── core/                       the rendering engine. pure.  [exists]
+│   ├── conformance/                the CommonMark spec suite + baseline  [exists]
 │   ├── sanitize/                   the sanitization policy. security-critical.
 │   ├── ui/                         shared components and theme tokens
 │   ├── fs-adapters/                filesystem interface + implementations
@@ -33,7 +34,7 @@ Siyana-Markdown-Viewer/
 
 ## The dependency rule
 
-```
+```text
                     ┌──────────────────────────────┐
    may import  ───▶ │  packages/core               │  ───▶ nothing
                     │  packages/sanitize           │
@@ -67,44 +68,90 @@ Siyana-Markdown-Viewer/
 
 The rendering engine. Pure and synchronous.
 
+> **Implementation status.** Scaffolded. Four modules exist — `limits.ts`,
+> `profiles.ts`, `url-policy.ts`, `parser.ts` — plus `index.ts` as the entry
+> point. The table below is the **target** module layout, and it does not match
+> what was built. The differences and their reasons are recorded in
+> [`docs/adr/0006-core-module-boundaries.md`](../adr/0006-core-module-boundaries.md).
+> In short: `decode` and `transform` are deferred, `parse` and `serialize` are
+> `markdown-it` rather than hand-written, and `url-policy.ts` is an addition the
+> table above did not anticipate.
+
 | Module | Responsibility |
 |---|---|
-| `decode` | Encoding detection, BOM strip, line-ending normalisation, invalid-byte handling |
-| `parse` | Markdown → AST, with the enabled extension set and enforced limits |
-| `transform` | Anchors/slugs, TOC extraction, footnote collection, task-list ids, math placeholders |
-| `serialize` | AST → HTML string from a fixed tag vocabulary |
-| `limits` | The bound table, and typed errors when a bound is breached |
-| `profile` | The "Siyana Markdown Profile" — which extensions are on, and at what version |
+| `decode` | Encoding detection, BOM strip, line-ending normalisation, invalid-byte handling — **not yet written** |
+| `parse` | Markdown → AST, with the enabled extension set and enforced limits — provided by `markdown-it` |
+| `transform` | Anchors/slugs, TOC extraction, footnote collection, task-list ids, math placeholders — **partial**; outline extraction lives in `index.ts` |
+| `serialize` | AST → HTML string from a fixed tag vocabulary — provided by `markdown-it`'s renderer |
+| `limits` | The bound table, and typed errors when a bound is breached — **exists**, 13 limits |
+| `profile` | The "Siyana Markdown Profile" — which extensions are on, and at what version — **exists** as `profiles.ts` |
 
-Public surface:
+Public surface — **target**, and the difference from what was built is
+deliberate. See [ADR-0006](../adr/0006-core-module-boundaries.md) §2.
 
 ```ts
 export interface RenderOptions {
-  readonly profile?: MarkdownProfile
+  readonly profile?: Profile
   readonly limits?: LimitOverrides
-  readonly anchors?: { enabled: boolean; prefix?: string }
-  readonly footnotes?: { enabled: boolean }
-  readonly rawHtml?: 'escape' | 'allow-if-sanitized'
+  readonly linkify?: boolean
+  readonly breaks?: boolean
+  readonly allowDataImageUrls?: boolean
+  // There is no `rawHtml` option, at any value. ADR-0005 Layer 1 requires raw
+  // HTML to be disabled at the parser; an option that permits it is the
+  // mechanism by which that gets switched off in a release nobody reviewed.
 }
 
-export interface RenderResult {
-  readonly html: string           // UNTRUSTED until sanitized
-  readonly outline: OutlineNode[]
-  readonly footnotes: Footnote[]
-  readonly title: string | null
-  readonly stats: RenderStats     // block count, byte count, parse duration
-}
+export type RenderResult =
+  | {
+      readonly ok: true
+      readonly kind: 'rendered'
+      readonly html: string        // UNTRUSTED until sanitized
+      readonly safe: false          // only `packages/sanitize` sets this
+      readonly outline: readonly OutlineEntry[]
+      readonly references: readonly string[]
+    }
+  | {
+      readonly ok: false
+      readonly kind: 'raw-fallback'
+      readonly error: RenderError
+      readonly raw: string          // so raw mode needs no re-read
+    }
 
-export type RenderError =
-  | { kind: 'limit-exceeded'; limit: LimitName; observed: number; allowed: number }
-  | { kind: 'decode-failure'; detail: string }
-  | { kind: 'parse-failure'; detail: string }
-
-export function render(source: Uint8Array, options?: RenderOptions): RenderResult
+export function renderDocument(source: string, options?: ParserOptions): RenderResult
 ```
 
-The `RenderResult.html` being explicitly marked untrusted is deliberate. It is a
-type-level reminder that the sanitizer step has not happened yet.
+Three properties of the built surface are load-bearing rather than incidental.
+
+**`ok: false` is a return value, not an exception.** A 40 MB file that hits
+`inputBytes` is a normal thing for a user to open, and the product's answer is
+"show the raw text with an explanation". Throwing would push that decision onto
+every caller. Thrown exceptions mean a programming error — a bad limit override,
+an unknown profile.
+
+**`safe` is typed `false` and only `packages/sanitize` can flip it.** Nothing in
+`core` sets it true, so a caller who forgets the sanitization step has a
+visible, greppable marker rather than a silently trusted string.
+
+**`source` is a `string`, not `Uint8Array`.** The target surface reads bytes,
+which implies the `decode` module. That module is not written yet, and accepting
+a `string` keeps the encoding question visible at the file-reading layer instead
+of being answered twice.
+
+### `packages/conformance`
+
+> **Scaffolded.** This is the CommonMark spec suite: the vendored
+> `spec-0.31.2.json` (652 examples, SHA-256 pinned), a faithful port of the
+> spec's own `normalize.py`, and a recorded baseline whose every failure is
+> attributed to a named decision. See
+> [`packages/conformance/README.md`](../../packages/conformance/README.md).
+
+The suite is its own package rather than part of `test-fixtures/` because it
+needs `markdown-it` directly — to compare raw parser configurations against
+`@siyana/core`'s — and ADR-0002's package boundaries do not let it reach that
+dependency through `core`. Declaring it as its own devDependency is the boundary
+working as designed rather than worked around. The first draft tried to import it
+transitively and Node refused with `ERR_MODULE_NOT_FOUND`, which is the boundary
+holding.
 
 ### `packages/sanitize`
 
@@ -254,5 +301,5 @@ desktop build matrix.
 
 - [Architecture overview](overview.md)
 - [Rendering pipeline](rendering-pipeline.md)
-- [ADR-0002](../adr-0002-monorepo-with-workspaces.md)
+- [ADR-0002](../adr/0002-monorepo-with-workspaces.md)
 - [`research/14-architecture-options/01-monorepo-strategy.md`](../../research/14-architecture-options/01-monorepo-strategy.md)

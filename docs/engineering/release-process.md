@@ -2,7 +2,7 @@
 
 ## Overview
 
-```
+```text
   develop
      │  full CI green, milestone reached
      ▼

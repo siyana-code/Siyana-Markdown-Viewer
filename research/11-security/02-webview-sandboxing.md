@@ -310,7 +310,7 @@ Rules this file encodes, each of which will be argued about in review:
 5. **No `clipboard`, no `shell.openPath`, no `webContents`, no `app`** on the
    bridge. Clipboard reads are gated behind an explicit user action in the main
    process, because clipboard contents are attacker-controlled
-   ([CVE-2023-2318](./01-threat-model.md#59-vector-clipboard--paste-path)).
+   ([CVE-2023-2318](./01-threat-model.md#59-vector-clipboard-paste-path)).
 
 ```js
 // main-side handlers re-validate, always.
@@ -762,7 +762,7 @@ window.
 Markdown viewer. But it converts an entire solved problem (CSS typography for
 long-form reading, which has twenty years of refinement) into an unsolved one,
 and it does not remove the other eleven threat vectors — path traversal, symlinks,
-TODoU, supply chain, encoding, file permissions all still apply. The DOM-XSS
+TOCTOU, supply chain, encoding, and file permissions all still apply. The DOM-XSS
 advantage is bought by not having a DOM, which is a large price for a *reader*.
 
 **Recommendation: not Flutter for v0.1.** Revisit if the CSS strategy proves to

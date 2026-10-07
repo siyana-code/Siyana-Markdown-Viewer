@@ -31,52 +31,104 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
 
+      # scripts/*.py use only the standard library, but setup-python pins the
+      # interpreter so the checks behave the same on every runner.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # No `cache:` here on purpose: setup-node fails the step outright when it
+      # cannot find a lockfile to key the cache on, and this repository does not
+      # have one until the JS workspace is scaffolded. Re-add it in Phase 1.
       - name: Install markdown lint tooling
         run: npm install -g markdownlint-cli2@latest
 
       - name: Lint markdown
         run: markdownlint-cli2 "**/*.md" "#node_modules" "#**/target/**" "#**/dist/**"
 
+      # Checks relative links resolve. Deliberately conservative:
+      #  - only .md files under docs/ and research/ are scanned, so example
+      #    payloads in shell snippets are never mistaken for links
+      #  - targets are resolved against the source file's directory
+      #  - paths that are obviously attack examples (/etc/shadow, ~/.ssh/...,
+      #    ::$DATA) are skipped: they appear in prose about traversal
       - name: Verify documentation links resolve
         run: |
           set -euo pipefail
           missing=0
-          while IFS= read -r link; do
-            target="${link%%#*}"
+          while IFS= read -r source lineno target; do
             [ -z "$target" ] && continue
             case "$target" in
-              http://*|https://*|mailto:*) continue ;;
+              http://*|https://*|mailto:*|tel:*|data:*) continue ;;
+              /*) continue ;;                       # absolute path, not a doc link
+              */etc/*|*.ssh*|*::\$DATA*|*/Windows/*) continue ;;  # attack examples
             esac
-            if [ ! -e "$target" ]; then
-              echo "::error file=$link::broken relative link -> $target"
-              missing=1
-            fi
-          done < <(grep -rhoE '\]\((\.{0,2}/[^)#][^)]*)\)' --include='*.md' . | sed -E 's/^\]\(//; s/\)$//')
-          [ "$missing" -eq 0 ] || exit 1
+            # Skip links that appear inside an inline code span. The syntax
+            # reference quotes real link targets (``[](./target.md)``) inside
+            # backticks as examples; those are specimen text, not navigation.
+            line="$(sed -n "${lineno}p" "$source")"
+            case "$line" in
+              *'`['*|*'[`'*) ;;
+              *)
+                resolved="$(dirname "$source")/$target"
+                if [ ! -e "$resolved" ]; then
+                  echo "::error file=$source::$lineno::broken link -> $target"
+                  missing=1
+                fi
+                ;;
+            esac
+          done < <(grep -rnoE '\]\((\.{1,2}/[^)#[:space:]]*)\)' --include='*.md' docs research \
+                   | sed -E 's#^([^:]+):([0-9]+):\]\((.*)\)$#\1 \2 \3#')
+          if [ "$missing" -ne 0 ]; then
+            echo "::error::broken relative links found"
+            exit 1
+          fi
+          echo "All relative documentation links resolve."
 
       - name: Verify research folder completeness
         run: |
           set -euo pipefail
-          # Every research folder must have an index, and every index must be
-          # linked from research/README.md.
+          # Every research folder must have an index, and research/README.md must
+          # link to it. Match on the folder name alone: the index uses
+          # relative links like "(00-method/)", not "research/00-method/".
+          count=0
           for dir in research/*/; do
+            name="${dir#research/}"
+            name="${name%/}"
             [ -f "${dir}README.md" ] || { echo "::error::missing ${dir}README.md"; exit 1; }
-            grep -qF "${dir%/}" research/README.md || {
-              echo "::error::${dir} is not linked from research/README.md"; exit 1;
+            grep -qF "(${name}/)" research/README.md || {
+              echo "::error::research/${name}/ is not linked from research/README.md"
+              exit 1
             }
+            count=$((count + 1))
           done
+          echo "All ${count} research folders have an index and are linked."
 
+      # Structural checks that markdownlint cannot do.
+      #
+      # check-fences  a closing fence may not carry an info string per CommonMark,
+      #                so ```` ```text ```` in closer position silently swallows
+      #                every heading below it. 60-odd files here had the habit.
+      # check-anchors  markdownlint's MD051 is disabled because it computes
+      #                fragments differently from GitHub for numbered headings, so
+      #                anchor links need verifying against GitHub's own algorithm.
+      #
+      # scripts/fix-anchors.py --apply repairs what can be repaired mechanically;
+      # the checks are what gate the commit.
+      - name: Verify code fences
+        run: python scripts/check-fences.py
+
+      - name: Verify anchor links resolve
+        run: python scripts/check-anchors.py
+
+      # A grep over raw Markdown cannot be used for this: the corpus legitimately
+      # contains the words it looks for. "> [!todo]" is an admonition example,
+      # "Lorem ipsum" is quoted from the CommonMark spec, and "Superseded by
+      # ADR-XXXX" is the status template. The script checks prose only, with code
+      # and inline HTML stripped, and lists its exemptions explicitly.
       - name: Verify no placeholder text left in docs
-        run: |
-          set -euo pipefail
-          if grep -rniE '\b(TODO|FIXME|XXX|lorem ipsum|coming soon)\b' docs research \
-             --include='*.md' \
-             --exclude-dir=15-open-questions; then
-            echo "::error::placeholder text found in docs or research"
-            exit 1
-          fi
+        run: python scripts/check-placeholders.py
 
   # ---------------------------------------------------------------------------
   # Code quality: format and lint.
@@ -85,43 +137,73 @@ jobs:
   lint:
     name: Lint and format
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: .
     steps:
+      # checkout FIRST, probe second.
+      #
+      # The probe was originally the first step, before checkout. At that point
+      # the working directory contains nothing but the runner's own files, so
+      # `[ -f pnpm-lock.yaml ]` was always false, every `if:` below was skipped,
+      # and the job exited 0. That is the actual cause of the "11 of 13 green
+      # jobs were green by skipping" observation in the Phase 0 wrap-up — not the
+      # absence of a lockfile, which is what it was assumed to be.
+      #
+      # A file-existence probe must always follow the checkout it is probing.
       - uses: actions/checkout@v4
 
+      - name: Detect what exists yet
+        id: probe
+        shell: bash
+        run: |
+          [ -f pnpm-lock.yaml ] && echo "js=true" >> "$GITHUB_OUTPUT" || echo "js=false" >> "$GITHUB_OUTPUT"
+          [ -f Cargo.toml ]       && echo "rs=true" >> "$GITHUB_OUTPUT" || echo "rs=false" >> "$GITHUB_OUTPUT"
+
       - uses: actions/setup-node@v4
+        if: steps.probe.outputs.js == 'true'
         with:
           node-version: 22
 
       - name: Setup Rust
+        if: steps.probe.outputs.rs == 'true'
         uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
 
       - uses: Swatinem/rust-cache@v2
+        if: steps.probe.outputs.rs == 'true'
 
       - name: Install pnpm
+        if: steps.probe.outputs.js == 'true'
         uses: pnpm/action-setup@v4
 
       - name: Install dependencies
+        if: steps.probe.outputs.js == 'true'
         run: pnpm install --frozen-lockfile
 
+      # The probe above skips this job when no lockfile exists. Now that one does
+      # exist, add the missing assertion: a job that skips everything exits 0 and
+      # looks identical to a job that passed. Before this was added, 11 of 13 jobs
+      # were green by skipping.
+      - name: Refuse to pass vacuously
+        if: steps.probe.outputs.js != 'true'
+        shell: bash
+        run: |
+          echo "::error::no pnpm-lock.yaml, so lint and format checked nothing and this job still passed"
+          exit 1
+
       - name: Format check (JS/TS)
-        if: hashFiles('pnpm-lock.yaml') != ''
+        if: steps.probe.outputs.js == 'true'
         run: pnpm format:check
 
       - name: Lint (JS/TS)
-        if: hashFiles('pnpm-lock.yaml') != ''
+        if: steps.probe.outputs.js == 'true'
         run: pnpm lint
 
       - name: Rust format check
-        if: hashFiles('Cargo.toml') != ''
+        if: steps.probe.outputs.rs == 'true'
         run: cargo fmt --all --check
 
       - name: Rust clippy
-        if: hashFiles('Cargo.toml') != ''
+        if: steps.probe.outputs.rs == 'true'
         run: cargo clippy --workspace --all-targets -- -D warnings
 
   # ---------------------------------------------------------------------------
@@ -133,18 +215,50 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # See the note in the lint job: the probe has to follow checkout or it
+      # always reports nothing present.
+      - name: Detect what exists yet
+        id: probe
+        shell: bash
+        run: |
+          [ -f pnpm-lock.yaml ] && echo "js=true" >> "$GITHUB_OUTPUT" || echo "js=false" >> "$GITHUB_OUTPUT"
+          [ -f Cargo.toml ]       && echo "rs=true" >> "$GITHUB_OUTPUT" || echo "rs=false" >> "$GITHUB_OUTPUT"
+
       - uses: actions/setup-node@v4
+        if: steps.probe.outputs.js == 'true'
         with:
           node-version: 22
 
       - uses: dtolnay/rust-toolchain@stable
+        if: steps.probe.outputs.rs == 'true'
+
       - uses: Swatinem/rust-cache@v2
+        if: steps.probe.outputs.rs == 'true'
+
       - uses: pnpm/action-setup@v4
+        if: steps.probe.outputs.js == 'true'
 
       - run: pnpm install --frozen-lockfile
-      - run: pnpm typecheck:ts
+        if: steps.probe.outputs.js == 'true'
+
+      # See the note in the lint job. A typecheck job that skipped its only real
+      # step reported success, which is the same false signal.
+      - name: Refuse to pass vacuously
+        if: steps.probe.outputs.js != 'true'
+        shell: bash
+        run: |
+          echo "::error::no pnpm-lock.yaml, so typecheck inspected nothing and this job still passed"
+          exit 1
+
+      # `pnpm typecheck` builds first, itself: `packages/conformance` resolves
+      # `@siyana/core` to `dist/index.d.ts`, and `tsc --noEmit` does not produce
+      # it, so on a fresh checkout every import of core fails with TS2307.
+      # `tsc --build` is incremental, so the second run is a no-op.
+      - run: pnpm typecheck
+        if: steps.probe.outputs.js == 'true'
+
       - name: Rust typecheck
-        if: hashFiles('Cargo.toml') != ''
+        if: steps.probe.outputs.rs == 'true'
         run: cargo check --workspace --all-targets
 
   # ---------------------------------------------------------------------------
@@ -160,16 +274,31 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # See the note in the lint job: the probe has to follow checkout or it
+      # always reports nothing present.
+      - name: Detect what exists yet
+        id: probe
+        shell: bash
+        run: |
+          [ -f pnpm-lock.yaml ] && echo "js=true" >> "$GITHUB_OUTPUT" || echo "js=false" >> "$GITHUB_OUTPUT"
+          [ -f Cargo.toml ]       && echo "rs=true" >> "$GITHUB_OUTPUT" || echo "rs=false" >> "$GITHUB_OUTPUT"
+
       - uses: actions/setup-node@v4
+        if: steps.probe.outputs.js == 'true'
         with:
           node-version: 22
 
       - uses: dtolnay/rust-toolchain@stable
+        if: steps.probe.outputs.rs == 'true'
+
       - uses: Swatinem/rust-cache@v2
+        if: steps.probe.outputs.rs == 'true'
+
       - uses: pnpm/action-setup@v4
+        if: steps.probe.outputs.js == 'true'
 
       - name: Install Linux webview dependencies
-        if: runner.os == 'Linux'
+        if: steps.probe.outputs.rs == 'true' && runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -177,72 +306,155 @@ jobs:
             librsvg2-dev patchelf build-essential curl wget file libssl-dev
 
       - run: pnpm install --frozen-lockfile
+        if: steps.probe.outputs.js == 'true'
+
+      # See the note in the lint job. A matrix of three operating systems that
+      # all skipped was reporting three green checks for zero tests run.
+      - name: Refuse to pass vacuously
+        if: steps.probe.outputs.js != 'true'
+        shell: bash
+        run: |
+          echo "::error::no pnpm-lock.yaml, so no tests ran on ${{ matrix.os }} and this job still passed"
+          exit 1
+
+      - name: Build the workspace
+        if: steps.probe.outputs.js == 'true'
+        run: pnpm build
 
       - name: Rust tests
-        if: hashFiles('Cargo.toml') != ''
+        if: steps.probe.outputs.rs == 'true'
         run: cargo test --workspace --all-features
 
       - name: JavaScript tests
-        if: hashFiles('pnpm-lock.yaml') != ''
+        if: steps.probe.outputs.js == 'true'
         run: pnpm test
 
   # ---------------------------------------------------------------------------
   # Markdown conformance. A regression here is a correctness regression.
+  #
+  # Runs on all three operating systems rather than one, because the runner is
+  # plain Node with no DOM and no native code, so the only thing that *could*
+  # differ is text handling — line endings above all. The vendored spec fixture is
+  # LF, GitHub's `actions/checkout` on Windows may check it out with CRLF, and a
+  # conformance runner that normalises CRLF differently per platform produces a
+  # number that is a property of the runner rather than of the parser. Running it
+  # on three platforms is how that would be discovered instead of shipped.
   # ---------------------------------------------------------------------------
   conformance:
-    name: CommonMark / GFM conformance
-    runs-on: ubuntu-latest
+    name: Conformance (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - uses: actions/checkout@v4
 
+      # See the note in the lint job: the probe has to follow checkout or it
+      # always reports nothing present. This job was "passing" for exactly that
+      # reason before the fix — it skipped the suite and exited 0.
+      - name: Detect the JavaScript workspace
+        id: probe
+        shell: bash
+        run: |
+          [ -f pnpm-lock.yaml ] && echo "js=true" >> "$GITHUB_OUTPUT" || echo "js=false" >> "$GITHUB_OUTPUT"
+
       - uses: actions/setup-node@v4
+        if: steps.probe.outputs.js == 'true'
         with:
           node-version: 22
 
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
       - uses: pnpm/action-setup@v4
+        if: steps.probe.outputs.js == 'true'
 
       - run: pnpm install --frozen-lockfile
+        if: steps.probe.outputs.js == 'true'
 
-      - name: Run CommonMark and GFM spec suites
-        if: hashFiles('pnpm-lock.yaml') != ''
+      # `@siyana/core` resolves `@siyana/core` -> `dist/index.js`, so the package
+      # must be built before the runner can import it. There is no `prepare`
+      # script on purpose: pnpm runs `prepare` on install, and a build that runs
+      # inside an install makes a typecheck error look like a network failure.
+      - name: Build the workspace
+        if: steps.probe.outputs.js == 'true'
+        run: pnpm build
+
+      - name: Run the CommonMark spec suite
+        if: steps.probe.outputs.js == 'true'
         run: pnpm test:conformance
 
-      - name: Conformance report
-        if: always() && hashFiles('pnpm-lock.yaml') != ''
-        run: pnpm conformance:report || true
-
-      - uses: actions/upload-artifact@v4
-        if: always() && hashFiles('pnpm-lock.yaml') != ''
-        with:
-          name: conformance-report
-          path: conformance-report.*
-          if-no-files-found: ignore
+      # A conformance run that silently stops testing is worse than one that
+      # fails. The probe above skips the whole job when there is no lockfile, so
+      # this asserts the runner actually compared something.
+      - name: Confirm the suite really ran
+        if: steps.probe.outputs.js == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          output="$(pnpm test:conformance 2>&1)"
+          echo "$output"
+          grep -q 'CONFORMANCE: success' <<<"$output" || {
+            echo "::error::the conformance runner did not report success"
+            exit 1
+          }
+          grep -q '652 examples' <<<"$output" || {
+            echo "::error::the conformance runner did not load all 652 spec examples"
+            exit 1
+          }
 
   # ---------------------------------------------------------------------------
   # Security scanning.
   # ---------------------------------------------------------------------------
+  # Languages are selected here rather than by matrix: the CodeQL action's
+  # `languages` input is a comma-separated list, and a matrix over it produces
+  # one redundant analysis per language per job. A single job that analyses both
+  # is faster and uploads one set of alerts.
+  #
+  # CodeQL is skipped while no source exists. "CodeQL could not process any code"
+  # is a hard failure, not a warning, so the probe is required rather than
+  # decorative — and it must follow checkout, or it finds nothing in an empty
+  # working tree and skips a codebase full of TypeScript.
+  # ---------------------------------------------------------------------------
   codeql:
-    name: CodeQL (${{ matrix.language }})
+    name: CodeQL
     runs-on: ubuntu-latest
     permissions:
       contents: read
       security-events: write
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [javascript-typescript, rust]
     steps:
       - uses: actions/checkout@v4
 
+      - name: Detect analysable source
+        id: probe
+        shell: bash
+        run: |
+          # `find` rather than a glob: `**` needs globstar enabled and silently
+          # matches nothing without it, which would look like "no source".
+          langs=""
+          if find . -name '*.ts' -not -path './.git/*' -not -path '*/node_modules/*' \
+               -not -path '*/dist/*' -not -path '*/target/*' -print -quit | grep -q .; then
+            langs="javascript-typescript"
+          fi
+          if find . -name '*.rs' -not -path './.git/*' -not -path '*/target/*' \
+               -print -quit | grep -q .; then
+            langs="${langs:+$langs,}rust"
+          fi
+          echo "langs=$langs" >> "$GITHUB_OUTPUT"
+          if [ -z "$langs" ]; then
+            echo "No analysable source yet; skipping CodeQL."
+          else
+            echo "Analysing: $langs"
+          fi
+
       - uses: github/codeql-action/init@v3
+        if: steps.probe.outputs.langs != ''
         with:
-          language: ${{ matrix.language }}
+          languages: ${{ steps.probe.outputs.langs }}
+          queries: security-extended
 
       - uses: github/codeql-action/analyze@v3
+        if: steps.probe.outputs.langs != ''
         with:
-          category: /language:${{ matrix.language }}
+          category: /language:multi
 
   dependency-review:
     name: Dependency review
@@ -295,35 +507,57 @@ jobs:
 
   # ---------------------------------------------------------------------------
   # Desktop build smoke test. Verifies the app packages on each OS.
-  # Skipped until apps/desktop has a manifest.
+  #
+  # Skips cleanly until apps/desktop has a manifest, because `apps/*` is not in
+  # the workspace glob yet. Unlike the other jobs this one is *expected* to skip,
+  # so it has no "refuse to pass vacuously" step: an absent shell is a known
+  # state recorded in ADR-0003, not a silent failure. The moment the shell is
+  # scaffolded, this job starts building and the skip goes away on its own.
   # ---------------------------------------------------------------------------
   build-desktop:
     name: Desktop build (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
-    if: hashFiles('apps/desktop/package.json') != ''
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - os: windows-latest
-            args: ""
-          - os: ubuntu-22.04
-            args: ""
-          - os: macos-latest
-            args: ""
+        os: [windows-latest, ubuntu-22.04, macos-latest]
     steps:
+      # checkout BEFORE the existence probe. The probe was the first step for the
+      # life of this job, so `[ -f apps/desktop/package.json ]` was always false
+      # and three operating systems reported green without building anything.
+      # Same defect as the probe steps elsewhere in this file, same fix.
       - uses: actions/checkout@v4
 
+      # `shell: bash` is required: the default shell on Windows runners is cmd.exe,
+      # which cannot run these POSIX conditionals. Bash is present on every
+      # GitHub-hosted runner regardless of platform.
+      - name: Check whether the desktop app exists yet
+        id: probe
+        shell: bash
+        run: |
+          if [ -f apps/desktop/package.json ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "apps/desktop not scaffolded yet; skipping."
+          fi
+
       - uses: actions/setup-node@v4
+        if: steps.probe.outputs.exists == 'true'
         with:
           node-version: 22
 
       - uses: dtolnay/rust-toolchain@stable
+        if: steps.probe.outputs.exists == 'true'
+
       - uses: Swatinem/rust-cache@v2
+        if: steps.probe.outputs.exists == 'true'
+
       - uses: pnpm/action-setup@v4
+        if: steps.probe.outputs.exists == 'true'
 
       - name: Install Linux webview dependencies
-        if: runner.os == 'Linux'
+        if: steps.probe.outputs.exists == 'true' && runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -331,8 +565,13 @@ jobs:
             librsvg2-dev patchelf build-essential curl wget file libssl-dev
 
       - run: pnpm install --frozen-lockfile
+        if: steps.probe.outputs.exists == 'true'
+
       - run: pnpm --filter desktop build
+        if: steps.probe.outputs.exists == 'true'
+
       - uses: actions/upload-artifact@v4
+        if: steps.probe.outputs.exists == 'true'
         with:
           name: desktop-build-${{ matrix.os }}
           path: |

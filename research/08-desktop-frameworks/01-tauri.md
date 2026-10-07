@@ -32,7 +32,7 @@ client, the updater — is Rust compiled into your binary.
 From the [architecture docs](https://v2.tauri.app/concept/architecture/), the
 crate stack is:
 
-```
+```text
 tauri                       ← the facade; owns IPC, ACL, config, asset embedding
 ├── tauri-runtime           ← abstract window/event-loop interface
 │   └── tauri-runtime-wry   ← the real implementation
@@ -113,7 +113,7 @@ replacement for v1's flat `allowlist`.
 
 ### The three-layer model
 
-```
+```text
 Permission   →  "this operation is allowed, under these conditions"
    ↓
 Capability   →  "these permissions apply to these windows/webviews, on these platforms"

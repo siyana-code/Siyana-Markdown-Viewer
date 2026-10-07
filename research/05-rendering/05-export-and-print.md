@@ -579,7 +579,7 @@ When the in-webview PDF is not good enough (large documents, deterministic
 output, batch export), the same sanitized HTML is rendered by headless
 Chromium:
 
-```
+```text
 chromium --headless=new --disable-gpu --no-sandbox-in-container \
   --print-to-pdf=out.pdf --no-pdf-header-footer \
   --virtual-time-budget=10000 \

@@ -9,7 +9,7 @@
 ## Table of contents
 
 1. [Layers of navigation](#1-layers-of-navigation)
-2. [Heading anchors](#2-heading-anchals)
+2. [Heading anchors](#2-heading-anchors)
 3. [The table of contents](#3-the-table-of-contents)
 4. [Search](#4-search)
 5. [Find-in-page](#5-find-in-page)
@@ -212,11 +212,19 @@ the index is warranted. Do not build an index before you have measured a scan.
 
 | Library | Model | Persistence | Fuzzy | Language handling | Notes |
 |---|---|---|---|---|---|
-| **`minisearch`** | In-memory inverted index with BM25-style scoring; docs in JS objects | Export/import to plain objects (`JSON`/`JSONL`); you persist it yourself | Yes — prefix + fuzzy (Levenshtein/dice), field boosting, auto-suggest | Custom tokenizer, easy to plug `Intl.Segmenter` | Zero dependencies; small; runs in Node and browser; works in a Web Worker. **Best default for an in-app folder index.** |
-| **`flexsearch`** 0.8 | Chunked/worker-native indexes, several index types (including a `Map`-based "document" index) | Yes — built-in `WorkerIndex`, `Index`, and export/import | Yes; has an `Encoder` abstraction for charset folding | Custom `Encoder`, `Charset` | Highest raw throughput; the README claims up to 1,000,000× faster "compared to other libraries" — **that is the project's own marketing claim, treat it as unverified**. API has churned across major versions; the 0.8 migration guide is a warning sign. |
-| **`lunr`** (v2 line) | In-memory inverted index, TF-IDF-ish scoring | `lunr.Index.serialize()` / `load()` — a compact text format | Yes — wildcards and edit distance | Per-language built-in pipelines (`lunr.multiLanguage`), 14 languages | Small, stable, boring in the best way. But: unmaintained-ish momentum, and **not worker-aware** — you build the worker. |
-| **`orama`** (`@orama/orama`) | Schema-declared index; full-text, vector, hybrid search; BM25; stemming/tokenization in ~30 languages | Yes (`save`/`load`) | Typo tolerance, exact match, boosting, pinning | Strong — explicit schema, strong multilingual support | Much more than we need. Its vector and hybrid search are aimed at a different product. Overkill for a Markdown folder; interesting if we ever want semantic search. |
-| **SQLite FTS5** | A virtual table inside SQLite; **persistent, transactional, incremental** | Native — it *is* the database | Built-in `porter`, `trigram`, `unicode61` tokenizers; `NEAR`, prefix (`*`), column filters, `bm25()` ranking, `snippet()` and `highlight()` helpers | `unicode61` + `trigram` covers CJK poorly; custom tokenizers are possible | The **only** option on this list that gives durable, incrementally-updated, crash-safe indexes for free, and it is already in every desktop toolchain (Python has it built in, Rust via `rusqlite`, Node via `node:sqlite`). Also the only one that can hold the *file content* alongside the index, enabling result previews without a second read. **Strongest candidate for the workspace scope.** |
+| **`minisearch`** | In-memory inverted index with BM25-style scoring; docs in JS objects | Export/import to plain objects (`JSON`/`JSONL`); you persist it yourself | Yes — prefix + fuzzy (Levenshtein/dice), field boosting, auto-suggest | Custom tokenizer, easy to plug `Intl.Segmenter` | Zero dependencies; small; runs in Node and browser; works in a Web Worker. **Best default for an in-app folder index.** Concurred with by [14-architecture-options §4](../14-architecture-options/05-search-architecture.md) |
+| **`flexsearch`** 0.8 | Chunked/worker-native indexes, several index types (including a `Map`-based "document" index) | Yes — built-in `WorkerIndex`, `Index`, and export/import | Yes; has an `Encoder` abstraction for charset folding | Custom `Encoder`, `Charset` | Highest raw throughput. The README claims up to 1,000,000× faster "compared to other libraries" — **that is the project's own marketing claim, treat it as unverified**. API has churned across major versions; the 0.8 migration guide is a warning sign. Our architecture doc additionally notes a slow release cadence |
+| **`lunr`** | In-memory inverted index, TF-IDF-ish scoring | `lunr.Index.serialize()` / `load()` — a compact text format | Yes — wildcards and edit distance | Per-language pipelines (`lunr.multiLanguage`), 14 languages | Small, stable, boring in the best way. But: unmaintained momentum and **not worker-aware** — you build the worker. [14-architecture-options §4.2](../14-architecture-options/05-search-architecture.md) recommends **avoiding** it |
+| **`orama`** (`@orama/orama`) | Schema-declared index; full-text, vector, hybrid search; BM25; stemming/tokenization in ~30 languages | Yes (`save`/`load`) | Typo tolerance, exact match, boosting, pinning | Strong — explicit schema, strong multilingual support | Much more than we need. Its vector and hybrid search are aimed at a different product, and it has grown into a *product* with a paid cloud tier. Overkill for a Markdown folder |
+| **SQLite FTS5** | A virtual table inside SQLite; **persistent, transactional, incremental** | Native — it *is* the database | Built-in `porter`, `trigram`, `unicode61` tokenizers; `NEAR`, prefix (`*`), column filters, `bm25()` ranking, `snippet()` and `highlight()` helpers | `unicode61` + `trigram` covers CJK poorly; custom tokenizers are possible | The **only** option on this list that gives durable, incrementally-updated, crash-safe indexes for free, and it is already in every desktop toolchain. Also the only one that can hold the *file content* alongside the index, enabling result previews without a second read. **Strongest candidate for the workspace scope** |
+
+> **Authority note.** The engine *decision* is already made in
+> [`14-architecture-options/05-search-architecture.md`](../14-architecture-options/05-search-architecture.md):
+> SQLite FTS5 via `rusqlite` (bundled) on desktop, MiniSearch on web and mobile,
+> with a phased plan and a benchmark gate before tier (c) is justified. This
+> section restates the same conclusion from the UX side and adds the versions
+> and licences verified on 6 Oct 2026. **Where the two disagree, the
+> architecture document wins.**
 
 **Recommendation:**
 
@@ -248,6 +256,12 @@ add the workspace scope with FTS5 later.
 ## 5. Find-in-page
 
 **The honest answer: do not build a custom find-in-page for v1.**
+
+> This conclusion agrees with
+> [`14-architecture-options/05-search-architecture.md` §2](../14-architecture-options/05-search-architecture.md),
+> which has already worked through "what we actually get for free", "Electron's
+> `Ctrl+F` problem", and the bar our own built-in bar must clear anyway. The
+> architecture document owns the mechanism; this section owns the UX.
 
 Every Chromium and WebKit webview ships an excellent native find: it is
 incremental, it highlights, it has a result counter, it scrolls to the match,
@@ -588,3 +602,20 @@ Differences from the TOC, if any:
 | N12 | Reading position persists per document across restarts | P1 |
 | N13 | All panel toggles are reachable by keyboard alone and each toggle target has `aria-expanded` | P0 |
 | N14 | History navigation (`Alt+←`/`Alt+→`) is the webview's, never reimplemented | P0 |
+
+## Sources
+
+- Electron, `Menu.setApplicationMenu` — "Passing `null` will suppress the default menu. On Windows and Linux, this has the additional effect of removing the menu bar from the window."; "The default menu will be created automatically if the app does not set one. It contains standard items such as File, Edit, View, and Window."; `&File` → generated `Alt-F` accelerator on Windows and Linux — <https://github.com/electron/electron/blob/main/docs/api/menu.md>
+- Electron, `Menus` tutorial — `role` values and their default `label`/`accelerator` per platform; the default menu roles `fileMenu`, `editMenu`, `viewMenu`, `windowMenu` and what each contains — <https://github.com/electron/electron/blob/main/docs/tutorial/menus.md>
+- Electron, `webContents` — `before-input-event`: "Calling `event.preventDefault` will prevent the page `keydown`/`keyup` events and the menu shortcuts."; `setIgnoreMenuShortcuts` for suppressing only the menu shortcuts — <https://github.com/electron/electron/blob/main/docs/api/web-contents.md>
+- Electron, `InputEvent` object (the `modifiers` value space: `shift`, `control`, `ctrl`, `alt`, `meta`, `command`, `cmd`, …) — <https://github.com/electron/electron/blob/main/docs/api/structures/input-event.md>
+- Tauri v2, "Window Menu" — `setAsAppMenu`, `setAsWindowMenu`, `append`/`prepend`/`insert`/`remove`, desktop-only, custom items and multi-level menus — <https://v2.tauri.app/learn/window-menu/>
+- Tauri v2, `@tauri-apps/api/menu` reference — `Menu`, `MenuItem`, `CheckMenuItem`, `IconMenuItem`, `PredefinedMenuItem`, `Submenu` with `setAccelerator`, `setAsHelpMenuForNSApp`, `setAsWindowsMenuForNSApp` — <https://v2.tauri.app/reference/javascript/api/namespacemenu/>
+- GitHub Flavored Markdown, heading anchors and the de-duplication suffix algorithm — <https://github.github.com/gfm/#heading-anchors>
+- `minisearch` — <https://github.com/lucaong/minisearch>
+- `flexsearch` 0.8 — README, `Encoder` abstraction, worker/persistent indexes; the "1,000,000 times faster" figure is the project's own — <https://github.com/nextapps-de/flexsearch>
+- `lunr` — <https://github.com/olivernn/lunr.js>
+- `@orama/orama` — schema-declared index, BM25, stemming in 30 languages, vector and hybrid search — <https://github.com/oramasearch/orama>
+- SQLite FTS5 — `bm25()`, `snippet()`, `highlight()`, `porter`/`unicode61`/`trigram` tokenizers, contentless and external-content tables — <https://www.sqlite.org/fts5.html>
+- WAI-ARIA Authoring Practices Guide — `aria-expanded`, `aria-controls`, dialog focus management — <https://www.w3.org/WAI/ARIA/apg/>
+- Existing internal decisions this document defers to: `14-architecture-options/05-search-architecture.md` §2 (tier (a), find-in-page, and "Electron's Ctrl+F problem") and §4 (tier (c) engine choice)

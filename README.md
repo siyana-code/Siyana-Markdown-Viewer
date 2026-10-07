@@ -12,13 +12,25 @@ telemetry. Your files never leave your machine.
 
 | Target | Phase | State |
 |--------|-------|-------|
-| Desktop (Windows + Linux) | Phase 1 | 🔬 Research complete, implementation not started |
-| Web | Phase 2 | ⏳ Planned |
-| Mobile | Phase 3 | ⏳ Planned |
+| Core rendering engine | Phase 1 | 🚧 Scaffolding in progress — [`packages/core`](packages/core) and the CommonMark conformance suite |
+| Desktop (Windows + Linux) | Phase 1 | ⏳ Blocked on ADR-0003's prototype gate |
+| Web | Phase 6 | ⏳ Planned |
+| Mobile | Phase 7 | ⏳ Planned |
 
-This repository is currently in its **research and planning phase**. See
-[`docs/roadmap.md`](docs/roadmap.md) for the full plan and
-[`research/`](research/) for the deep study that informs it.
+The research phase is complete: [88 documents, ~430 000 words](research/) across
+16 areas. Phase 1 has started at the bottom of the stack, so the parser is
+verified before any shell exists.
+
+**The rendering engine measures 573 / 652 CommonMark examples (87.88 %)**, with
+every one of the 79 failures attributed to a deliberate security decision. The
+parser's ceiling with raw HTML permitted — which
+[ADR-0005](docs/adr/0005-security-baseline-xss-sanitization.md) forbids — is
+649 / 652. See
+[`packages/conformance/README.md`](packages/conformance/README.md) for the
+decomposition.
+
+See [`docs/roadmap.md`](docs/roadmap.md) for the plan and
+[`research/`](research/) for the study that informs it.
 
 ---
 
@@ -55,15 +67,19 @@ render it beautifully, instantly, and safely. Nothing else is required.
 
 ## Repository map
 
-```
+```text
 docs/       Decisions and reference docs for THIS project (ADRs, roadmap, standards)
 research/   The deep study: Markdown, parsers, shells, security, platform reality
-apps/       desktop/ (Phase 1), web/ (Phase 2), mobile/ (Phase 3)
-packages/   core/, ui/, fs-adapters/, test-fixtures/
+apps/       desktop/ (Phase 1), web/ (Phase 6), mobile/ (Phase 7)
+packages/   core/ [exists], conformance/ [exists], ui/, fs-adapters/, sanitize/
 ```
 
 - [`docs/`](docs/README.md) — what we decided and why
 - [`research/`](research/README.md) — what we learned and why we believe it
+- [`packages/core/`](packages/core/src/) — the rendering engine. Pure: no DOM,
+  no I/O, no platform APIs
+- [`packages/conformance/`](packages/conformance/README.md) — the CommonMark
+  spec suite, with every failure attributed to a decision
 
 ---
 
@@ -72,7 +88,7 @@ packages/   core/, ui/, fs-adapters/, test-fixtures/
 `main` is for production releases only. `develop` is the default branch and the
 integration branch for all work.
 
-```
+```text
 main      ──●──────────────●──────────────►   production releases (tagged)
            ↑              ↑
            │   (release)  │
